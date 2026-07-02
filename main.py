@@ -191,8 +191,19 @@ async def main():
     # 載入 cookies
     if os.path.exists(COOKIES_FILE):
         print("📂 載入 cookies.json...")
-        client.load_cookies(COOKIES_FILE)
-        print("✅ 載入成功")
+        with open(COOKIES_FILE, "r", encoding="utf-8") as f:
+            try:
+                cookies_data = json.load(f)
+                if isinstance(cookies_data, list):
+                    cookies_pool = cookies_data
+                else:
+                    cookies_pool = [cookies_data]
+            except Exception as e:
+                print(f"❌ 錯誤：無法解析 cookies.json：{e}")
+                return
+        cookie_index = 0
+        client.set_cookies(cookies_pool[cookie_index])
+        print(f"✅ 成功載入 Cookie 池，共 {len(cookies_pool)} 組帳號。目前使用第 1 組。")
     else:
         print("❌ 錯誤：找不到 cookies.json，請確認是否有成功建立！")
         return
@@ -222,74 +233,98 @@ async def main():
 
     consecutive_429s = 0
 
+    stop_scanning = False
+
     for idx, (username_key, channels) in enumerate(account_channels.items(), 1):
+        if stop_scanning:
+            break
+
         original_name = channels[0]["original"]  # 用原始大小寫查詢
         print(f"[{idx}/{total}] 查詢 @{original_name} ...")
 
-        try:
-            # 優先從快取中讀取 ID，避免呼叫 get_user_by_screen_name API
-            user_id = user_ids.get(username_key)
-            if not user_id:
-                # 快取沒有才查
-                user = await client.get_user_by_screen_name(original_name)
-                user_id = str(user.id)
-                user_ids[username_key] = user_id
-                user_ids_updated = True
-                print(f"  🆕 快取未命中，解析新 ID: {user_id}")
-                time.sleep(2.0) # 查 ID 後額外延遲，避免限制
-            
-            tweets = await client.get_user_tweets(user_id, "Tweets", count=TWEETS_PER_USER)
+        success = False
+        retry_count = 0
+        while not success and retry_count < 3:
+            try:
+                # 優先從快取中讀取 ID，避免呼叫 get_user_by_screen_name API
+                user_id = user_ids.get(username_key)
+                if not user_id:
+                    # 快取沒有才查
+                    user = await client.get_user_by_screen_name(original_name)
+                    user_id = str(user.id)
+                    user_ids[username_key] = user_id
+                    user_ids_updated = True
+                    print(f"  🆕 快取未命中，解析新 ID: {user_id}")
+                    time.sleep(2.0) # 查 ID 後額外延遲，避免限制
+                
+                tweets = await client.get_user_tweets(user_id, "Tweets", count=TWEETS_PER_USER)
+                success = True
+                
+                # 成功執行，重設連續 429 計數
+                consecutive_429s = 0
 
-            # 成功執行，重設連續 429 計數
-            consecutive_429s = 0
+                last_id = last_seen.get(username_key, "0")
+                is_first_run = last_id == "0"
 
-            last_id = last_seen.get(username_key, "0")
-            is_first_run = last_id == "0"
-
-            if is_first_run:
-                # 第一次執行：只記錄位置，不發送（避免一次性洗版）
-                if tweets:
-                    last_seen[username_key] = str(tweets[0].id)
-                    print(f"  📌 首次執行，記錄至推文 ID {tweets[0].id}（不發送歷史貼文）")
-            else:
-                # 找出比上次更新的推文
-                new_media_tweets = []
-                newest_id = last_id
-
-                for tweet in tweets:
-                    tweet_id = str(tweet.id)
-                    if not is_new_tweet(tweet_id, last_id):
-                        break  # 推文按時間倒序，遇到舊的就停
-                    if int(tweet_id) > int(newest_id):
-                        newest_id = tweet_id
-                    if should_post(tweet):
-                        new_media_tweets.append(tweet)
-
-                if new_media_tweets:
-                    print(f"  🆕 發現 {len(new_media_tweets)} 則新圖文推文，準備發送...")
-                    # 從舊到新發送（不要倒序洗版）
-                    for tweet in reversed(new_media_tweets):
-                        for ch in channels:
-                            post_to_discord(ch["webhook"], original_name, str(tweet.id), ch["name"])
+                if is_first_run:
+                    # 第一次執行：只記錄位置，不發送（避免一次性洗版）
+                    if tweets:
+                        last_seen[username_key] = str(tweets[0].id)
+                        print(f"  📌 首次執行，記錄至推文 ID {tweets[0].id}（不發送歷史貼文）")
                 else:
-                    print(f"  ➖ 無新圖文推文")
+                    # 找出比上次更新的推文
+                    new_media_tweets = []
+                    newest_id = last_id
 
-                # 更新進度（記最新的推文 ID，無論是否含媒體）
-                if tweets and is_new_tweet(str(tweets[0].id), last_seen.get(username_key, "0")):
-                    last_seen[username_key] = str(tweets[0].id)
+                    for tweet in tweets:
+                        tweet_id = str(tweet.id)
+                        if not is_new_tweet(tweet_id, last_id):
+                            break  # 推文按時間倒序，遇到舊的就停
+                        if int(tweet_id) > int(newest_id):
+                            newest_id = tweet_id
+                        if should_post(tweet):
+                            new_media_tweets.append(tweet)
 
-        except Exception as e:
-            print(f"  ⚠️  @{original_name} 發生錯誤：{e}")
-            if "429" in str(e) or "Rate limit" in str(e):
-                consecutive_429s += 1
-                if consecutive_429s >= 3:
-                    print("  🚨 連續偵測到 3 次 Rate Limit，中斷本次執行以保護帳號。")
-                    break
-                print("  ⏳ 偵測到 Rate Limit 限制，暫停 120 秒後繼續...")
-                time.sleep(120)
-            else:
-                time.sleep(5)
-            continue
+                    if new_media_tweets:
+                        print(f"  🆕 發現 {len(new_media_tweets)} 則新圖文推文，準備發送...")
+                        # 從舊到新發送（不要倒序洗版）
+                        for tweet in reversed(new_media_tweets):
+                            for ch in channels:
+                                post_to_discord(ch["webhook"], original_name, str(tweet.id), ch["name"])
+                    else:
+                        print(f"  ➖ 無新圖文推文")
+
+                    # 更新進度（記最新的推文 ID，無論是否含媒體）
+                    if tweets and is_new_tweet(str(tweets[0].id), last_seen.get(username_key, "0")):
+                        last_seen[username_key] = str(tweets[0].id)
+
+            except Exception as e:
+                print(f"  ⚠️  @{original_name} 發生錯誤：{e}")
+                if "429" in str(e) or "Rate limit" in str(e):
+                    consecutive_429s += 1
+                    
+                    # 1. 優先嘗試切換帳號
+                    if cookie_index + 1 < len(cookies_pool):
+                        cookie_index += 1
+                        print(f"  🔄 [帳號輪替] 偵測到限速，正在切換到第 {cookie_index + 1} 組備用帳號...")
+                        client.set_cookies(cookies_pool[cookie_index], clear_cookies=True)
+                        time.sleep(5)  # 稍等 5 秒後重試
+                        retry_count += 1
+                        continue
+                    
+                    # 2. 如果無備用帳號可用且連續失敗次數過高，終止掃描
+                    if consecutive_429s >= 3:
+                        print("  🚨 所有帳號皆已達 Rate Limit 限制，終止本次掃描。")
+                        stop_scanning = True
+                        break
+                    
+                    # 3. 否則暫停等待
+                    print("  ⏳ 偵測到 Rate Limit 限制且無備用帳號，暫停 120 秒後繼續...")
+                    time.sleep(120)
+                    retry_count += 1
+                else:
+                    time.sleep(5)
+                    retry_count += 1
 
         time.sleep(REQUEST_DELAY)
 
