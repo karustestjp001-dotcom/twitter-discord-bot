@@ -1,0 +1,57 @@
+name: Twitter Monitor
+
+on:
+  schedule:
+    # 每小時整點執行（UTC 時間，台灣時間 = UTC+8）
+    - cron: '0 * * * *'
+  # 允許手動觸發（用於測試）
+  workflow_dispatch:
+
+# 需要寫入權限才能 commit last_seen.json
+permissions:
+  contents: write
+
+jobs:
+  monitor:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      # 從 GitHub Secret 還原 cookies.json
+      - name: Restore Twitter cookies
+        run: |
+          echo "${{ secrets.TWITTER_COOKIES }}" | base64 -d > cookies.json
+          echo "✅ cookies.json 已還原"
+
+      - name: Run monitor
+        env:
+          WEBHOOK_ILLUSTRATORS:   ${{ secrets.WEBHOOK_ILLUSTRATORS }}
+          WEBHOOK_VRC:            ${{ secrets.WEBHOOK_VRC }}
+          WEBHOOK_VIDEO_CREATORS: ${{ secrets.WEBHOOK_VIDEO_CREATORS }}
+          WEBHOOK_3D_MODELERS:    ${{ secrets.WEBHOOK_3D_MODELERS }}
+          WEBHOOK_GRAPHIC_DESIGN: ${{ secrets.WEBHOOK_GRAPHIC_DESIGN }}
+          WEBHOOK_PHOTOGRAPHY:    ${{ secrets.WEBHOOK_PHOTOGRAPHY }}
+          WEBHOOK_AI_CREATORS:    ${{ secrets.WEBHOOK_AI_CREATORS }}
+        run: python main.py
+
+      # 把更新後的 last_seen.json commit 回 repo
+      - name: Save progress (commit last_seen.json)
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add last_seen.json
+          # 只有在有變更時才 commit
+          git diff --staged --quiet || git commit -m "chore: update last_seen [skip ci]"
+          git push
