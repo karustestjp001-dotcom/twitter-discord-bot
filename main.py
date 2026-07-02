@@ -103,7 +103,7 @@ from config import CHANNELS
 COOKIES_FILE = "cookies.json"
 LAST_SEEN_FILE = "last_seen.json"
 USER_IDS_FILE = "user_ids.json"
-REQUEST_DELAY = 4      # 每個帳號之間的間隔（秒），有快取後 4 秒很安全
+REQUEST_DELAY = 8      # 每個帳號之間的間隔（秒），調至 8 秒更安全，符合 Twitter 頻率限制
 DISCORD_DELAY = 1.0    # Discord 發文間隔（秒）
 TWEETS_PER_USER = 10   # 每個帳號最多抓幾則推文
 
@@ -275,7 +275,11 @@ async def main():
 
         except Exception as e:
             print(f"  ⚠️  @{original_name} 發生錯誤：{e}")
-            time.sleep(5)
+            if "429" in str(e) or "Rate limit" in str(e):
+                print("  ⏳ 偵測到 Rate Limit 限制，暫停 120 秒後繼續...")
+                time.sleep(120)
+            else:
+                time.sleep(5)
             continue
 
         time.sleep(REQUEST_DELAY)
