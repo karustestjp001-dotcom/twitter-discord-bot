@@ -220,6 +220,8 @@ async def main():
     total = len(account_channels)
     print(f"\n🔍 開始掃描 {total} 個帳號...\n")
 
+    consecutive_429s = 0
+
     for idx, (username_key, channels) in enumerate(account_channels.items(), 1):
         original_name = channels[0]["original"]  # 用原始大小寫查詢
         print(f"[{idx}/{total}] 查詢 @{original_name} ...")
@@ -237,6 +239,9 @@ async def main():
                 time.sleep(2.0) # 查 ID 後額外延遲，避免限制
             
             tweets = await client.get_user_tweets(user_id, "Tweets", count=TWEETS_PER_USER)
+
+            # 成功執行，重設連續 429 計數
+            consecutive_429s = 0
 
             last_id = last_seen.get(username_key, "0")
             is_first_run = last_id == "0"
@@ -276,6 +281,10 @@ async def main():
         except Exception as e:
             print(f"  ⚠️  @{original_name} 發生錯誤：{e}")
             if "429" in str(e) or "Rate limit" in str(e):
+                consecutive_429s += 1
+                if consecutive_429s >= 3:
+                    print("  🚨 連續偵測到 3 次 Rate Limit，中斷本次執行以保護帳號。")
+                    break
                 print("  ⏳ 偵測到 Rate Limit 限制，暫停 120 秒後繼續...")
                 time.sleep(120)
             else:
