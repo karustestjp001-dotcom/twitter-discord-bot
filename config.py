@@ -33,6 +33,7 @@ CHANNELS = [
             "BGAsylum",
             "dolosseXD",
             "nezukonezu32",
+            "wooupp",
         ],
     },
     {
@@ -110,6 +111,7 @@ CHANNELS = [
             "rako_bear_",
             "Raylivez1",
             "hanasakimakura",
+            "tanco_camera",
         ],
     },
     {
@@ -126,6 +128,7 @@ CHANNELS = [
             "okomechan991",
             "eatsleep1111",
             "G_Eskeles",
+            "MaxVOAO",
         ],
     },
 ]
