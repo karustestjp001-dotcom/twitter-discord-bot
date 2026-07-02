@@ -152,17 +152,26 @@ def is_new_tweet(tweet_id: str, last_id: str) -> bool:
         return False
 
 
-def should_post(tweet) -> bool:
+def should_post(tweet, media_type="any") -> bool:
     """
     判斷是否要轉發這則推文：
     - 必須是原創推文（非轉推）
-    - 必須含有圖片或影片
+    - 必須含有合適的圖片或影片
     """
     # 跳過轉推
     if getattr(tweet, "retweeted_tweet", None):
         return False
-    # 必須有 media（圖片/影片/GIF）
-    return bool(getattr(tweet, "media", None))
+        
+    media_list = getattr(tweet, "media", None)
+    if not media_list:
+        return False
+        
+    if media_type == "video":
+        return any(getattr(m, "type", "") == "video" for m in media_list)
+    elif media_type == "photo":
+        return any(getattr(m, "type", "") == "photo" for m in media_list)
+        
+    return True
 
 
 def post_to_discord(webhook_url: str, username: str, tweet_id: str, channel_name: str):
@@ -220,12 +229,24 @@ async def main():
         if not webhook_url:
             print(f"⚠️  找不到 Webhook：{channel['webhook_env']}，跳過頻道 {channel['name']}")
             continue
-        for raw_name in channel["accounts"]:
-            key = raw_name.lower()
+        for raw_item in channel["accounts"]:
+            if isinstance(raw_item, dict):
+                original = raw_item["username"]
+                media_type = raw_item.get("media_type", "any")
+            else:
+                original = raw_item
+                media_type = "any"
+                
+            key = original.lower()
             if key not in account_channels:
                 account_channels[key] = []
             account_channels[key].append(
-                {"webhook": webhook_url, "name": channel["name"], "original": raw_name}
+                {
+                    "webhook": webhook_url,
+                    "name": channel["name"],
+                    "original": original,
+                    "media_type": media_type
+                }
             )
 
     total = len(account_channels)
@@ -272,8 +293,8 @@ async def main():
                         last_seen[username_key] = str(tweets[0].id)
                         print(f"  📌 首次執行，記錄至推文 ID {tweets[0].id}（不發送歷史貼文）")
                 else:
-                    # 找出比上次更新的推文
-                    new_media_tweets = []
+                    # 找出需要發送到各頻道的推文
+                    channel_posts = {i: [] for i in range(len(channels))}
                     newest_id = last_id
 
                     for tweet in tweets:
@@ -282,16 +303,22 @@ async def main():
                             break  # 推文按時間倒序，遇到舊的就停
                         if int(tweet_id) > int(newest_id):
                             newest_id = tweet_id
-                        if should_post(tweet):
-                            new_media_tweets.append(tweet)
+                        
+                        for c_idx, ch in enumerate(channels):
+                            if should_post(tweet, ch.get("media_type", "any")):
+                                channel_posts[c_idx].append(tweet)
 
-                    if new_media_tweets:
-                        print(f"  🆕 發現 {len(new_media_tweets)} 則新圖文推文，準備發送...")
-                        # 從舊到新發送（不要倒序洗版）
-                        for tweet in reversed(new_media_tweets):
-                            for ch in channels:
+                    # 發送推文
+                    has_posted = False
+                    for c_idx, ch in enumerate(channels):
+                        to_post = channel_posts[c_idx]
+                        if to_post:
+                            has_posted = True
+                            print(f"  🆕 發現 {len(to_post)} 則新圖文推文，將發送至 [{ch['name']}]...")
+                            for tweet in reversed(to_post):
                                 post_to_discord(ch["webhook"], original_name, str(tweet.id), ch["name"])
-                    else:
+                    
+                    if not has_posted:
                         print(f"  ➖ 無新圖文推文")
 
                     # 更新進度（記最新的推文 ID，無論是否含媒體）

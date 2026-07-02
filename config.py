@@ -79,6 +79,7 @@ CHANNELS = [
             "HarlequinWheels",
             "CAT02A",
             "oshiruko_s2",
+            {"username": "iiiichimarU_03", "media_type": "video"},
         ],
     },
     {
