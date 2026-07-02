@@ -102,7 +102,8 @@ from config import CHANNELS
 
 COOKIES_FILE = "cookies.json"
 LAST_SEEN_FILE = "last_seen.json"
-REQUEST_DELAY = 5      # 每個帳號之間的間隔（秒），調高一點以避免被 Twitter Rate Limit
+USER_IDS_FILE = "user_ids.json"
+REQUEST_DELAY = 4      # 每個帳號之間的間隔（秒），有快取後 4 秒很安全
 DISCORD_DELAY = 1.0    # Discord 發文間隔（秒）
 TWEETS_PER_USER = 10   # 每個帳號最多抓幾則推文
 
@@ -123,6 +124,23 @@ def load_last_seen() -> dict:
 def save_last_seen(data: dict):
     """將最新推文 ID 存回檔案"""
     with open(LAST_SEEN_FILE, "w", encoding="utf-8") as f:
+        json.dump(data, f, indent=2, ensure_ascii=False)
+
+
+def load_user_ids() -> dict:
+    """讀取已快取的作者 ID"""
+    if os.path.exists(USER_IDS_FILE):
+        with open(USER_IDS_FILE, "r", encoding="utf-8") as f:
+            try:
+                return json.load(f)
+            except Exception:
+                return {}
+    return {}
+
+
+def save_user_ids(data: dict):
+    """儲存作者 ID 快取"""
+    with open(USER_IDS_FILE, "w", encoding="utf-8") as f:
         json.dump(data, f, indent=2, ensure_ascii=False)
 
 
@@ -179,8 +197,10 @@ async def main():
         print("❌ 錯誤：找不到 cookies.json，請確認是否有成功建立！")
         return
 
-    # 讀取上次的進度
+    # 讀取上次的進度與快取的 ID
     last_seen = load_last_seen()
+    user_ids = load_user_ids()
+    user_ids_updated = False
 
     # 整合各頻道帳號：username -> [{"webhook": ..., "name": ...}, ...]
     account_channels = {}
@@ -205,9 +225,18 @@ async def main():
         print(f"[{idx}/{total}] 查詢 @{original_name} ...")
 
         try:
-            # 用帳號名稱取得 user 物件
-            user = await client.get_user_by_screen_name(original_name)
-            tweets = await client.get_user_tweets(user.id, "Tweets", count=TWEETS_PER_USER)
+            # 優先從快取中讀取 ID，避免呼叫 get_user_by_screen_name API
+            user_id = user_ids.get(username_key)
+            if not user_id:
+                # 快取沒有才查
+                user = await client.get_user_by_screen_name(original_name)
+                user_id = str(user.id)
+                user_ids[username_key] = user_id
+                user_ids_updated = True
+                print(f"  🆕 快取未命中，解析新 ID: {user_id}")
+                time.sleep(2.0) # 查 ID 後額外延遲，避免限制
+            
+            tweets = await client.get_user_tweets(user_id, "Tweets", count=TWEETS_PER_USER)
 
             last_id = last_seen.get(username_key, "0")
             is_first_run = last_id == "0"
@@ -251,9 +280,13 @@ async def main():
 
         time.sleep(REQUEST_DELAY)
 
-    # 儲存進度
+    # 儲存進度與快取
     save_last_seen(last_seen)
+    if user_ids_updated:
+        save_user_ids(user_ids)
+        print("💾 已將新解析的 ID 儲存至 user_ids.json")
     print("\n✅ 掃描完成，進度已儲存！")
+
 
 
 if __name__ == "__main__":
