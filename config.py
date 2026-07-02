@@ -112,6 +112,7 @@ CHANNELS = [
             "Raylivez1",
             "hanasakimakura",
             "tanco_camera",
+            "2025pics",
         ],
     },
     {
