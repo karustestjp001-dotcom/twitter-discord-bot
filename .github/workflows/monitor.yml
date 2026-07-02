@@ -2,8 +2,8 @@ name: Twitter Monitor
 
 on:
   schedule:
-    # 每小時整點執行（UTC 時間，台灣時間 = UTC+8）
-    - cron: '0 * * * *'
+    # 避開整點高峰期，改在每小時的 23 分執行，以提高觸發率（UTC 時間）
+    - cron: '23 * * * *'
   # 允許手動觸發（用於測試）
   workflow_dispatch:
 
