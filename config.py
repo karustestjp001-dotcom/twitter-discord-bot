@@ -17,7 +17,6 @@ CHANNELS = [
             "HOSHIBACKYARD",
             "Kokoya_art",
             "Ohoo_7am",
-            "p1ct0a1",        # ⚠️ 同時在 ai-creators
             "CarmesJocelin",
             "Dino_illus",
             "asteroid_ill",
