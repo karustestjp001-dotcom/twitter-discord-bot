@@ -112,6 +112,7 @@ CHANNELS = [
             "hanasakimakura",
             "tanco_camera",
             "2025pics",
+            "naturehealyou",
         ],
     },
     {
