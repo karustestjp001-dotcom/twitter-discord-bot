@@ -327,13 +327,13 @@ async def main():
 
             except Exception as e:
                 print(f"  ⚠️  @{original_name} 發生錯誤：{e}")
-                if "429" in str(e) or "Rate limit" in str(e):
+                if any(x in str(e) for x in ["429", "401", "403", "Rate limit", "authenticate", "Forbidden"]):
                     consecutive_429s += 1
                     
                     # 1. 優先嘗試切換帳號
                     if cookie_index + 1 < len(cookies_pool):
                         cookie_index += 1
-                        print(f"  🔄 [帳號輪替] 偵測到限速，正在切換到第 {cookie_index + 1} 組備用帳號...")
+                        print(f"  🔄 [帳號輪替] 偵測到限速或登入失效，正在切換到第 {cookie_index + 1} 組備用帳號...")
                         client.set_cookies(cookies_pool[cookie_index], clear_cookies=True)
                         time.sleep(5)  # 稍等 5 秒後重試
                         retry_count += 1
@@ -341,12 +341,12 @@ async def main():
                     
                     # 2. 如果無備用帳號可用且連續失敗次數過高，終止掃描
                     if consecutive_429s >= 3:
-                        print("  🚨 所有帳號皆已達 Rate Limit 限制，終止本次掃描。")
+                        print("  🚨 所有帳號皆已失效或被限速，終止本次掃描。")
                         stop_scanning = True
                         break
                     
                     # 3. 否則暫停等待
-                    print("  ⏳ 偵測到 Rate Limit 限制且無備用帳號，暫停 120 秒後繼續...")
+                    print("  ⏳ 偵測到限制且無備用帳號，暫停 120 秒後繼續...")
                     time.sleep(120)
                     retry_count += 1
                 else:
