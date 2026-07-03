@@ -2,8 +2,8 @@ name: Twitter Monitor
 
 on:
   schedule:
-    # 避開整點高峰期，改在每小時的 23 分執行，以提高觸發率（UTC 時間）
-    - cron: '23 * * * *'
+    # 每 30 分鐘執行一次，即使 GitHub 排程有延遲，也能大幅提升觸發頻率
+    - cron: '*/30 * * * *'
   # 允許手動觸發（用於測試）
   workflow_dispatch:
 
