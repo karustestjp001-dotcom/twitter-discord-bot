@@ -33,6 +33,7 @@ CHANNELS = [
             "dolosseXD",
             "nezukonezu32",
             "wooupp",
+            "EOR79",
         ],
     },
     {
@@ -100,6 +101,7 @@ CHANNELS = [
         "accounts": [
             "15424578268",
             "Amememe929",
+            "EOR79",
         ],
     },
     {
