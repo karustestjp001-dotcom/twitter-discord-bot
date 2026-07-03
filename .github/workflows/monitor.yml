@@ -28,6 +28,10 @@ jobs:
         uses: actions/checkout@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
+          ref: main
+
+      - name: Sync latest state
+        run: git pull --ff-only origin main
 
       - name: Set up Python 3.11
         uses: actions/setup-python@v5
@@ -62,4 +66,4 @@ jobs:
           git add last_seen.json user_ids.json
           # 只有在有變更時才 commit
           git diff --staged --quiet || git commit -m "chore: update state files [skip ci]"
-          git push
+          git push || (git pull --rebase origin main && git push)
