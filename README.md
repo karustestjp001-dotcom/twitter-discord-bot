@@ -79,7 +79,29 @@ git push -u origin main
 
 ### 第六步：確認自動排程
 
-設定後程式會**每小時整點自動執行一次**，不需要任何手動操作。
+目前建議使用 Cloudflare Cron 作為主要排程器，定時呼叫 GitHub `workflow_dispatch`。
+GitHub Actions 內建 `schedule` 只保留為低頻備援，避免 GitHub 排程尖峰時漏跑。
+
+Cloudflare Worker 設定檔位於 `cloudflare-dispatcher/`：
+
+```bash
+cd cloudflare-dispatcher
+npm install
+npx wrangler login
+npx wrangler secret put GITHUB_TOKEN
+npx wrangler secret put TRIGGER_SECRET
+npx wrangler deploy
+```
+
+需要建立 GitHub fine-grained personal access token，權限至少包含：
+
+| 權限 | 設定 |
+|---|---|
+| Repository access | 只選此 repo |
+| Actions | Read and write |
+| Contents | Read-only |
+
+部署後 Cloudflare Cron 會在每小時第 7 與第 37 分鐘觸發 GitHub workflow。
 
 ---
 
@@ -105,3 +127,4 @@ git push -u origin main
 | `last_seen.json` | 記錄每個帳號最後處理的推文 ID（自動更新）|
 | `requirements.txt` | Python 套件需求 |
 | `.github/workflows/monitor.yml` | GitHub Actions 排程設定 |
+| `cloudflare-dispatcher/` | Cloudflare Cron 外部喚醒器 |

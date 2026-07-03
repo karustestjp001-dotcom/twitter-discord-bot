@@ -2,14 +2,22 @@ name: Twitter Monitor
 
 on:
   schedule:
-    # 每 30 分鐘執行一次，即使 GitHub 排程有延遲，也能大幅提升觸發頻率
-    - cron: '*/30 * * * *'
-  # 允許手動觸發（用於測試）
+    # GitHub 原生 schedule 只作為低頻備援；主要由 Cloudflare Cron 呼叫 workflow_dispatch。
+    - cron: '23 */6 * * *'
   workflow_dispatch:
+    inputs:
+      source:
+        description: 'Trigger source'
+        required: false
+        default: 'manual'
 
 # 需要寫入權限才能 commit last_seen.json
 permissions:
   contents: write
+
+concurrency:
+  group: twitter-monitor
+  cancel-in-progress: false
 
 jobs:
   monitor:
