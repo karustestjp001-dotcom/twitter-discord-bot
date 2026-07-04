@@ -54,6 +54,7 @@ jobs:
           WEBHOOK_VIDEO_CREATORS: ${{ secrets.WEBHOOK_VIDEO_CREATORS }}
           WEBHOOK_3D_MODELERS:    ${{ secrets.WEBHOOK_3D_MODELERS }}
           WEBHOOK_GRAPHIC_DESIGN: ${{ secrets.WEBHOOK_GRAPHIC_DESIGN }}
+          WEBHOOK_DEFYING_FATE:   ${{ secrets.WEBHOOK_DEFYING_FATE }}
           WEBHOOK_PHOTOGRAPHY:    ${{ secrets.WEBHOOK_PHOTOGRAPHY }}
           WEBHOOK_AI_CREATORS:    ${{ secrets.WEBHOOK_AI_CREATORS }}
         run: python main.py

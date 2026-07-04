@@ -105,6 +105,13 @@ CHANNELS = [
         ],
     },
     {
+        "name": "defying-fate",
+        "webhook_env": "WEBHOOK_DEFYING_FATE",
+        "accounts": [
+            "V_DefyingFate",
+        ],
+    },
+    {
         "name": "photography",
         "webhook_env": "WEBHOOK_PHOTOGRAPHY",
         "accounts": [
