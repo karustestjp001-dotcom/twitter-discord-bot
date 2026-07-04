@@ -68,6 +68,7 @@ CHANNELS = [
             "ESMR_01",
             "titan_otoufuVRC",
             "kuromi6_6",
+            "vrc_nuunuu",
         ],
     },
     {
