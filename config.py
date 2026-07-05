@@ -69,6 +69,7 @@ CHANNELS = [
             "titan_otoufuVRC",
             "kuromi6_6",
             "vrc_nuunuu",
+            "vrcbiyaareal",
         ],
     },
     {
