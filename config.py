@@ -70,6 +70,7 @@ CHANNELS = [
             "kuromi6_6",
             "vrc_nuunuu",
             "vrcbiyaareal",
+            "Blue_HIBIKI",
         ],
     },
     {
