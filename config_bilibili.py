@@ -1,0 +1,16 @@
+WEBHOOK_ENV = "WEBHOOK_BILIBILI"
+FORUM_THREAD_PREFIX = "Bilibili 更新"
+
+WATCH_VIDEOS = [
+    "BV11kMh6WEe5",
+    "BV1FxT966Emy",
+    "BV1dEMb6wE2y",
+    "BV15yM86PEna",
+    "BV16xT966EyV",
+    "BV1XQTZ6MEcS",
+    "BV1EFMF6QE41",
+    "BV18yMA6EE9g",
+    "BV1i9MP6wEtH",
+    "BV17gMP6hETy",
+    "BV1cUMK6VEzR",
+]
