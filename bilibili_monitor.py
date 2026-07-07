@@ -10,11 +10,12 @@ from __future__ import annotations
 import json
 import os
 from datetime import datetime
+from urllib.parse import urlencode
 from zoneinfo import ZoneInfo
 
 import requests
 
-from config_bilibili import FORUM_THREAD_PREFIX, WATCH_VIDEOS, WEBHOOK_ENV
+from config_bilibili import FORUM_THREAD_PREFIX, THREAD_KEY_OVERRIDES, WATCH_VIDEOS, WEBHOOK_ENV
 
 
 STATE_FILE = "bilibili_seen.json"
@@ -34,6 +35,8 @@ def load_state() -> dict:
 
     if "videos" not in state or not isinstance(state["videos"], dict):
         state["videos"] = {}
+    if "threads" not in state or not isinstance(state["threads"], dict):
+        state["threads"] = {}
     return state
 
 
@@ -80,12 +83,13 @@ def get_video_info(session: requests.Session, bvid: str) -> dict:
     }
 
 
-def make_snapshot(info: dict) -> dict:
+def make_snapshot(info: dict, thread_key: str) -> dict:
     return {
         "title": info["title"],
         "owner": info["owner"],
         "owner_mid": info["owner_mid"],
         "aid": info["aid"],
+        "thread_key": thread_key,
         "pubdate": info["pubdate"],
         "page_count": info["page_count"],
         "seen_cids": [page["cid"] for page in info["pages"] if page["cid"]],
@@ -101,10 +105,26 @@ def truncate_thread_name(name: str) -> str:
     return cleaned[:87] + "..."
 
 
-def post_to_discord(webhook_url: str, info: dict, new_pages: list[dict]) -> None:
+def append_query(url: str, params: dict[str, str]) -> str:
+    separator = "&" if "?" in url else "?"
+    return f"{url}{separator}{urlencode(params)}"
+
+
+def get_thread_key(info: dict) -> str:
+    return THREAD_KEY_OVERRIDES.get(info["bvid"], info["bvid"])
+
+
+def post_to_discord(
+    webhook_url: str,
+    info: dict,
+    new_pages: list[dict],
+    state: dict,
+    thread_key: str,
+    bootstrap: bool = False,
+) -> None:
     video_url = f"https://www.bilibili.com/video/{info['bvid']}"
     lines = [
-        "Bilibili 影片更新喵",
+        "Bilibili 追番串建立喵" if bootstrap else "Bilibili 影片更新喵",
         f"標題：{info['title']}",
     ]
     if info["owner"]:
@@ -122,12 +142,29 @@ def post_to_discord(webhook_url: str, info: dict, new_pages: list[dict]) -> None
 
     payload = {
         "content": "\n".join(lines),
-        "thread_name": truncate_thread_name(f"{FORUM_THREAD_PREFIX} - {info['title']}"),
     }
+    post_url = append_query(webhook_url, {"wait": "true"})
 
-    resp = requests.post(webhook_url, json=payload, timeout=REQUEST_TIMEOUT)
+    thread_id = (state.setdefault("threads", {}).get(thread_key) or {}).get("thread_id")
+    if thread_id:
+        post_url = append_query(webhook_url, {"thread_id": thread_id, "wait": "true"})
+    else:
+        payload["thread_name"] = truncate_thread_name(f"{FORUM_THREAD_PREFIX} - {info['title']}")
+
+    resp = requests.post(post_url, json=payload, timeout=REQUEST_TIMEOUT)
     if resp.status_code not in (200, 204):
         raise RuntimeError(f"Discord webhook error {resp.status_code}: {resp.text[:300]}")
+
+    if not thread_id and resp.text:
+        message = resp.json()
+        channel_id = message.get("channel_id")
+        if channel_id:
+            state["threads"][thread_key] = {
+                "thread_id": channel_id,
+                "title": info["title"],
+                "bvid": info["bvid"],
+                "created_at": datetime.now(TIMEZONE).isoformat(timespec="seconds"),
+            }
 
 
 def detect_new_pages(old: dict | None, info: dict) -> list[dict]:
@@ -144,12 +181,14 @@ def detect_new_pages(old: dict | None, info: dict) -> list[dict]:
 
 def main() -> None:
     force = os.environ.get("BILIBILI_FORCE") == "1"
+    bootstrap_threads = os.environ.get("BILIBILI_BOOTSTRAP_THREADS") == "1"
     webhook_url = os.environ.get(WEBHOOK_ENV)
     if not webhook_url:
         print(f"[WARN] Missing {WEBHOOK_ENV}; skip Bilibili monitor")
         return
 
     state = load_state()
+    state.setdefault("threads", {})
     today = today_taipei()
     if state.get("last_checked_date") == today and not force:
         print(f"[OK] Bilibili already checked today ({today}); skip")
@@ -175,16 +214,20 @@ def main() -> None:
         old = videos.get(bvid)
         try:
             info = get_video_info(session, bvid)
+            thread_key = get_thread_key(info)
             new_pages = detect_new_pages(old, info)
-            if new_pages:
+            if bootstrap_threads and not state["threads"].get(thread_key):
+                print(f"[THREAD] {bvid} create Discord thread")
+                post_to_discord(webhook_url, info, info["pages"], state, thread_key, bootstrap=True)
+            elif new_pages:
                 print(f"[NEW] {bvid} has {len(new_pages)} new pages")
-                post_to_discord(webhook_url, info, new_pages)
+                post_to_discord(webhook_url, info, new_pages, state, thread_key)
             elif old:
                 print(f"[NOOP] {bvid} no new pages")
             else:
                 print(f"[INIT] {bvid} first seen")
 
-            videos[bvid] = make_snapshot(info)
+            videos[bvid] = make_snapshot(info, thread_key)
             success_count += 1
         except Exception as exc:
             print(f"[WARN] {bvid} check failed: {repr(exc)}")
