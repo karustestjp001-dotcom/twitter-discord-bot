@@ -9,18 +9,30 @@ from __future__ import annotations
 
 import json
 import os
+import re
 from datetime import datetime
 from urllib.parse import urlencode
 from zoneinfo import ZoneInfo
 
 import requests
 
-from config_bilibili import FORUM_THREAD_PREFIX, THREAD_KEY_OVERRIDES, WATCH_VIDEOS, WEBHOOK_ENV
+from config_bilibili import FORUM_THREAD_PREFIX, THREAD_KEY_OVERRIDES, THREAD_TITLES, WATCH_VIDEOS, WEBHOOK_ENV
 
 
 STATE_FILE = "bilibili_seen.json"
 TIMEZONE = ZoneInfo("Asia/Taipei")
 REQUEST_TIMEOUT = 20
+NON_EPISODE_PART_KEYWORDS = (
+    "感谢观看",
+    "感謝觀看",
+    "关注",
+    "關注",
+    "追番",
+    "每周更新",
+    "周更",
+    "点个",
+    "點個",
+)
 
 
 def load_state() -> dict:
@@ -63,11 +75,16 @@ def get_video_info(session: requests.Session, bvid: str) -> dict:
     data = payload["data"]
     pages = []
     for page in data.get("pages") or []:
+        part = page.get("part") or f"P{page.get('page')}"
+        if not is_episode_part(part):
+            continue
+
         pages.append(
             {
                 "cid": str(page.get("cid", "")),
                 "page": int(page.get("page") or 0),
-                "part": page.get("part") or f"P{page.get('page')}",
+                "part": part,
+                "episode_no": len(pages) + 1,
             }
         )
 
@@ -105,6 +122,13 @@ def truncate_thread_name(name: str) -> str:
     return cleaned[:87] + "..."
 
 
+def is_episode_part(part: str) -> bool:
+    compact = "".join(str(part).split())
+    if not compact:
+        return False
+    return not any(keyword in compact for keyword in NON_EPISODE_PART_KEYWORDS)
+
+
 def append_query(url: str, params: dict[str, str]) -> str:
     separator = "&" if "?" in url else "?"
     return f"{url}{separator}{urlencode(params)}"
@@ -112,6 +136,21 @@ def append_query(url: str, params: dict[str, str]) -> str:
 
 def get_thread_key(info: dict) -> str:
     return THREAD_KEY_OVERRIDES.get(info["bvid"], info["bvid"])
+
+
+def get_thread_title(info: dict, thread_key: str) -> str:
+    if thread_key in THREAD_TITLES:
+        return THREAD_TITLES[thread_key]
+
+    title = info["title"]
+    title = re.sub(r"[【『《「\[]", "", title)
+    title = re.sub(r"[】』》」\]]", "", title)
+    title = re.sub(r"第\s*\d+\s*[~-]\s*\d+\s*[话話集]", "", title)
+    title = re.sub(r"第\s*\d+\s*[话話集]", "", title)
+    title = re.sub(r"更至\s*\d+(?:\s*-\s*\d+)?\s*[集话話]?", "", title)
+    title = re.sub(r"（.*?）|\\(.*?\\)", "", title)
+    title = re.sub(r"\s+", " ", title).strip()
+    return title or info["title"]
 
 
 def post_to_discord(
@@ -123,9 +162,11 @@ def post_to_discord(
     bootstrap: bool = False,
 ) -> None:
     video_url = f"https://www.bilibili.com/video/{info['bvid']}"
+    thread_title = get_thread_title(info, thread_key)
     lines = [
         "Bilibili 追番串建立喵" if bootstrap else "Bilibili 影片更新喵",
-        f"標題：{info['title']}",
+        f"追蹤：{thread_title}",
+        f"原標題：{info['title']}",
     ]
     if info["owner"]:
         lines.append(f"UP：{info['owner']}")
@@ -135,8 +176,9 @@ def post_to_discord(
         lines.append(f"新增 {len(new_pages)} 個分P：")
         for page in new_pages[:10]:
             page_no = page.get("page") or ""
+            episode_no = page.get("episode_no") or page_no
             part = page.get("part") or f"P{page_no}"
-            lines.append(f"- P{page_no} {part} {video_url}?p={page_no}")
+            lines.append(f"- 第{episode_no}集：P{page_no} {part} {video_url}?p={page_no}")
     else:
         lines.append(video_url)
 
@@ -149,7 +191,7 @@ def post_to_discord(
     if thread_id:
         post_url = append_query(webhook_url, {"thread_id": thread_id, "wait": "true"})
     else:
-        payload["thread_name"] = truncate_thread_name(f"{FORUM_THREAD_PREFIX} - {info['title']}")
+        payload["thread_name"] = truncate_thread_name(f"{FORUM_THREAD_PREFIX} - {thread_title}")
 
     resp = requests.post(post_url, json=payload, timeout=REQUEST_TIMEOUT)
     if resp.status_code not in (200, 204):
@@ -161,7 +203,7 @@ def post_to_discord(
         if channel_id:
             state["threads"][thread_key] = {
                 "thread_id": channel_id,
-                "title": info["title"],
+                "title": thread_title,
                 "bvid": info["bvid"],
                 "created_at": datetime.now(TIMEZONE).isoformat(timespec="seconds"),
             }
