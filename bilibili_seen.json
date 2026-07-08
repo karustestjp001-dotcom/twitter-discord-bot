@@ -84,34 +84,6 @@
       ],
       "last_seen_at": "2026-07-08T08:40:22+08:00"
     },
-    "BV1XQTZ6MEcS": {
-      "title": "『无职转生 第三季』第1~2话",
-      "owner": "KAYGEZ",
-      "owner_mid": "690151424",
-      "aid": "116859382793197",
-      "thread_key": "mushoku_tensei",
-      "pubdate": 1783133196,
-      "page_count": 2,
-      "seen_cids": [
-        "39650591957",
-        "39653016525"
-      ],
-      "pages": [
-        {
-          "cid": "39650591957",
-          "page": 1,
-          "part": "(1)",
-          "episode_no": 1
-        },
-        {
-          "cid": "39653016525",
-          "page": 2,
-          "part": "(2)",
-          "episode_no": 2
-        }
-      ],
-      "last_seen_at": "2026-07-08T08:40:22+08:00"
-    },
     "BV1EFMF6QE41": {
       "title": "『描绘直至生命尽头』第1话",
       "owner": "KAYGEZ",
@@ -321,6 +293,34 @@
         }
       ],
       "last_seen_at": "2026-07-08T23:54:46+08:00"
+    },
+    "BV1jcM86YEWJ": {
+      "title": "【周更】无职转生 第三季 全14集【超清中字】",
+      "owner": "夏日幻听MCE",
+      "owner_mid": "224267770",
+      "aid": "116878240388834",
+      "thread_key": "mushoku_tensei",
+      "pubdate": 1783420756,
+      "page_count": 2,
+      "seen_cids": [
+        "39732186320",
+        "39732251481"
+      ],
+      "pages": [
+        {
+          "cid": "39732186320",
+          "page": 1,
+          "part": "第1话",
+          "episode_no": 1
+        },
+        {
+          "cid": "39732251481",
+          "page": 2,
+          "part": "第2话",
+          "episode_no": 2
+        }
+      ],
+      "last_seen_at": "2026-07-08T23:56:25+08:00"
     }
   },
   "last_checked_date": "2026-07-08",
@@ -353,7 +353,7 @@
     "mushoku_tensei": {
       "thread_id": "1524206573071765634",
       "title": "无职转生 第三季",
-      "bvid": "BV1XQTZ6MEcS",
+      "bvid": "BV1jcM86YEWJ",
       "created_at": "2026-07-08T08:12:44+08:00"
     },
     "BV1EFMF6QE41": {
