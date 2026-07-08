@@ -133,34 +133,6 @@
       ],
       "last_seen_at": "2026-07-08T08:40:22+08:00"
     },
-    "BV18yMA6EE9g": {
-      "title": "『穹庐下的魔女』第1~2话",
-      "owner": "KAYGEZ",
-      "owner_mid": "690151424",
-      "aid": "116862620795677",
-      "thread_key": "BV18yMA6EE9g",
-      "pubdate": 1783182357,
-      "page_count": 2,
-      "seen_cids": [
-        "39656884612",
-        "39656950979"
-      ],
-      "pages": [
-        {
-          "cid": "39656884612",
-          "page": 1,
-          "part": "(1)",
-          "episode_no": 1
-        },
-        {
-          "cid": "39656950979",
-          "page": 2,
-          "part": "(2)",
-          "episode_no": 2
-        }
-      ],
-      "last_seen_at": "2026-07-08T08:40:22+08:00"
-    },
     "BV17gMP6hETy": {
       "title": "【黄泉的使者】第13集",
       "owner": "后宫补番",
@@ -321,6 +293,34 @@
         }
       ],
       "last_seen_at": "2026-07-08T23:50:47+08:00"
+    },
+    "BV1LbMg6kEPM": {
+      "title": "【全12集/周更】『穹庐下的魔女』更新至第2话【中文字幕】",
+      "owner": "夏日幻听MCE",
+      "owner_mid": "224267770",
+      "aid": "116884229854511",
+      "thread_key": "BV18yMA6EE9g",
+      "pubdate": 1783512024,
+      "page_count": 2,
+      "seen_cids": [
+        "39764037508",
+        "39764101848"
+      ],
+      "pages": [
+        {
+          "cid": "39764037508",
+          "page": 1,
+          "part": "第1话",
+          "episode_no": 1
+        },
+        {
+          "cid": "39764101848",
+          "page": 2,
+          "part": "第2话",
+          "episode_no": 2
+        }
+      ],
+      "last_seen_at": "2026-07-08T23:54:46+08:00"
     }
   },
   "last_checked_date": "2026-07-08",
@@ -365,7 +365,7 @@
     "BV18yMA6EE9g": {
       "thread_id": "1524206578444665063",
       "title": "穹庐下的魔女",
-      "bvid": "BV18yMA6EE9g",
+      "bvid": "BV1LbMg6kEPM",
       "created_at": "2026-07-08T08:12:45+08:00"
     },
     "cat_and_dragon": {
