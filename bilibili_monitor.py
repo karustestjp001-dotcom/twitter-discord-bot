@@ -229,6 +229,13 @@ def detect_new_pages(old: dict | None, info: dict) -> list[dict]:
     return [page for page in info["pages"] if page.get("cid") and page["cid"] not in old_cids]
 
 
+def has_existing_video_for_thread(videos: dict, current_bvid: str, thread_key: str) -> bool:
+    for bvid, snapshot in videos.items():
+        if bvid != current_bvid and snapshot.get("thread_key") == thread_key:
+            return True
+    return False
+
+
 def main() -> None:
     force = os.environ.get("BILIBILI_FORCE") == "1"
     bootstrap_threads = os.environ.get("BILIBILI_BOOTSTRAP_THREADS") == "1"
@@ -266,6 +273,8 @@ def main() -> None:
             info = get_video_info(session, bvid)
             thread_key = get_thread_key(info)
             new_pages = detect_new_pages(old, info)
+            if not old and has_existing_video_for_thread(videos, bvid, thread_key):
+                new_pages = info["pages"]
             if bootstrap_threads and not state["threads"].get(thread_key):
                 print(f"[THREAD] {bvid} create Discord thread")
                 post_to_discord(webhook_url, info, info["pages"], state, thread_key, bootstrap=True)

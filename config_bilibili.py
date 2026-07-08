@@ -14,6 +14,7 @@ WATCH_VIDEOS = [
     "BV17gMP6hETy",
     "BV1cUMK6VEzR",
     "BV16DMb6gEt6",
+    "BV14qTo6fExY",
 ]
 
 # Same show can sometimes be uploaded as separate BVIDs. Videos with the same
@@ -24,6 +25,7 @@ THREAD_KEY_OVERRIDES = {
     "BV1XQTZ6MEcS": "mushoku_tensei",
     "BV1Xi7s6iE3e": "cat_and_dragon",
     "BV16DMb6gEt6": "rick_and_morty_s9",
+    "BV14qTo6fExY": "a_record_of_a_mortal_journey",
 }
 
 THREAD_TITLES = {
@@ -38,4 +40,5 @@ THREAD_TITLES = {
     "BV17gMP6hETy": "黄泉的使者",
     "BV1cUMK6VEzR": "魔法光源股份有限公司 第二季",
     "rick_and_morty_s9": "瑞克和莫蒂 第九季",
+    "a_record_of_a_mortal_journey": "凡人修仙传",
 }
