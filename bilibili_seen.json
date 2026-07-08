@@ -42,27 +42,6 @@
       ],
       "last_seen_at": "2026-07-08T08:40:21+08:00"
     },
-    "BV1FxT966Emy": {
-      "title": "『擅长跳舞的殿下 世界在起舞』第2话",
-      "owner": "KAYGEZ",
-      "owner_mid": "690151424",
-      "aid": "116873291105316",
-      "thread_key": "world_is_dancing",
-      "pubdate": 1783345223,
-      "page_count": 1,
-      "seen_cids": [
-        "39708263775"
-      ],
-      "pages": [
-        {
-          "cid": "39708263775",
-          "page": 1,
-          "part": "『擅长跳舞的殿下 世界在起舞』第2话",
-          "episode_no": 1
-        }
-      ],
-      "last_seen_at": "2026-07-08T08:40:21+08:00"
-    },
     "BV1dEMb6wE2y": {
       "title": "【7月/合集】与你相恋到生命尽头 第1话（每周更新）",
       "owner": "晓月の诗",
@@ -100,27 +79,6 @@
           "cid": "39730610333",
           "page": 1,
           "part": "01",
-          "episode_no": 1
-        }
-      ],
-      "last_seen_at": "2026-07-08T08:40:22+08:00"
-    },
-    "BV16xT966EyV": {
-      "title": "【世界在起舞】第2话",
-      "owner": "晓月の诗",
-      "owner_mid": "3493112693394137",
-      "aid": "116873291236468",
-      "thread_key": "world_is_dancing",
-      "pubdate": 1783345254,
-      "page_count": 1,
-      "seen_cids": [
-        "39713439887"
-      ],
-      "pages": [
-        {
-          "cid": "39713439887",
-          "page": 1,
-          "part": "02简中",
           "episode_no": 1
         }
       ],
@@ -335,6 +293,34 @@
         }
       ],
       "last_seen_at": "2026-07-08T08:40:23+08:00"
+    },
+    "BV1z5KD64Ejy": {
+      "title": "【7月/合集】世界在起舞 01-02话（每周更新）",
+      "owner": "晓月の诗",
+      "owner_mid": "3493112693394137",
+      "aid": "116833663321704",
+      "thread_key": "world_is_dancing",
+      "pubdate": 1782740447,
+      "page_count": 2,
+      "seen_cids": [
+        "39514734938",
+        "39713443255"
+      ],
+      "pages": [
+        {
+          "cid": "39514734938",
+          "page": 1,
+          "part": "01",
+          "episode_no": 1
+        },
+        {
+          "cid": "39713443255",
+          "page": 2,
+          "part": "02",
+          "episode_no": 2
+        }
+      ],
+      "last_seen_at": "2026-07-08T23:50:47+08:00"
     }
   },
   "last_checked_date": "2026-07-08",
@@ -349,7 +335,7 @@
     "world_is_dancing": {
       "thread_id": "1524206564947529738",
       "title": "擅长跳舞的殿下 世界在起舞",
-      "bvid": "BV1FxT966Emy",
+      "bvid": "BV1z5KD64Ejy",
       "created_at": "2026-07-08T08:12:42+08:00"
     },
     "BV1dEMb6wE2y": {
