@@ -16,7 +16,14 @@ from zoneinfo import ZoneInfo
 
 import requests
 
-from config_bilibili import FORUM_THREAD_PREFIX, THREAD_KEY_OVERRIDES, THREAD_TITLES, WATCH_VIDEOS, WEBHOOK_ENV
+from config_bilibili import (
+    FORUM_THREAD_PREFIX,
+    THREAD_KEY_OVERRIDES,
+    THREAD_TITLES,
+    UPLOAD_MONITORS,
+    WATCH_VIDEOS,
+    WEBHOOK_ENV,
+)
 
 
 STATE_FILE = "bilibili_seen.json"
@@ -33,6 +40,7 @@ NON_EPISODE_PART_KEYWORDS = (
     "点个",
     "點個",
 )
+UPLOAD_SEARCH_PAGE_SIZE = 10
 
 
 def load_state() -> dict:
@@ -73,25 +81,31 @@ def get_video_info(session: requests.Session, bvid: str) -> dict:
         raise RuntimeError(f"Bilibili API error for {bvid}: {payload.get('code')} {payload.get('message')}")
 
     data = payload["data"]
+    title = data.get("title") or bvid
+    raw_pages = data.get("pages") or []
     pages = []
-    for page in data.get("pages") or []:
+    for page in raw_pages:
         part = page.get("part") or f"P{page.get('page')}"
         if not is_episode_part(part):
             continue
+
+        episode_no = extract_episode_no(part)
+        if episode_no is None and len(raw_pages) == 1:
+            episode_no = extract_episode_no(title)
 
         pages.append(
             {
                 "cid": str(page.get("cid", "")),
                 "page": int(page.get("page") or 0),
                 "part": part,
-                "episode_no": len(pages) + 1,
+                "episode_no": episode_no or len(pages) + 1,
             }
         )
 
     return {
         "bvid": bvid,
         "aid": str(data.get("aid", "")),
-        "title": data.get("title") or bvid,
+        "title": title,
         "owner": (data.get("owner") or {}).get("name") or "",
         "owner_mid": str((data.get("owner") or {}).get("mid") or ""),
         "pubdate": int(data.get("pubdate") or 0),
@@ -127,6 +141,18 @@ def is_episode_part(part: str) -> bool:
     if not compact:
         return False
     return not any(keyword in compact for keyword in NON_EPISODE_PART_KEYWORDS)
+
+
+def extract_episode_no(text: str) -> int | None:
+    match = re.search(r"第\s*(\d+)\s*[话話集]", str(text))
+    if match:
+        return int(match.group(1))
+
+    match = re.search(r"[Ee](\d{1,3})\b", str(text))
+    if match:
+        return int(match.group(1))
+
+    return None
 
 
 def append_query(url: str, params: dict[str, str]) -> str:
@@ -236,6 +262,88 @@ def has_existing_video_for_thread(videos: dict, current_bvid: str, thread_key: s
     return False
 
 
+def get_latest_pubdate_for_thread(videos: dict, thread_key: str) -> int:
+    pubdates = []
+    for snapshot in videos.values():
+        if snapshot.get("thread_key") != thread_key:
+            continue
+
+        try:
+            pubdates.append(int(snapshot.get("pubdate") or 0))
+        except (TypeError, ValueError):
+            pass
+
+    return max(pubdates, default=0)
+
+
+def find_new_upload_archives(session: requests.Session, monitor: dict, videos: dict) -> list[dict]:
+    keywords = monitor.get("keywords") or []
+    if not keywords:
+        return []
+
+    params = {
+        "mid": monitor["mid"],
+        "keywords": keywords[0],
+        "ps": UPLOAD_SEARCH_PAGE_SIZE,
+        "pn": 1,
+    }
+    resp = session.get(
+        "https://api.bilibili.com/x/series/recArchivesByKeywords",
+        params=params,
+        timeout=REQUEST_TIMEOUT,
+    )
+    resp.raise_for_status()
+    payload = resp.json()
+    if payload.get("code") != 0:
+        raise RuntimeError(
+            f"Bilibili upload search error for {monitor.get('name')}: "
+            f"{payload.get('code')} {payload.get('message')}"
+        )
+
+    thread_key = monitor["thread_key"]
+    latest_seen_pubdate = get_latest_pubdate_for_thread(videos, thread_key)
+    if not latest_seen_pubdate:
+        return []
+
+    archives = ((payload.get("data") or {}).get("archives") or [])
+    matches = []
+    for archive in archives:
+        bvid = archive.get("bvid")
+        title = archive.get("title") or ""
+        pubdate = int(archive.get("pubdate") or 0)
+        if not bvid or bvid in videos or pubdate <= latest_seen_pubdate:
+            continue
+        if not any(keyword in title for keyword in keywords):
+            continue
+
+        matches.append(archive)
+
+    return sorted(matches, key=lambda archive: int(archive.get("pubdate") or 0))
+
+
+def check_upload_monitor(
+    session: requests.Session,
+    webhook_url: str,
+    state: dict,
+    monitor: dict,
+) -> bool:
+    videos = state.setdefault("videos", {})
+    new_archives = find_new_upload_archives(session, monitor, videos)
+    if not new_archives:
+        print(f"[NOOP] {monitor.get('name')} upload search: {monitor.get('thread_key')} no new videos")
+        return True
+
+    for archive in new_archives:
+        bvid = archive["bvid"]
+        thread_key = monitor["thread_key"]
+        info = get_video_info(session, bvid)
+        print(f"[NEW] {monitor.get('name')} uploaded {bvid} for {thread_key}")
+        post_to_discord(webhook_url, info, info["pages"], state, thread_key)
+        videos[bvid] = make_snapshot(info, thread_key)
+
+    return True
+
+
 def main() -> None:
     force = os.environ.get("BILIBILI_FORCE") == "1"
     bootstrap_threads = os.environ.get("BILIBILI_BOOTSTRAP_THREADS") == "1"
@@ -291,11 +399,19 @@ def main() -> None:
         except Exception as exc:
             print(f"[WARN] {bvid} check failed: {repr(exc)}")
 
+    for monitor in UPLOAD_MONITORS:
+        try:
+            if check_upload_monitor(session, webhook_url, state, monitor):
+                success_count += 1
+        except Exception as exc:
+            print(f"[WARN] upload monitor {monitor.get('name')} check failed: {repr(exc)}")
+
     if success_count:
         state["last_checked_date"] = today
         state["last_checked_at"] = datetime.now(TIMEZONE).isoformat(timespec="seconds")
         save_state(state)
-        print(f"[OK] Bilibili check done: {success_count}/{len(WATCH_VIDEOS)}")
+        expected_count = len(WATCH_VIDEOS) + len(UPLOAD_MONITORS)
+        print(f"[OK] Bilibili check done: {success_count}/{expected_count}")
     else:
         print("[ERROR] Bilibili all checks failed; state not updated")
 

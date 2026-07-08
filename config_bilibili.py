@@ -41,3 +41,21 @@ THREAD_TITLES = {
     "rick_and_morty_s9": "瑞克和莫蒂 第九季",
     "a_record_of_a_mortal_journey": "凡人修仙传",
 }
+
+# Some uploaders publish every episode as a new BVID instead of updating one
+# multi-part collection. These rules scan the uploader's archive search and
+# route matching new uploads back to the existing forum thread.
+UPLOAD_MONITORS = [
+    {
+        "name": "KAYGEZ",
+        "mid": "690151424",
+        "thread_key": "BV11kMh6WEe5",
+        "keywords": ["攻壳机动队", "GHOST IN THE SHELL"],
+    },
+    {
+        "name": "KAYGEZ",
+        "mid": "690151424",
+        "thread_key": "BV1EFMF6QE41",
+        "keywords": ["描绘直至生命尽头"],
+    },
+]
