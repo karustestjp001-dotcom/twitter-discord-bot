@@ -153,6 +153,13 @@ def get_thread_title(info: dict, thread_key: str) -> str:
     return title or info["title"]
 
 
+def format_bilibili_page_url(video_url: str, page_no: int | str) -> str:
+    url = f"{video_url}?p={page_no}"
+    if str(page_no) == "1":
+        return url
+    return f"<{url}>"
+
+
 def post_to_discord(
     webhook_url: str,
     info: dict,
@@ -178,7 +185,8 @@ def post_to_discord(
             page_no = page.get("page") or ""
             episode_no = page.get("episode_no") or page_no
             part = page.get("part") or f"P{page_no}"
-            lines.append(f"- 第{episode_no}集：P{page_no} {part} {video_url}?p={page_no}")
+            page_url = format_bilibili_page_url(video_url, page_no)
+            lines.append(f"- 第{episode_no}集：P{page_no} {part} {page_url}")
     else:
         lines.append(video_url)
 
