@@ -116,6 +116,13 @@ CHANNELS = [
         ],
     },
     {
+        "name": "wickedgame",
+        "webhook_env": "WEBHOOK_WICKEDGAME",
+        "accounts": [
+            "wickedgame",
+        ],
+    },
+    {
         "name": "photography",
         "webhook_env": "WEBHOOK_PHOTOGRAPHY",
         "accounts": [
