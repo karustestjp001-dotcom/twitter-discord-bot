@@ -1,0 +1,58 @@
+name: Bilibili Monitor
+
+on:
+  schedule:
+    # GitHub 原生 schedule 只作為低頻備援；主要由 Cloudflare Cron 呼叫 workflow_dispatch。
+    - cron: '37 */6 * * *'
+  workflow_dispatch:
+    inputs:
+      source:
+        description: 'Trigger source'
+        required: false
+        default: 'manual'
+
+# 需要寫入權限才能 commit bilibili_seen.json
+permissions:
+  contents: write
+
+concurrency:
+  group: bilibili-monitor
+  cancel-in-progress: false
+
+jobs:
+  monitor:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          ref: main
+
+      - name: Sync latest state
+        run: git pull --ff-only origin main
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run Bilibili monitor
+        env:
+          WEBHOOK_BILIBILI: ${{ secrets.WEBHOOK_BILIBILI }}
+          BILIBILI_COOKIE:  ${{ secrets.BILIBILI_COOKIE }}
+        run: python bilibili_monitor.py
+
+      # 把更新後的 bilibili_seen.json commit 回 repo
+      - name: Save Bilibili progress
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add bilibili_seen.json
+          # 只有在有變更時才 commit
+          git diff --staged --quiet || git commit -m "chore: update Bilibili state file [skip ci]"
+          git push || (git pull --rebase origin main && git push)

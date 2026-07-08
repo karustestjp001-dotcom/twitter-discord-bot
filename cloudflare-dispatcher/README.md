@@ -1,6 +1,6 @@
 # Cloudflare Dispatcher
 
-這個 Worker 只負責定時呼叫 GitHub API，觸發現有的 `Twitter Monitor` workflow。
+這個 Worker 只負責定時呼叫 GitHub API，觸發 `Twitter Monitor` 與 `Bilibili Monitor` workflows。
 
 ## 需要的 GitHub Token
 
@@ -46,4 +46,4 @@ curl https://twitter-discord-bot-dispatcher.<你的子網域>.workers.dev/health
 curl -X POST "https://twitter-discord-bot-dispatcher.<你的子網域>.workers.dev/dispatch?token=<TRIGGER_SECRET>"
 ```
 
-Cron 會在每小時第 7 與第 37 分鐘觸發。Cron 使用 UTC 計算小時，但分鐘不會因時區改變。
+Cron 會在每小時第 7 與第 37 分鐘觸發，並同時 dispatch `twitter-monitor.yml` 與 `bilibili-monitor.yml`。Cron 使用 UTC 計算小時，但分鐘不會因時區改變。

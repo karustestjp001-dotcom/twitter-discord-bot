@@ -81,6 +81,7 @@ git push -u origin main
 
 目前建議使用 Cloudflare Cron 作為主要排程器，定時呼叫 GitHub `workflow_dispatch`。
 GitHub Actions 內建 `schedule` 只保留為低頻備援，避免 GitHub 排程尖峰時漏跑。
+Twitter 與 Bilibili 已拆成兩條 workflow，避免其中一邊失敗拖累另一邊。
 
 Cloudflare Worker 設定檔位於 `cloudflare-dispatcher/`：
 
@@ -101,7 +102,7 @@ npx wrangler deploy
 | Actions | Read and write |
 | Contents | Read-only |
 
-部署後 Cloudflare Cron 會在每小時第 7 與第 37 分鐘觸發 GitHub workflow。
+部署後 Cloudflare Cron 會在每小時第 7 與第 37 分鐘觸發 GitHub workflows。
 
 ---
 
@@ -126,5 +127,6 @@ npx wrangler deploy
 | `setup_cookies.py` | 一次性 Cookie 產生腳本（只在本機執行）|
 | `last_seen.json` | 記錄每個帳號最後處理的推文 ID（自動更新）|
 | `requirements.txt` | Python 套件需求 |
-| `.github/workflows/monitor.yml` | GitHub Actions 排程設定 |
+| `.github/workflows/twitter-monitor.yml` | Twitter GitHub Actions 排程設定 |
+| `.github/workflows/bilibili-monitor.yml` | Bilibili GitHub Actions 排程設定 |
 | `cloudflare-dispatcher/` | Cloudflare Cron 外部喚醒器 |

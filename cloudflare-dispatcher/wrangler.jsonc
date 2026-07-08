@@ -12,7 +12,7 @@
   "vars": {
     "GITHUB_OWNER": "karustestjp001-dotcom",
     "GITHUB_REPO": "twitter-discord-bot",
-    "GITHUB_WORKFLOW_ID": "monitor.yml",
+    "GITHUB_WORKFLOW_IDS": "twitter-monitor.yml,bilibili-monitor.yml",
     "GITHUB_REF": "main"
   }
 }

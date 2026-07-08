@@ -2,7 +2,8 @@ interface Env {
   GITHUB_TOKEN: string;
   GITHUB_OWNER: string;
   GITHUB_REPO: string;
-  GITHUB_WORKFLOW_ID: string;
+  GITHUB_WORKFLOW_ID?: string;
+  GITHUB_WORKFLOW_IDS?: string;
   GITHUB_REF: string;
   TRIGGER_SECRET?: string;
   DISCORD_HEALTH_WEBHOOK?: string;
@@ -47,7 +48,7 @@ export default {
 
 async function runDispatch(env: Env, source: string): Promise<DispatchResult> {
   try {
-    const result = await dispatchGithubWorkflow(env, source);
+    const result = await dispatchGithubWorkflows(env, source);
     if (!result.ok) {
       await notifyDiscord(env, `GitHub workflow_dispatch failed (${result.status}): ${result.message}`);
     }
@@ -59,12 +60,43 @@ async function runDispatch(env: Env, source: string): Promise<DispatchResult> {
   }
 }
 
-async function dispatchGithubWorkflow(env: Env, source: string): Promise<DispatchResult> {
+async function dispatchGithubWorkflows(env: Env, source: string): Promise<DispatchResult> {
+  const workflowIds = getWorkflowIds(env);
+  const results = await Promise.all(workflowIds.map((workflowId) => dispatchGithubWorkflow(env, workflowId, source)));
+  const failures = results.filter((result) => !result.ok);
+
+  if (!failures.length) {
+    return {
+      ok: true,
+      status: 204,
+      message: `workflows dispatched: ${workflowIds.join(", ")}`,
+    };
+  }
+
+  return {
+    ok: false,
+    status: failures[0].status,
+    message: failures.map((failure) => failure.message).join("; "),
+  };
+}
+
+function getWorkflowIds(env: Env): string[] {
+  const configured = env.GITHUB_WORKFLOW_IDS || env.GITHUB_WORKFLOW_ID || "";
+  const workflowIds = configured.split(",").map((workflowId) => workflowId.trim()).filter(Boolean);
+
+  if (!workflowIds.length) {
+    throw new Error("Missing GITHUB_WORKFLOW_IDS");
+  }
+
+  return workflowIds;
+}
+
+async function dispatchGithubWorkflow(env: Env, workflowId: string, source: string): Promise<DispatchResult> {
   const owner = env.GITHUB_OWNER;
   const repo = env.GITHUB_REPO;
-  const workflowId = encodeURIComponent(env.GITHUB_WORKFLOW_ID);
+  const encodedWorkflowId = encodeURIComponent(workflowId);
   const ref = env.GITHUB_REF || "main";
-  const endpoint = `https://api.github.com/repos/${owner}/${repo}/actions/workflows/${workflowId}/dispatches`;
+  const endpoint = `https://api.github.com/repos/${owner}/${repo}/actions/workflows/${encodedWorkflowId}/dispatches`;
 
   const response = await fetch(endpoint, {
     method: "POST",
@@ -84,14 +116,14 @@ async function dispatchGithubWorkflow(env: Env, source: string): Promise<Dispatc
   });
 
   if (response.status === 204) {
-    return { ok: true, status: response.status, message: "workflow dispatched" };
+    return { ok: true, status: response.status, message: `${workflowId} dispatched` };
   }
 
   const body = await response.text();
   return {
     ok: false,
     status: response.status,
-    message: body || response.statusText,
+    message: `${workflowId}: ${body || response.statusText}`,
   };
 }
 
