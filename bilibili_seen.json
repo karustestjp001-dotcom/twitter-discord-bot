@@ -63,27 +63,6 @@
       ],
       "last_seen_at": "2026-07-10T00:07:52+08:00"
     },
-    "BV15yM86PEna": {
-      "title": "【4K超清/合集】尼古喵喵 第1话（每周更新）",
-      "owner": "晓月の诗",
-      "owner_mid": "3493112693394137",
-      "aid": "116878039124820",
-      "thread_key": "BV15yM86PEna",
-      "pubdate": 1783418167,
-      "page_count": 1,
-      "seen_cids": [
-        "39730610333"
-      ],
-      "pages": [
-        {
-          "cid": "39730610333",
-          "page": 1,
-          "part": "01",
-          "episode_no": 1
-        }
-      ],
-      "last_seen_at": "2026-07-10T00:07:52+08:00"
-    },
     "BV1EFMF6QE41": {
       "title": "『描绘直至生命尽头』第1话",
       "owner": "KAYGEZ",
@@ -342,6 +321,27 @@
         }
       ],
       "last_seen_at": "2026-07-10T08:58:39+08:00"
+    },
+    "BV1N3MW6aEoQ": {
+      "title": "『尼古喵喵』02【中文字幕】",
+      "owner": "夏日幻听MCE",
+      "owner_mid": "224267770",
+      "aid": "116890923965215",
+      "thread_key": "BV15yM86PEna",
+      "pubdate": 1783614347,
+      "page_count": 1,
+      "seen_cids": [
+        "39799884108"
+      ],
+      "pages": [
+        {
+          "cid": "39799884108",
+          "page": 1,
+          "part": "『尼古喵喵』03【中文字幕】",
+          "episode_no": 1
+        }
+      ],
+      "last_seen_at": "2026-07-10T10:18:43+08:00"
     }
   },
   "last_checked_date": "2026-07-10",
@@ -368,7 +368,7 @@
     "BV15yM86PEna": {
       "thread_id": "1524206570039410862",
       "title": "尼古喵喵",
-      "bvid": "BV15yM86PEna",
+      "bvid": "BV1N3MW6aEoQ",
       "created_at": "2026-07-08T08:12:43+08:00"
     },
     "mushoku_tensei": {

@@ -5,7 +5,7 @@ WATCH_VIDEOS = [
     "BV11kMh6WEe5",
     "BV1z5KD64Ejy",
     "BV1dEMb6wE2y",
-    "BV15yM86PEna",
+    "BV1N3MW6aEoQ",
     "BV1jcM86YEWJ",
     "BV1EFMF6QE41",
     "BV1LbMg6kEPM",
@@ -21,6 +21,7 @@ WATCH_VIDEOS = [
 # key post updates to the same Discord forum thread.
 THREAD_KEY_OVERRIDES = {
     "BV1z5KD64Ejy": "world_is_dancing",
+    "BV1N3MW6aEoQ": "BV15yM86PEna",
     "BV1jcM86YEWJ": "mushoku_tensei",
     "BV1LbMg6kEPM": "BV18yMA6EE9g",
     "BV1Xi7s6iE3e": "cat_and_dragon",
