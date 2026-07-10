@@ -19,7 +19,7 @@
           "episode_no": 1
         }
       ],
-      "last_seen_at": "2026-07-10T00:07:53+08:00"
+      "last_seen_at": "2026-07-11T00:08:18+08:00"
     },
     "BV11kMh6WEe5": {
       "title": "『第1话 攻壳机动队 THE GHOST IN THE SHELL』",
@@ -40,7 +40,7 @@
           "episode_no": 1
         }
       ],
-      "last_seen_at": "2026-07-10T00:07:51+08:00"
+      "last_seen_at": "2026-07-11T00:08:15+08:00"
     },
     "BV1dEMb6wE2y": {
       "title": "【7月/合集】与你相恋到生命尽头 第1话（每周更新）",
@@ -61,7 +61,7 @@
           "episode_no": 1
         }
       ],
-      "last_seen_at": "2026-07-10T00:07:52+08:00"
+      "last_seen_at": "2026-07-11T00:08:16+08:00"
     },
     "BV1EFMF6QE41": {
       "title": "『描绘直至生命尽头』第1话",
@@ -82,7 +82,7 @@
           "episode_no": 1
         }
       ],
-      "last_seen_at": "2026-07-10T00:07:52+08:00"
+      "last_seen_at": "2026-07-11T00:08:17+08:00"
     },
     "BV17gMP6hETy": {
       "title": "【黄泉的使者】第13集",
@@ -103,7 +103,7 @@
           "episode_no": 13
         }
       ],
-      "last_seen_at": "2026-07-10T00:07:53+08:00"
+      "last_seen_at": "2026-07-11T00:08:17+08:00"
     },
     "BV16DMb6gEt6": {
       "title": "《瑞克和莫蒂第九季》更至1-7集 超清双字(未删减)",
@@ -194,7 +194,7 @@
           "episode_no": 2
         }
       ],
-      "last_seen_at": "2026-07-10T00:07:53+08:00"
+      "last_seen_at": "2026-07-11T00:08:17+08:00"
     },
     "BV14qTo6fExY": {
       "title": "【独家】《凡人修仙传之慕兰之战》第5集【总第181集】",
@@ -215,7 +215,7 @@
           "episode_no": 5
         }
       ],
-      "last_seen_at": "2026-07-10T00:07:54+08:00"
+      "last_seen_at": "2026-07-11T00:08:18+08:00"
     },
     "BV1z5KD64Ejy": {
       "title": "【7月/合集】世界在起舞 01-02话（每周更新）",
@@ -243,7 +243,7 @@
           "episode_no": 2
         }
       ],
-      "last_seen_at": "2026-07-10T00:07:51+08:00"
+      "last_seen_at": "2026-07-11T00:08:16+08:00"
     },
     "BV1LbMg6kEPM": {
       "title": "【全12集/周更】『穹庐下的魔女』更新至第2话【中文字幕】",
@@ -271,7 +271,7 @@
           "episode_no": 2
         }
       ],
-      "last_seen_at": "2026-07-10T00:07:53+08:00"
+      "last_seen_at": "2026-07-11T00:08:17+08:00"
     },
     "BV1jcM86YEWJ": {
       "title": "【周更】无职转生 第三季 全14集【超清中字】",
@@ -320,7 +320,7 @@
           "episode_no": 1
         }
       ],
-      "last_seen_at": "2026-07-10T08:58:39+08:00"
+      "last_seen_at": "2026-07-11T00:08:18+08:00"
     },
     "BV1N3MW6aEoQ": {
       "title": "『尼古喵喵』02【中文字幕】",
@@ -341,11 +341,53 @@
           "episode_no": 1
         }
       ],
-      "last_seen_at": "2026-07-10T10:18:43+08:00"
+      "last_seen_at": "2026-07-11T00:08:16+08:00"
+    },
+    "BV11iN76gEGa": {
+      "title": "『第2话 先行 攻壳机动队 THE GHOST IN THE SHELL』",
+      "owner": "KAYGEZ",
+      "owner_mid": "690151424",
+      "aid": "116894917067516",
+      "thread_key": "BV11kMh6WEe5",
+      "pubdate": 1783675411,
+      "page_count": 1,
+      "seen_cids": [
+        "39819415227"
+      ],
+      "pages": [
+        {
+          "cid": "39819415227",
+          "page": 1,
+          "part": "『第2话 先行 攻壳机动队 THE GHOST IN THE SHELL』",
+          "episode_no": 2
+        }
+      ],
+      "last_seen_at": "2026-07-11T00:08:19+08:00"
+    },
+    "BV19pNH6vEdW": {
+      "title": "『描绘直至生命尽头』第2话",
+      "owner": "KAYGEZ",
+      "owner_mid": "690151424",
+      "aid": "116896460574184",
+      "thread_key": "BV1EFMF6QE41",
+      "pubdate": 1783698706,
+      "page_count": 1,
+      "seen_cids": [
+        "39831080002"
+      ],
+      "pages": [
+        {
+          "cid": "39831080002",
+          "page": 1,
+          "part": "『描绘直至生命尽头』第2话",
+          "episode_no": 2
+        }
+      ],
+      "last_seen_at": "2026-07-11T00:08:20+08:00"
     }
   },
-  "last_checked_date": "2026-07-10",
-  "last_checked_at": "2026-07-10T00:07:55+08:00",
+  "last_checked_date": "2026-07-11",
+  "last_checked_at": "2026-07-11T00:08:21+08:00",
   "threads": {
     "BV11kMh6WEe5": {
       "thread_id": "1524206562405777498",
