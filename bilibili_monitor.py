@@ -248,11 +248,26 @@ def detect_new_pages(old: dict | None, info: dict) -> list[dict]:
         return []
 
     old_cids = set(old.get("seen_cids") or [])
-    if not old_cids:
+    old_pages = old.get("pages") or []
+    old_page_numbers = {
+        int(page.get("page") or 0)
+        for page in old_pages
+        if int(page.get("page") or 0) > 0
+    }
+
+    if not old_cids and not old_page_numbers:
         old_count = int(old.get("page_count") or 0)
         return [page for page in info["pages"] if page.get("page", 0) > old_count]
 
-    return [page for page in info["pages"] if page.get("cid") and page["cid"] not in old_cids]
+    # Bilibili can replace a part's CID without adding an episode.  A changed
+    # CID for an already-seen P must not be announced as a new release.
+    return [
+        page
+        for page in info["pages"]
+        if page.get("cid")
+        and page["cid"] not in old_cids
+        and page.get("page") not in old_page_numbers
+    ]
 
 
 def has_existing_video_for_thread(videos: dict, current_bvid: str, thread_key: str) -> bool:
