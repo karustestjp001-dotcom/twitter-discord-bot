@@ -106,6 +106,7 @@ CHANNELS = [
             "Amememe929",
             "EOR79",
             "lens_the_martyr",
+            "ariiol_",
         ],
     },
     {
