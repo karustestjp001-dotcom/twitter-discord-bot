@@ -321,6 +321,27 @@
         }
       ],
       "last_seen_at": "2026-07-10T00:07:52+08:00"
+    },
+    "BV1jhM56oE3t": {
+      "title": "『雷霆三人行』第1话",
+      "owner": "KAYGEZ",
+      "owner_mid": "690151424",
+      "aid": "116885806910282",
+      "thread_key": "BV1jhM56oE3t",
+      "pubdate": 1783536109,
+      "page_count": 1,
+      "seen_cids": [
+        "39772360428"
+      ],
+      "pages": [
+        {
+          "cid": "39772360428",
+          "page": 1,
+          "part": "『雷霆三人行』第1话",
+          "episode_no": 1
+        }
+      ],
+      "last_seen_at": "2026-07-10T08:58:39+08:00"
     }
   },
   "last_checked_date": "2026-07-10",

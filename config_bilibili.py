@@ -14,6 +14,7 @@ WATCH_VIDEOS = [
     "BV1cUMK6VEzR",
     "BV16DMb6gEt6",
     "BV14qTo6fExY",
+    "BV1jhM56oE3t",
 ]
 
 # Same show can sometimes be uploaded as separate BVIDs. Videos with the same
@@ -40,6 +41,7 @@ THREAD_TITLES = {
     "BV1cUMK6VEzR": "魔法光源股份有限公司 第二季",
     "rick_and_morty_s9": "瑞克和莫蒂 第九季",
     "a_record_of_a_mortal_journey": "凡人修仙传",
+    "BV1jhM56oE3t": "雷霆三人行",
 }
 
 # Some uploaders publish every episode as a new BVID instead of updating one
@@ -57,5 +59,11 @@ UPLOAD_MONITORS = [
         "mid": "690151424",
         "thread_key": "BV1EFMF6QE41",
         "keywords": ["描绘直至生命尽头"],
+    },
+    {
+        "name": "KAYGEZ",
+        "mid": "690151424",
+        "thread_key": "BV1jhM56oE3t",
+        "keywords": ["雷霆三人行"],
     },
 ]
