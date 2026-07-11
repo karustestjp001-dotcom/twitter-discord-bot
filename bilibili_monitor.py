@@ -19,6 +19,7 @@ import requests
 
 from config_bilibili import (
     ANIME1_MONITORS,
+    BANGUMI_MONITORS,
     FORUM_THREAD_PREFIX,
     THREAD_KEY_OVERRIDES,
     THREAD_TITLES,
@@ -366,6 +367,91 @@ def check_upload_monitor(
     return True
 
 
+def get_bangumi_episodes(session: requests.Session, season_id: str) -> list[dict]:
+    resp = session.get(
+        "https://api.bilibili.com/pgc/view/web/season",
+        params={"season_id": season_id},
+        timeout=REQUEST_TIMEOUT,
+    )
+    resp.raise_for_status()
+    payload = resp.json()
+    if payload.get("code") != 0:
+        raise RuntimeError(
+            f"Bilibili Bangumi season error {season_id}: "
+            f"{payload.get('code')} {payload.get('message')}"
+        )
+
+    episodes = []
+    for episode in (payload.get("result") or {}).get("episodes") or []:
+        bvid = episode.get("bvid")
+        badge = str(episode.get("badge") or "")
+        if not bvid or "预告" in badge:
+            continue
+
+        episodes.append(
+            {
+                "bvid": bvid,
+                "episode_no": episode.get("title"),
+                "long_title": episode.get("long_title") or "",
+                "pubdate": int(episode.get("pub_time") or 0),
+            }
+        )
+
+    return sorted(episodes, key=lambda episode: episode["pubdate"])
+
+
+def check_bangumi_monitor(
+    session: requests.Session,
+    webhook_url: str,
+    state: dict,
+    monitor: dict,
+) -> bool:
+    videos = state.setdefault("videos", {})
+    thread_key = monitor["thread_key"]
+    episodes = get_bangumi_episodes(session, monitor["season_id"])
+    if not episodes:
+        raise RuntimeError(f"Bangumi season {monitor['season_id']} returned no released episodes")
+
+    monitor_state = state.setdefault("bangumi", {}).setdefault(thread_key, {})
+    latest_seen_pubdate = max(
+        get_latest_pubdate_for_thread(videos, thread_key),
+        int(monitor_state.get("last_seen_pubdate") or 0),
+    )
+    if not latest_seen_pubdate:
+        monitor_state["last_seen_pubdate"] = max(episode["pubdate"] for episode in episodes)
+        monitor_state["last_checked_at"] = datetime.now(TIMEZONE).isoformat(timespec="seconds")
+        print(f"[INIT] Bangumi {monitor.get('name')} saved {len(episodes)} existing episodes")
+        return True
+
+    new_episodes = [
+        episode
+        for episode in episodes
+        if episode["bvid"] not in videos
+        and episode["pubdate"] > latest_seen_pubdate
+    ]
+    for episode in new_episodes:
+        info = get_video_info(session, episode["bvid"])
+        if not info["pages"]:
+            raise RuntimeError(f"Bangumi episode {episode['bvid']} has no playable pages")
+
+        page = dict(info["pages"][0])
+        page["episode_no"] = episode["episode_no"]
+        page["part"] = episode["long_title"] or page["part"]
+        print(f"[NEW] Bangumi {monitor.get('name')} episode {episode['episode_no']}")
+        post_to_discord(webhook_url, info, [page], state, thread_key)
+        videos[episode["bvid"]] = make_snapshot(info, thread_key)
+
+    monitor_state.pop("seen_bvids", None)
+    monitor_state["last_seen_pubdate"] = max(episode["pubdate"] for episode in episodes)
+    monitor_state["last_checked_at"] = datetime.now(TIMEZONE).isoformat(timespec="seconds")
+    print(
+        f"[NOOP] Bangumi {monitor.get('name')} no new episodes"
+        if not new_episodes
+        else f"[OK] Bangumi {monitor.get('name')} posted {len(new_episodes)} episodes"
+    )
+    return True
+
+
 def get_anime1_entries(session: requests.Session, source_url: str) -> list[dict]:
     resp = session.get(source_url, timeout=REQUEST_TIMEOUT)
     resp.raise_for_status()
@@ -515,6 +601,13 @@ def main() -> None:
         except Exception as exc:
             print(f"[WARN] {bvid} check failed: {repr(exc)}")
 
+    for monitor in BANGUMI_MONITORS:
+        try:
+            if check_bangumi_monitor(session, webhook_url, state, monitor):
+                success_count += 1
+        except Exception as exc:
+            print(f"[WARN] Bangumi monitor {monitor.get('name')} check failed: {repr(exc)}")
+
     for monitor in UPLOAD_MONITORS:
         try:
             if check_upload_monitor(session, webhook_url, state, monitor):
@@ -533,7 +626,12 @@ def main() -> None:
         state["last_checked_date"] = today
         state["last_checked_at"] = datetime.now(TIMEZONE).isoformat(timespec="seconds")
         save_state(state)
-        expected_count = len(WATCH_VIDEOS) + len(UPLOAD_MONITORS) + len(ANIME1_MONITORS)
+        expected_count = (
+            len(WATCH_VIDEOS)
+            + len(BANGUMI_MONITORS)
+            + len(UPLOAD_MONITORS)
+            + len(ANIME1_MONITORS)
+        )
         print(f"[OK] Bilibili check done: {success_count}/{expected_count}")
     else:
         print("[ERROR] Bilibili all checks failed; state not updated")

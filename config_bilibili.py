@@ -79,3 +79,13 @@ ANIME1_MONITORS = [
         "label": "無刪減版",
     },
 ]
+
+# Official Bilibili Bangumi episodes are separate BVIDs, so a fixed video
+# monitor cannot see the next episode.  These rules follow the season feed.
+BANGUMI_MONITORS = [
+    {
+        "name": "凡人修仙传",
+        "season_id": "28747",
+        "thread_key": "a_record_of_a_mortal_journey",
+    },
+]

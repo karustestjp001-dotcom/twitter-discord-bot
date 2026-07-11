@@ -391,6 +391,27 @@
         }
       ],
       "last_seen_at": "2026-07-11T00:08:20+08:00"
+    },
+    "BV1bQNn6dE1N": {
+      "title": "【独家】《凡人修仙传之慕兰之战》第6集【总第182集】",
+      "owner": "哔哩哔哩国创",
+      "owner_mid": "98627270",
+      "aid": "116897064421990",
+      "thread_key": "a_record_of_a_mortal_journey",
+      "pubdate": 1783738807,
+      "page_count": 1,
+      "seen_cids": [
+        "39833699253"
+      ],
+      "pages": [
+        {
+          "cid": "39833699253",
+          "page": 1,
+          "part": "【独家】《凡人修仙传之慕兰之战》第6集【总第182集】",
+          "episode_no": 6
+        }
+      ],
+      "last_seen_at": "2026-07-12T02:16:45+08:00"
     }
   },
   "last_checked_date": "2026-07-12",
@@ -483,6 +504,12 @@
         "29350"
       ],
       "last_checked_at": "2026-07-12T00:08:14+08:00"
+    }
+  },
+  "bangumi": {
+    "a_record_of_a_mortal_journey": {
+      "last_checked_at": "2026-07-12T02:17:18+08:00",
+      "last_seen_pubdate": 1783738800
     }
   }
 }
