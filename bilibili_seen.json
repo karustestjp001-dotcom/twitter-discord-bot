@@ -467,5 +467,15 @@
       "bvid": "BV1jhM56oE3t",
       "created_at": "2026-07-10T09:02:27+08:00"
     }
+  },
+  "anime1": {
+    "BV15yM86PEna": {
+      "source_url": "https://anime1.me/category/2026%E5%B9%B4%E5%A4%8F%E5%AD%A3/%E5%B0%BC%E5%8F%A4%E5%96%B5%E5%96%B5",
+      "seen_post_ids": [
+        "29416",
+        "29350"
+      ],
+      "last_checked_at": "2026-07-11T10:49:00+08:00"
+    }
   }
 }

@@ -11,12 +11,14 @@ import json
 import os
 import re
 from datetime import datetime
+from html import unescape
 from urllib.parse import urlencode
 from zoneinfo import ZoneInfo
 
 import requests
 
 from config_bilibili import (
+    ANIME1_MONITORS,
     FORUM_THREAD_PREFIX,
     THREAD_KEY_OVERRIDES,
     THREAD_TITLES,
@@ -41,6 +43,11 @@ NON_EPISODE_PART_KEYWORDS = (
     "點個",
 )
 UPLOAD_SEARCH_PAGE_SIZE = 10
+ANIME1_ENTRY_RE = re.compile(
+    r'<h2 class="entry-title"><a href="([^"]+)"[^>]*>(.*?)</a>.*?'
+    r'<time[^>]+datetime="([^"]+)"',
+    re.DOTALL,
+)
 
 
 def load_state() -> dict:
@@ -359,6 +366,100 @@ def check_upload_monitor(
     return True
 
 
+def get_anime1_entries(session: requests.Session, source_url: str) -> list[dict]:
+    resp = session.get(source_url, timeout=REQUEST_TIMEOUT)
+    resp.raise_for_status()
+
+    entries = []
+    for url, raw_title, published_at in ANIME1_ENTRY_RE.findall(resp.text):
+        entry_url = unescape(url).strip()
+        post_id = entry_url.rstrip("/").rsplit("/", 1)[-1]
+        if not post_id.isdigit():
+            continue
+
+        title = re.sub(r"<[^>]+>", "", unescape(raw_title)).strip()
+        episode_match = re.search(r"\[(\d+)\]", title)
+        entries.append(
+            {
+                "id": post_id,
+                "title": title,
+                "episode_no": int(episode_match.group(1)) if episode_match else None,
+                "url": entry_url,
+                "published_at": published_at,
+            }
+        )
+
+    return entries
+
+
+def post_anime1_to_discord(
+    webhook_url: str,
+    entry: dict,
+    state: dict,
+    monitor: dict,
+) -> None:
+    thread_key = monitor["thread_key"]
+    thread = (state.setdefault("threads", {}).get(thread_key) or {})
+    thread_id = thread.get("thread_id")
+    if not thread_id:
+        raise RuntimeError(f"Missing Discord thread for Anime1 monitor: {thread_key}")
+
+    episode_no = entry.get("episode_no")
+    episode_text = f"第{episode_no}集" if episode_no is not None else entry["title"]
+    label = monitor["label"]
+    payload = {
+        "content": "\n".join(
+            [
+                "Anime1 影片更新喵",
+                f"追蹤：{thread.get('title') or thread_key}",
+                f"版本：{label}",
+                f"原標題：{entry['title']}",
+                "",
+                f"- {episode_text}：{label} {entry['url']}",
+            ]
+        )
+    }
+    post_url = append_query(webhook_url, {"thread_id": thread_id, "wait": "true"})
+    resp = requests.post(post_url, json=payload, timeout=REQUEST_TIMEOUT)
+    if resp.status_code not in (200, 204):
+        raise RuntimeError(f"Discord webhook error {resp.status_code}: {resp.text[:300]}")
+
+
+def check_anime1_monitor(
+    session: requests.Session,
+    webhook_url: str,
+    state: dict,
+    monitor: dict,
+) -> bool:
+    entries = get_anime1_entries(session, monitor["url"])
+    if not entries:
+        raise RuntimeError("Anime1 category page returned no episode entries")
+
+    anime1_state = state.setdefault("anime1", {})
+    state_key = monitor["thread_key"]
+    old = anime1_state.get(state_key)
+    current_ids = [entry["id"] for entry in entries]
+    if not old or old.get("source_url") != monitor["url"]:
+        anime1_state[state_key] = {
+            "source_url": monitor["url"],
+            "seen_post_ids": current_ids,
+            "last_checked_at": datetime.now(TIMEZONE).isoformat(timespec="seconds"),
+        }
+        print(f"[INIT] Anime1 {state_key} saved {len(current_ids)} existing episodes")
+        return True
+
+    seen_post_ids = set(old.get("seen_post_ids") or [])
+    new_entries = [entry for entry in entries if entry["id"] not in seen_post_ids]
+    for entry in sorted(new_entries, key=lambda item: int(item["id"])):
+        print(f"[NEW] Anime1 {entry['title']} for {state_key}")
+        post_anime1_to_discord(webhook_url, entry, state, monitor)
+
+    old["seen_post_ids"] = current_ids
+    old["last_checked_at"] = datetime.now(TIMEZONE).isoformat(timespec="seconds")
+    print(f"[NOOP] Anime1 {state_key} no new episodes" if not new_entries else f"[OK] Anime1 posted {len(new_entries)} episodes")
+    return True
+
+
 def main() -> None:
     force = os.environ.get("BILIBILI_FORCE") == "1"
     bootstrap_threads = os.environ.get("BILIBILI_BOOTSTRAP_THREADS") == "1"
@@ -421,11 +522,18 @@ def main() -> None:
         except Exception as exc:
             print(f"[WARN] upload monitor {monitor.get('name')} check failed: {repr(exc)}")
 
+    for monitor in ANIME1_MONITORS:
+        try:
+            if check_anime1_monitor(session, webhook_url, state, monitor):
+                success_count += 1
+        except Exception as exc:
+            print(f"[WARN] Anime1 monitor {monitor.get('name')} check failed: {repr(exc)}")
+
     if success_count:
         state["last_checked_date"] = today
         state["last_checked_at"] = datetime.now(TIMEZONE).isoformat(timespec="seconds")
         save_state(state)
-        expected_count = len(WATCH_VIDEOS) + len(UPLOAD_MONITORS)
+        expected_count = len(WATCH_VIDEOS) + len(UPLOAD_MONITORS) + len(ANIME1_MONITORS)
         print(f"[OK] Bilibili check done: {success_count}/{expected_count}")
     else:
         print("[ERROR] Bilibili all checks failed; state not updated")

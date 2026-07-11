@@ -68,3 +68,14 @@ UPLOAD_MONITORS = [
         "keywords": ["雷霆三人行"],
     },
 ]
+
+# Anime1 category pages list each episode as a separate WordPress post.  These
+# updates are sent to the matching Bilibili forum thread with their version label.
+ANIME1_MONITORS = [
+    {
+        "name": "Anime1",
+        "url": "https://anime1.me/category/2026%E5%B9%B4%E5%A4%8F%E5%AD%A3/%E5%B0%BC%E5%8F%A4%E5%96%B5%E5%96%B5",
+        "thread_key": "BV15yM86PEna",
+        "label": "無刪減版",
+    },
+]
