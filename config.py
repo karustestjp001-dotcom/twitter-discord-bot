@@ -71,6 +71,7 @@ CHANNELS = [
             "vrc_nuunuu",
             "vrcbiyaareal",
             "Blue_HIBIKI",
+            "usj_MC",
         ],
     },
     {
