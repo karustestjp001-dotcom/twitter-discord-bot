@@ -6,7 +6,7 @@ WATCH_VIDEOS = [
     "BV1z5KD64Ejy",
     "BV1dEMb6wE2y",
     "BV1N3MW6aEoQ",
-    "BV1jcM86YEWJ",
+    "BV14JN36oEwX",
     "BV1EFMF6QE41",
     "BV1LbMg6kEPM",
     "BV1Xi7s6iE3e",
@@ -22,7 +22,7 @@ WATCH_VIDEOS = [
 THREAD_KEY_OVERRIDES = {
     "BV1z5KD64Ejy": "world_is_dancing",
     "BV1N3MW6aEoQ": "BV15yM86PEna",
-    "BV1jcM86YEWJ": "mushoku_tensei",
+    "BV14JN36oEwX": "mushoku_tensei",
     "BV1LbMg6kEPM": "BV18yMA6EE9g",
     "BV1Xi7s6iE3e": "cat_and_dragon",
     "BV16DMb6gEt6": "rick_and_morty_s9",

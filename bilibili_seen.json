@@ -280,34 +280,6 @@
       ],
       "last_seen_at": "2026-07-13T00:08:06+08:00"
     },
-    "BV1jcM86YEWJ": {
-      "title": "【周更】无职转生 第三季 全14集【超清中字】",
-      "owner": "夏日幻听MCE",
-      "owner_mid": "224267770",
-      "aid": "116878240388834",
-      "thread_key": "mushoku_tensei",
-      "pubdate": 1783420756,
-      "page_count": 2,
-      "seen_cids": [
-        "39732186320",
-        "39732251481"
-      ],
-      "pages": [
-        {
-          "cid": "39732186320",
-          "page": 1,
-          "part": "第1话",
-          "episode_no": 1
-        },
-        {
-          "cid": "39732251481",
-          "page": 2,
-          "part": "第2话",
-          "episode_no": 2
-        }
-      ],
-      "last_seen_at": "2026-07-10T00:07:52+08:00"
-    },
     "BV1jhM56oE3t": {
       "title": "『雷霆三人行』第1话",
       "owner": "KAYGEZ",
@@ -412,6 +384,27 @@
         }
       ],
       "last_seen_at": "2026-07-12T02:16:45+08:00"
+    },
+    "BV14JN36oEwX": {
+      "title": "【无职转生 第三季】第3话",
+      "owner": "晓月の诗",
+      "owner_mid": "3493112693394137",
+      "aid": "116907617356140",
+      "thread_key": "mushoku_tensei",
+      "pubdate": 1783869116,
+      "page_count": 1,
+      "seen_cids": [
+        "39889864424"
+      ],
+      "pages": [
+        {
+          "cid": "39889864424",
+          "page": 1,
+          "part": "03简中",
+          "episode_no": 3
+        }
+      ],
+      "last_seen_at": "2026-07-13T20:44:03+08:00"
     }
   },
   "last_checked_date": "2026-07-13",
@@ -444,7 +437,7 @@
     "mushoku_tensei": {
       "thread_id": "1524206573071765634",
       "title": "无职转生 第三季",
-      "bvid": "BV1jcM86YEWJ",
+      "bvid": "BV14JN36oEwX",
       "created_at": "2026-07-08T08:12:44+08:00"
     },
     "BV1EFMF6QE41": {
