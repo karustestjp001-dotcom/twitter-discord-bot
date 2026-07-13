@@ -8,7 +8,6 @@ WATCH_VIDEOS = [
     "BV1N3MW6aEoQ",
     "BV14JN36oEwX",
     "BV1EFMF6QE41",
-    "BV1LbMg6kEPM",
     "BV1Xi7s6iE3e",
     "BV17gMP6hETy",
     "BV1cUMK6VEzR",
@@ -23,7 +22,6 @@ THREAD_KEY_OVERRIDES = {
     "BV1z5KD64Ejy": "world_is_dancing",
     "BV1N3MW6aEoQ": "BV15yM86PEna",
     "BV14JN36oEwX": "mushoku_tensei",
-    "BV1LbMg6kEPM": "BV18yMA6EE9g",
     "BV1Xi7s6iE3e": "cat_and_dragon",
     "BV16DMb6gEt6": "rick_and_morty_s9",
     "BV14qTo6fExY": "a_record_of_a_mortal_journey",
@@ -87,5 +85,16 @@ BANGUMI_MONITORS = [
         "name": "凡人修仙传",
         "season_id": "28747",
         "thread_key": "a_record_of_a_mortal_journey",
+    },
+]
+
+# YouTube's channel RSS feed is used for official uploads that are not kept in
+# a Bilibili collection.
+YOUTUBE_MONITORS = [
+    {
+        "name": "回歸線娛樂",
+        "channel_id": "UCBxsPpM2YiwN6phyYgvc4Pw",
+        "thread_key": "BV18yMA6EE9g",
+        "keywords": ["穹廬下的魔女"],
     },
 ]

@@ -252,34 +252,6 @@
       ],
       "last_seen_at": "2026-07-13T00:08:05+08:00"
     },
-    "BV1LbMg6kEPM": {
-      "title": "『穹庐下的魔女』第1-2话【中文字幕】",
-      "owner": "夏日幻听MCE",
-      "owner_mid": "224267770",
-      "aid": "116884229854511",
-      "thread_key": "BV18yMA6EE9g",
-      "pubdate": 1783512024,
-      "page_count": 2,
-      "seen_cids": [
-        "39764037508",
-        "39764101848"
-      ],
-      "pages": [
-        {
-          "cid": "39764037508",
-          "page": 1,
-          "part": "第1话",
-          "episode_no": 1
-        },
-        {
-          "cid": "39764101848",
-          "page": 2,
-          "part": "第2话",
-          "episode_no": 2
-        }
-      ],
-      "last_seen_at": "2026-07-13T00:08:06+08:00"
-    },
     "BV1jhM56oE3t": {
       "title": "『雷霆三人行』第1话",
       "owner": "KAYGEZ",
@@ -449,7 +421,7 @@
     "BV18yMA6EE9g": {
       "thread_id": "1524206578444665063",
       "title": "穹庐下的魔女",
-      "bvid": "BV1LbMg6kEPM",
+      "bvid": "youtube:UCBxsPpM2YiwN6phyYgvc4Pw",
       "created_at": "2026-07-08T08:12:45+08:00"
     },
     "cat_and_dragon": {
@@ -503,6 +475,16 @@
     "a_record_of_a_mortal_journey": {
       "last_checked_at": "2026-07-13T00:08:08+08:00",
       "last_seen_pubdate": 1783738800
+    }
+  },
+  "youtube": {
+    "BV18yMA6EE9g": {
+      "channel_id": "UCBxsPpM2YiwN6phyYgvc4Pw",
+      "seen_video_ids": [
+        "LyzHC6678gA",
+        "MNA8W7XY6p0"
+      ],
+      "last_checked_at": "2026-07-13T20:51:16+08:00"
     }
   }
 }

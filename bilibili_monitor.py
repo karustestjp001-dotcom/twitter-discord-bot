@@ -10,6 +10,7 @@ from __future__ import annotations
 import json
 import os
 import re
+import xml.etree.ElementTree as ET
 from datetime import datetime
 from html import unescape
 from urllib.parse import urlencode
@@ -26,6 +27,7 @@ from config_bilibili import (
     UPLOAD_MONITORS,
     WATCH_VIDEOS,
     WEBHOOK_ENV,
+    YOUTUBE_MONITORS,
 )
 
 
@@ -152,7 +154,7 @@ def is_episode_part(part: str) -> bool:
 
 
 def extract_episode_no(text: str) -> int | None:
-    match = re.search(r"第\s*(\d+)\s*[话話集]", str(text))
+    match = re.search(r"第\s*(\d+)\s*[话話集幕]", str(text))
     if match:
         return int(match.group(1))
 
@@ -546,6 +548,115 @@ def check_anime1_monitor(
     return True
 
 
+def get_youtube_entries(session: requests.Session, channel_id: str) -> list[dict]:
+    resp = session.get(
+        "https://www.youtube.com/feeds/videos.xml",
+        params={"channel_id": channel_id},
+        timeout=REQUEST_TIMEOUT,
+    )
+    resp.raise_for_status()
+    try:
+        root = ET.fromstring(resp.content)
+    except ET.ParseError as exc:
+        raise RuntimeError(f"YouTube RSS parse error for {channel_id}: {exc}") from exc
+
+    namespaces = {
+        "atom": "http://www.w3.org/2005/Atom",
+        "yt": "http://www.youtube.com/xml/schemas/2015",
+    }
+    entries = []
+    for item in root.findall("atom:entry", namespaces):
+        video_id = item.findtext("yt:videoId", namespaces=namespaces)
+        title = item.findtext("atom:title", namespaces=namespaces) or ""
+        published_at = item.findtext("atom:published", namespaces=namespaces) or ""
+        if not video_id:
+            continue
+
+        entries.append(
+            {
+                "id": video_id,
+                "title": title,
+                "episode_no": extract_episode_no(title),
+                "url": f"https://www.youtube.com/watch?v={video_id}",
+                "published_at": published_at,
+            }
+        )
+
+    return entries
+
+
+def post_youtube_to_discord(
+    webhook_url: str,
+    entry: dict,
+    state: dict,
+    monitor: dict,
+) -> None:
+    thread_key = monitor["thread_key"]
+    thread = (state.setdefault("threads", {}).get(thread_key) or {})
+    thread_id = thread.get("thread_id")
+    if not thread_id:
+        raise RuntimeError(f"Missing Discord thread for YouTube monitor: {thread_key}")
+
+    episode_label = entry.get("episode_label")
+    if not episode_label:
+        episode_no = entry.get("episode_no")
+        episode_label = f"第{episode_no}集" if episode_no is not None else entry["title"]
+    payload = {
+        "content": "\n".join(
+            [
+                "YouTube 影片更新喵",
+                f"追蹤：{thread.get('title') or thread_key}",
+                "來源：YouTube",
+                f"原標題：{entry['title']}",
+                "",
+                f"- {episode_label}：{entry['url']}",
+            ]
+        )
+    }
+    post_url = append_query(webhook_url, {"thread_id": thread_id, "wait": "true"})
+    resp = requests.post(post_url, json=payload, timeout=REQUEST_TIMEOUT)
+    if resp.status_code not in (200, 204):
+        raise RuntimeError(f"Discord webhook error {resp.status_code}: {resp.text[:300]}")
+
+
+def check_youtube_monitor(
+    session: requests.Session,
+    webhook_url: str,
+    state: dict,
+    monitor: dict,
+) -> bool:
+    keywords = monitor.get("keywords") or []
+    entries = [
+        entry
+        for entry in get_youtube_entries(session, monitor["channel_id"])
+        if any(keyword in entry["title"] for keyword in keywords)
+    ]
+
+    youtube_state = state.setdefault("youtube", {})
+    state_key = monitor["thread_key"]
+    old = youtube_state.get(state_key)
+    current_ids = [entry["id"] for entry in entries]
+    if not old or old.get("channel_id") != monitor["channel_id"]:
+        youtube_state[state_key] = {
+            "channel_id": monitor["channel_id"],
+            "seen_video_ids": current_ids,
+            "last_checked_at": datetime.now(TIMEZONE).isoformat(timespec="seconds"),
+        }
+        print(f"[INIT] YouTube {state_key} saved {len(current_ids)} existing videos")
+        return True
+
+    seen_video_ids = set(old.get("seen_video_ids") or [])
+    new_entries = [entry for entry in entries if entry["id"] not in seen_video_ids]
+    for entry in sorted(new_entries, key=lambda item: item["published_at"]):
+        print(f"[NEW] YouTube {entry['title']} for {state_key}")
+        post_youtube_to_discord(webhook_url, entry, state, monitor)
+
+    old["seen_video_ids"] = sorted(seen_video_ids | set(current_ids))[-100:]
+    old["last_checked_at"] = datetime.now(TIMEZONE).isoformat(timespec="seconds")
+    print(f"[NOOP] YouTube {state_key} no new videos" if not new_entries else f"[OK] YouTube posted {len(new_entries)} videos")
+    return True
+
+
 def main() -> None:
     force = os.environ.get("BILIBILI_FORCE") == "1"
     bootstrap_threads = os.environ.get("BILIBILI_BOOTSTRAP_THREADS") == "1"
@@ -622,6 +733,13 @@ def main() -> None:
         except Exception as exc:
             print(f"[WARN] Anime1 monitor {monitor.get('name')} check failed: {repr(exc)}")
 
+    for monitor in YOUTUBE_MONITORS:
+        try:
+            if check_youtube_monitor(session, webhook_url, state, monitor):
+                success_count += 1
+        except Exception as exc:
+            print(f"[WARN] YouTube monitor {monitor.get('name')} check failed: {repr(exc)}")
+
     if success_count:
         state["last_checked_date"] = today
         state["last_checked_at"] = datetime.now(TIMEZONE).isoformat(timespec="seconds")
@@ -631,6 +749,7 @@ def main() -> None:
             + len(BANGUMI_MONITORS)
             + len(UPLOAD_MONITORS)
             + len(ANIME1_MONITORS)
+            + len(YOUTUBE_MONITORS)
         )
         print(f"[OK] Bilibili check done: {success_count}/{expected_count}")
     else:
