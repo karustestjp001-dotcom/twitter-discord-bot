@@ -9,7 +9,7 @@ WATCH_VIDEOS = [
     "BV14JN36oEwX",
     "BV1EFMF6QE41",
     "BV1Xi7s6iE3e",
-    "BV17gMP6hETy",
+    "BV1QvNA6CESz",
     "BV1cUMK6VEzR",
     "BV16DMb6gEt6",
     "BV14qTo6fExY",
@@ -23,6 +23,7 @@ THREAD_KEY_OVERRIDES = {
     "BV1N3MW6aEoQ": "BV15yM86PEna",
     "BV14JN36oEwX": "mushoku_tensei",
     "BV1Xi7s6iE3e": "cat_and_dragon",
+    "BV1QvNA6CESz": "BV17gMP6hETy",
     "BV16DMb6gEt6": "rick_and_morty_s9",
     "BV14qTo6fExY": "a_record_of_a_mortal_journey",
 }
@@ -64,6 +65,12 @@ UPLOAD_MONITORS = [
         "mid": "690151424",
         "thread_key": "BV1jhM56oE3t",
         "keywords": ["雷霆三人行"],
+    },
+    {
+        "name": "后宫补番",
+        "mid": "4262884",
+        "thread_key": "BV17gMP6hETy",
+        "keywords": ["黄泉的使者"],
     },
 ]
 
