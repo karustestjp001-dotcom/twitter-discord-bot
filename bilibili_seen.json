@@ -486,5 +486,46 @@
       ],
       "last_checked_at": "2026-07-13T20:51:16+08:00"
     }
+  },
+  "weekly_health": {
+    "BV11kMh6WEe5": {
+      "last_episode_notification_at": "2026-07-13T20:57:52+08:00"
+    },
+    "BV15yM86PEna": {
+      "last_episode_notification_at": "2026-07-13T20:57:52+08:00"
+    },
+    "BV17gMP6hETy": {
+      "last_episode_notification_at": "2026-07-13T20:57:52+08:00"
+    },
+    "BV18yMA6EE9g": {
+      "last_episode_notification_at": "2026-07-13T20:57:52+08:00"
+    },
+    "BV1EFMF6QE41": {
+      "last_episode_notification_at": "2026-07-13T20:57:52+08:00"
+    },
+    "BV1cUMK6VEzR": {
+      "last_episode_notification_at": "2026-07-13T20:57:52+08:00"
+    },
+    "BV1dEMb6wE2y": {
+      "last_episode_notification_at": "2026-07-13T20:57:52+08:00"
+    },
+    "BV1jhM56oE3t": {
+      "last_episode_notification_at": "2026-07-13T20:57:52+08:00"
+    },
+    "a_record_of_a_mortal_journey": {
+      "last_episode_notification_at": "2026-07-13T20:57:52+08:00"
+    },
+    "cat_and_dragon": {
+      "last_episode_notification_at": "2026-07-13T20:57:52+08:00"
+    },
+    "mushoku_tensei": {
+      "last_episode_notification_at": "2026-07-13T20:57:52+08:00"
+    },
+    "rick_and_morty_s9": {
+      "last_episode_notification_at": "2026-07-13T20:57:52+08:00"
+    },
+    "world_is_dancing": {
+      "last_episode_notification_at": "2026-07-13T20:57:52+08:00"
+    }
   }
 }

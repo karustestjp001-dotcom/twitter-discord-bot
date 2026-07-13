@@ -11,7 +11,7 @@ import json
 import os
 import re
 import xml.etree.ElementTree as ET
-from datetime import datetime
+from datetime import datetime, timedelta
 from html import unescape
 from urllib.parse import urlencode
 from zoneinfo import ZoneInfo
@@ -46,6 +46,7 @@ NON_EPISODE_PART_KEYWORDS = (
     "點個",
 )
 UPLOAD_SEARCH_PAGE_SIZE = 10
+WEEKLY_UPDATE_TIMEOUT = timedelta(days=7)
 ANIME1_ENTRY_RE = re.compile(
     r'<h2 class="entry-title"><a href="([^"]+)"[^>]*>(.*?)</a>.*?'
     r'<time[^>]+datetime="([^"]+)"',
@@ -170,6 +171,76 @@ def append_query(url: str, params: dict[str, str]) -> str:
     return f"{url}{separator}{urlencode(params)}"
 
 
+def record_episode_notification(state: dict, thread_key: str) -> None:
+    health = state.setdefault("weekly_health", {}).setdefault(thread_key, {})
+    health["last_episode_notification_at"] = datetime.now(TIMEZONE).isoformat(timespec="seconds")
+    health.pop("alerted_for", None)
+    health.pop("alerted_at", None)
+
+
+def get_active_thread_keys() -> set[str]:
+    thread_keys = {THREAD_KEY_OVERRIDES.get(bvid, bvid) for bvid in WATCH_VIDEOS}
+    for monitors in (UPLOAD_MONITORS, ANIME1_MONITORS, BANGUMI_MONITORS, YOUTUBE_MONITORS):
+        thread_keys.update(monitor["thread_key"] for monitor in monitors)
+    return thread_keys
+
+
+def check_weekly_update_health(webhook_url: str, state: dict) -> bool:
+    now = datetime.now(TIMEZONE)
+    health_state = state.setdefault("weekly_health", {})
+    threads = state.setdefault("threads", {})
+
+    for thread_key in sorted(get_active_thread_keys()):
+        thread = threads.get(thread_key) or {}
+        thread_id = thread.get("thread_id")
+        if not thread_id:
+            continue
+
+        health = health_state.setdefault(thread_key, {})
+        last_notification_text = health.get("last_episode_notification_at")
+        if not last_notification_text:
+            health["last_episode_notification_at"] = now.isoformat(timespec="seconds")
+            continue
+
+        try:
+            last_notification = datetime.fromisoformat(last_notification_text)
+            if last_notification.tzinfo is None:
+                last_notification = last_notification.replace(tzinfo=TIMEZONE)
+        except (TypeError, ValueError):
+            health["last_episode_notification_at"] = now.isoformat(timespec="seconds")
+            health.pop("alerted_for", None)
+            continue
+
+        if now - last_notification < WEEKLY_UPDATE_TIMEOUT:
+            continue
+        if health.get("alerted_for") == last_notification_text:
+            continue
+
+        title = thread.get("title") or thread_key
+        payload = {
+            "content": "\n".join(
+                [
+                    "追番監控異常提醒喵",
+                    f"追蹤：{title}",
+                    f"最近一次發片通知：{last_notification.astimezone(TIMEZONE).strftime('%Y-%m-%d %H:%M')}",
+                    "已超過 7 天沒有偵測到下一集。今日已重新檢查設定來源，仍未找到新內容。",
+                    "可能原因：來源刪文、改用新網址、官方延期，或日本重大節日停播。",
+                    "請人工確認來源狀態。",
+                ]
+            )
+        }
+        post_url = append_query(webhook_url, {"thread_id": thread_id, "wait": "true"})
+        resp = requests.post(post_url, json=payload, timeout=REQUEST_TIMEOUT)
+        if resp.status_code not in (200, 204):
+            raise RuntimeError(f"Discord health alert error {resp.status_code}: {resp.text[:300]}")
+
+        health["alerted_for"] = last_notification_text
+        health["alerted_at"] = now.isoformat(timespec="seconds")
+        print(f"[ALERT] {title} has no episode notification for 7 days")
+
+    return True
+
+
 def get_thread_key(info: dict) -> str:
     return THREAD_KEY_OVERRIDES.get(info["bvid"], info["bvid"])
 
@@ -251,6 +322,8 @@ def post_to_discord(
                 "bvid": info["bvid"],
                 "created_at": datetime.now(TIMEZONE).isoformat(timespec="seconds"),
             }
+
+    record_episode_notification(state, thread_key)
 
 
 def detect_new_pages(old: dict | None, info: dict) -> list[dict]:
@@ -512,6 +585,8 @@ def post_anime1_to_discord(
     if resp.status_code not in (200, 204):
         raise RuntimeError(f"Discord webhook error {resp.status_code}: {resp.text[:300]}")
 
+    record_episode_notification(state, thread_key)
+
 
 def check_anime1_monitor(
     session: requests.Session,
@@ -617,6 +692,8 @@ def post_youtube_to_discord(
     resp = requests.post(post_url, json=payload, timeout=REQUEST_TIMEOUT)
     if resp.status_code not in (200, 204):
         raise RuntimeError(f"Discord webhook error {resp.status_code}: {resp.text[:300]}")
+
+    record_episode_notification(state, thread_key)
 
 
 def check_youtube_monitor(
@@ -740,7 +817,13 @@ def main() -> None:
         except Exception as exc:
             print(f"[WARN] YouTube monitor {monitor.get('name')} check failed: {repr(exc)}")
 
-    if success_count:
+    health_success = False
+    try:
+        health_success = check_weekly_update_health(webhook_url, state)
+    except Exception as exc:
+        print(f"[WARN] weekly update health check failed: {repr(exc)}")
+
+    if success_count or health_success:
         state["last_checked_date"] = today
         state["last_checked_at"] = datetime.now(TIMEZONE).isoformat(timespec="seconds")
         save_state(state)
