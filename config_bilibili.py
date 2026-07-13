@@ -11,7 +11,7 @@ WATCH_VIDEOS = [
     "BV1Xi7s6iE3e",
     "BV1QvNA6CESz",
     "BV1cUMK6VEzR",
-    "BV16DMb6gEt6",
+    "BV19CNC68Eiq",
     "BV14qTo6fExY",
     "BV1jhM56oE3t",
 ]
@@ -24,7 +24,7 @@ THREAD_KEY_OVERRIDES = {
     "BV14JN36oEwX": "mushoku_tensei",
     "BV1Xi7s6iE3e": "cat_and_dragon",
     "BV1QvNA6CESz": "BV17gMP6hETy",
-    "BV16DMb6gEt6": "rick_and_morty_s9",
+    "BV19CNC68Eiq": "rick_and_morty_s9",
     "BV14qTo6fExY": "a_record_of_a_mortal_journey",
 }
 
