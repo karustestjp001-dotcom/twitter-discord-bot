@@ -275,7 +275,7 @@ def post_to_discord(
     thread_key: str,
     bootstrap: bool = False,
 ) -> None:
-    video_url = f"https://www.bilibili.com/video/{info['bvid']}"
+    video_url = f"https://vxbilibili.com/video/{info['bvid']}"
     thread_title = get_thread_title(info, thread_key)
     lines = [
         "Bilibili 追番串建立喵" if bootstrap else "Bilibili 影片更新喵",
