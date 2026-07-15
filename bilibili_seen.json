@@ -1,26 +1,5 @@
 {
   "videos": {
-    "BV1cUMK6VEzR": {
-      "title": "【魔法光源股份有限公司 第二季】第1集",
-      "owner": "后宫补番",
-      "owner_mid": "4262884",
-      "aid": "116863023449078",
-      "thread_key": "BV1cUMK6VEzR",
-      "pubdate": 1783188888,
-      "page_count": 1,
-      "seen_cids": [
-        "39658720415"
-      ],
-      "pages": [
-        {
-          "cid": "39658720415",
-          "page": 1,
-          "part": "01",
-          "episode_no": 1
-        }
-      ],
-      "last_seen_at": "2026-07-15T00:07:43+08:00"
-    },
     "BV11kMh6WEe5": {
       "title": "『第1话 攻壳机动队 THE GHOST IN THE SHELL』",
       "owner": "KAYGEZ",
@@ -405,6 +384,27 @@
         }
       ],
       "last_seen_at": "2026-07-15T00:07:46+08:00"
+    },
+    "BV15aNN6sECM": {
+      "title": "【魔法光源股份有限公司 第二季】第2集",
+      "owner": "后宫补番",
+      "owner_mid": "4262884",
+      "aid": "116902567415247",
+      "thread_key": "BV1cUMK6VEzR",
+      "pubdate": 1783792028,
+      "page_count": 1,
+      "seen_cids": [
+        "39863846263"
+      ],
+      "pages": [
+        {
+          "cid": "39863846263",
+          "page": 1,
+          "part": "02",
+          "episode_no": 2
+        }
+      ],
+      "last_seen_at": "2026-07-15T12:13:04+08:00"
     }
   },
   "last_checked_date": "2026-07-15",
@@ -467,7 +467,7 @@
     "BV1cUMK6VEzR": {
       "thread_id": "1524206586346868777",
       "title": "魔法光源股份有限公司 第二季",
-      "bvid": "BV1cUMK6VEzR",
+      "bvid": "BV15aNN6sECM",
       "created_at": "2026-07-08T08:12:47+08:00"
     },
     "rick_and_morty_s9": {
@@ -532,7 +532,7 @@
       "last_episode_notification_at": "2026-07-13T20:57:52+08:00"
     },
     "BV1cUMK6VEzR": {
-      "last_episode_notification_at": "2026-07-13T20:57:52+08:00"
+      "last_episode_notification_at": "2026-07-15T12:13:04+08:00"
     },
     "BV1dEMb6wE2y": {
       "last_episode_notification_at": "2026-07-13T20:57:52+08:00"

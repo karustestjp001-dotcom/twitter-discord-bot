@@ -10,7 +10,7 @@ WATCH_VIDEOS = [
     "BV1EFMF6QE41",
     "BV1Xi7s6iE3e",
     "BV1QvNA6CESz",
-    "BV1cUMK6VEzR",
+    "BV15aNN6sECM",
     "BV19CNC68Eiq",
     "BV14qTo6fExY",
     "BV1jhM56oE3t",
@@ -24,6 +24,7 @@ THREAD_KEY_OVERRIDES = {
     "BV14JN36oEwX": "mushoku_tensei",
     "BV1Xi7s6iE3e": "cat_and_dragon",
     "BV1QvNA6CESz": "BV17gMP6hETy",
+    "BV15aNN6sECM": "BV1cUMK6VEzR",
     "BV19CNC68Eiq": "rick_and_morty_s9",
     "BV14qTo6fExY": "a_record_of_a_mortal_journey",
 }
@@ -71,6 +72,12 @@ UPLOAD_MONITORS = [
         "mid": "4262884",
         "thread_key": "BV17gMP6hETy",
         "keywords": ["黄泉的使者"],
+    },
+    {
+        "name": "后宫补番",
+        "mid": "4262884",
+        "thread_key": "BV1cUMK6VEzR",
+        "keywords": ["魔法光源股份有限公司"],
     },
 ]
 
