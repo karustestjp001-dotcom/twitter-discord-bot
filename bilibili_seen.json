@@ -21,27 +21,6 @@
       ],
       "last_seen_at": "2026-07-15T00:07:41+08:00"
     },
-    "BV1dEMb6wE2y": {
-      "title": "【7月/合集】与你相恋到生命尽头 01-02话（每周更新）",
-      "owner": "晓月の诗",
-      "owner_mid": "3493112693394137",
-      "aid": "116878710212286",
-      "thread_key": "BV1dEMb6wE2y",
-      "pubdate": 1783427991,
-      "page_count": 1,
-      "seen_cids": [
-        "39735395609"
-      ],
-      "pages": [
-        {
-          "cid": "39735395609",
-          "page": 1,
-          "part": "01",
-          "episode_no": 1
-        }
-      ],
-      "last_seen_at": "2026-07-15T00:07:42+08:00"
-    },
     "BV1EFMF6QE41": {
       "title": "『描绘直至生命尽头』第1话",
       "owner": "KAYGEZ",
@@ -398,6 +377,27 @@
         }
       ],
       "last_seen_at": "2026-07-15T12:14:33+08:00"
+    },
+    "BV1jnNY6iEsQ": {
+      "title": "【4K超清】与你相恋到生命尽头 第2话",
+      "owner": "晓月の诗",
+      "owner_mid": "3493112693394137",
+      "aid": "116921810879361",
+      "thread_key": "BV1dEMb6wE2y",
+      "pubdate": 1784085738,
+      "page_count": 1,
+      "seen_cids": [
+        "39960643693"
+      ],
+      "pages": [
+        {
+          "cid": "39960643693",
+          "page": 1,
+          "part": "02原版",
+          "episode_no": 2
+        }
+      ],
+      "last_seen_at": "2026-07-15T12:15:23+08:00"
     }
   },
   "last_checked_date": "2026-07-15",
@@ -418,7 +418,7 @@
     "BV1dEMb6wE2y": {
       "thread_id": "1524206567010996346",
       "title": "与你相恋到生命尽头",
-      "bvid": "BV1dEMb6wE2y",
+      "bvid": "BV1jnNY6iEsQ",
       "created_at": "2026-07-08T08:12:42+08:00"
     },
     "BV15yM86PEna": {
@@ -528,7 +528,7 @@
       "last_episode_notification_at": "2026-07-15T12:13:04+08:00"
     },
     "BV1dEMb6wE2y": {
-      "last_episode_notification_at": "2026-07-13T20:57:52+08:00"
+      "last_episode_notification_at": "2026-07-15T12:15:23+08:00"
     },
     "BV1jhM56oE3t": {
       "last_episode_notification_at": "2026-07-13T20:57:52+08:00"

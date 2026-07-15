@@ -4,7 +4,7 @@ FORUM_THREAD_PREFIX = "Bilibili 更新"
 WATCH_VIDEOS = [
     "BV11kMh6WEe5",
     "BV1smN26sEqQ",
-    "BV1dEMb6wE2y",
+    "BV1jnNY6iEsQ",
     "BV1N3MW6aEoQ",
     "BV14JN36oEwX",
     "BV1EFMF6QE41",
@@ -20,6 +20,7 @@ WATCH_VIDEOS = [
 # key post updates to the same Discord forum thread.
 THREAD_KEY_OVERRIDES = {
     "BV1smN26sEqQ": "world_is_dancing",
+    "BV1jnNY6iEsQ": "BV1dEMb6wE2y",
     "BV1N3MW6aEoQ": "BV15yM86PEna",
     "BV14JN36oEwX": "mushoku_tensei",
     "BV1Xi7s6iE3e": "cat_and_dragon",
@@ -84,6 +85,12 @@ UPLOAD_MONITORS = [
         "mid": "3493112693394137",
         "thread_key": "world_is_dancing",
         "keywords": ["世界在起舞"],
+    },
+    {
+        "name": "晓月の诗",
+        "mid": "3493112693394137",
+        "thread_key": "BV1dEMb6wE2y",
+        "keywords": ["与你相恋到生命尽头"],
     },
 ]
 
