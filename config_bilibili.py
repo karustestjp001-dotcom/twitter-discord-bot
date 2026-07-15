@@ -3,7 +3,7 @@ FORUM_THREAD_PREFIX = "Bilibili 更新"
 
 WATCH_VIDEOS = [
     "BV11kMh6WEe5",
-    "BV1z5KD64Ejy",
+    "BV1smN26sEqQ",
     "BV1dEMb6wE2y",
     "BV1N3MW6aEoQ",
     "BV14JN36oEwX",
@@ -19,7 +19,7 @@ WATCH_VIDEOS = [
 # Same show can sometimes be uploaded as separate BVIDs. Videos with the same
 # key post updates to the same Discord forum thread.
 THREAD_KEY_OVERRIDES = {
-    "BV1z5KD64Ejy": "world_is_dancing",
+    "BV1smN26sEqQ": "world_is_dancing",
     "BV1N3MW6aEoQ": "BV15yM86PEna",
     "BV14JN36oEwX": "mushoku_tensei",
     "BV1Xi7s6iE3e": "cat_and_dragon",
@@ -78,6 +78,12 @@ UPLOAD_MONITORS = [
         "mid": "4262884",
         "thread_key": "BV1cUMK6VEzR",
         "keywords": ["魔法光源股份有限公司"],
+    },
+    {
+        "name": "晓月の诗",
+        "mid": "3493112693394137",
+        "thread_key": "world_is_dancing",
+        "keywords": ["世界在起舞"],
     },
 ]
 

@@ -119,34 +119,6 @@
       ],
       "last_seen_at": "2026-07-15T00:07:43+08:00"
     },
-    "BV1z5KD64Ejy": {
-      "title": "【7月/合集】世界在起舞 01-02话（每周更新）",
-      "owner": "晓月の诗",
-      "owner_mid": "3493112693394137",
-      "aid": "116833663321704",
-      "thread_key": "world_is_dancing",
-      "pubdate": 1782740447,
-      "page_count": 2,
-      "seen_cids": [
-        "39514734938",
-        "39713443255"
-      ],
-      "pages": [
-        {
-          "cid": "39514734938",
-          "page": 1,
-          "part": "01",
-          "episode_no": 1
-        },
-        {
-          "cid": "39713443255",
-          "page": 2,
-          "part": "02",
-          "episode_no": 2
-        }
-      ],
-      "last_seen_at": "2026-07-15T00:07:41+08:00"
-    },
     "BV1jhM56oE3t": {
       "title": "『雷霆三人行』第1话",
       "owner": "KAYGEZ",
@@ -405,6 +377,27 @@
         }
       ],
       "last_seen_at": "2026-07-15T12:13:04+08:00"
+    },
+    "BV1smN26sEqQ": {
+      "title": "【世界在起舞】第3话",
+      "owner": "晓月の诗",
+      "owner_mid": "3493112693394137",
+      "aid": "116912918889697",
+      "thread_key": "world_is_dancing",
+      "pubdate": 1783950075,
+      "page_count": 1,
+      "seen_cids": [
+        "39917128266"
+      ],
+      "pages": [
+        {
+          "cid": "39917128266",
+          "page": 1,
+          "part": "【世界在起舞】第3话",
+          "episode_no": 3
+        }
+      ],
+      "last_seen_at": "2026-07-15T12:14:33+08:00"
     }
   },
   "last_checked_date": "2026-07-15",
@@ -419,7 +412,7 @@
     "world_is_dancing": {
       "thread_id": "1524443076247031950",
       "title": "擅长跳舞的殿下 世界在起舞",
-      "bvid": "BV1z5KD64Ejy",
+      "bvid": "BV1smN26sEqQ",
       "created_at": "2026-07-08T23:52:32+08:00"
     },
     "BV1dEMb6wE2y": {
@@ -553,7 +546,7 @@
       "last_episode_notification_at": "2026-07-13T21:08:21+08:00"
     },
     "world_is_dancing": {
-      "last_episode_notification_at": "2026-07-13T20:57:52+08:00"
+      "last_episode_notification_at": "2026-07-15T12:14:33+08:00"
     }
   }
 }
