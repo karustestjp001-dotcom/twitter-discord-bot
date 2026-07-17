@@ -19,7 +19,7 @@
           "episode_no": 1
         }
       ],
-      "last_seen_at": "2026-07-17T00:07:56+08:00"
+      "last_seen_at": "2026-07-18T00:07:20+08:00"
     },
     "BV1EFMF6QE41": {
       "title": "『描绘直至生命尽头』第1话",
@@ -40,7 +40,7 @@
           "episode_no": 1
         }
       ],
-      "last_seen_at": "2026-07-17T00:07:57+08:00"
+      "last_seen_at": "2026-07-18T00:07:21+08:00"
     },
     "BV1Xi7s6iE3e": {
       "title": "【猫与龙】全12集 超清中字（未删减版）周更",
@@ -75,7 +75,7 @@
           "episode_no": 3
         }
       ],
-      "last_seen_at": "2026-07-17T00:07:58+08:00"
+      "last_seen_at": "2026-07-18T00:07:22+08:00"
     },
     "BV14qTo6fExY": {
       "title": "【独家】《凡人修仙传之慕兰之战》第5集【总第181集】",
@@ -96,7 +96,7 @@
           "episode_no": 5
         }
       ],
-      "last_seen_at": "2026-07-17T00:07:59+08:00"
+      "last_seen_at": "2026-07-18T00:07:22+08:00"
     },
     "BV1jhM56oE3t": {
       "title": "『雷霆三人行』第1话",
@@ -117,7 +117,7 @@
           "episode_no": 1
         }
       ],
-      "last_seen_at": "2026-07-17T00:07:59+08:00"
+      "last_seen_at": "2026-07-18T00:07:23+08:00"
     },
     "BV1N3MW6aEoQ": {
       "title": "『尼古喵喵』02【中文字幕】",
@@ -138,7 +138,7 @@
           "episode_no": 1
         }
       ],
-      "last_seen_at": "2026-07-17T00:07:57+08:00"
+      "last_seen_at": "2026-07-18T00:07:21+08:00"
     },
     "BV11iN76gEGa": {
       "title": "『第2话 先行 攻壳机动队 THE GHOST IN THE SHELL』",
@@ -222,7 +222,7 @@
           "episode_no": 3
         }
       ],
-      "last_seen_at": "2026-07-17T00:07:57+08:00"
+      "last_seen_at": "2026-07-18T00:07:21+08:00"
     },
     "BV1QvNA6CESz": {
       "title": "【黄泉的使者】第14集",
@@ -243,7 +243,7 @@
           "episode_no": 14
         }
       ],
-      "last_seen_at": "2026-07-17T00:07:58+08:00"
+      "last_seen_at": "2026-07-18T00:07:22+08:00"
     },
     "BV19CNC68Eiq": {
       "title": "《瑞克和莫蒂第九季》更至1-8集 超清双字(未删减)",
@@ -355,7 +355,7 @@
           "episode_no": 2
         }
       ],
-      "last_seen_at": "2026-07-17T00:07:58+08:00"
+      "last_seen_at": "2026-07-18T00:07:22+08:00"
     },
     "BV1smN26sEqQ": {
       "title": "【世界在起舞】第3话",
@@ -376,7 +376,7 @@
           "episode_no": 3
         }
       ],
-      "last_seen_at": "2026-07-17T00:07:56+08:00"
+      "last_seen_at": "2026-07-18T00:07:21+08:00"
     },
     "BV1jnNY6iEsQ": {
       "title": "【4K超清】与你相恋到生命尽头 第2话",
@@ -419,10 +419,52 @@
         }
       ],
       "last_seen_at": "2026-07-16T00:07:48+08:00"
+    },
+    "BV1chK76qEWd": {
+      "title": "【先行】『第3话 攻壳机动队 THE GHOST IN THE SHELL』",
+      "owner": "KAYGEZ",
+      "owner_mid": "690151424",
+      "aid": "116931860366443",
+      "thread_key": "BV11kMh6WEe5",
+      "pubdate": 1784238872,
+      "page_count": 1,
+      "seen_cids": [
+        "40021657407"
+      ],
+      "pages": [
+        {
+          "cid": "40021657407",
+          "page": 1,
+          "part": "【先行】『第3话 攻壳机动队 THE GHOST IN THE SHELL』",
+          "episode_no": 3
+        }
+      ],
+      "last_seen_at": "2026-07-18T00:07:24+08:00"
+    },
+    "BV1JmN66cEjL": {
+      "title": "『雷霆三人行』第2话",
+      "owner": "KAYGEZ",
+      "owner_mid": "690151424",
+      "aid": "116925183035992",
+      "thread_key": "BV1jhM56oE3t",
+      "pubdate": 1784137039,
+      "page_count": 1,
+      "seen_cids": [
+        "39986924322"
+      ],
+      "pages": [
+        {
+          "cid": "39986924322",
+          "page": 1,
+          "part": "『雷霆三人行』第2话",
+          "episode_no": 2
+        }
+      ],
+      "last_seen_at": "2026-07-18T00:07:25+08:00"
     }
   },
-  "last_checked_date": "2026-07-17",
-  "last_checked_at": "2026-07-17T00:08:03+08:00",
+  "last_checked_date": "2026-07-18",
+  "last_checked_at": "2026-07-18T00:07:28+08:00",
   "threads": {
     "BV11kMh6WEe5": {
       "thread_id": "1524206562405777498",
@@ -507,15 +549,16 @@
     "BV15yM86PEna": {
       "source_url": "https://anime1.me/category/2026%E5%B9%B4%E5%A4%8F%E5%AD%A3/%E5%B0%BC%E5%8F%A4%E5%96%B5%E5%96%B5",
       "seen_post_ids": [
+        "29476",
         "29416",
         "29350"
       ],
-      "last_checked_at": "2026-07-17T00:08:03+08:00"
+      "last_checked_at": "2026-07-18T00:07:28+08:00"
     }
   },
   "bangumi": {
     "a_record_of_a_mortal_journey": {
-      "last_checked_at": "2026-07-17T00:08:00+08:00",
+      "last_checked_at": "2026-07-18T00:07:23+08:00",
       "last_seen_pubdate": 1783738800
     }
   },
@@ -526,15 +569,15 @@
         "LyzHC6678gA",
         "MNA8W7XY6p0"
       ],
-      "last_checked_at": "2026-07-17T00:08:03+08:00"
+      "last_checked_at": "2026-07-18T00:07:28+08:00"
     }
   },
   "weekly_health": {
     "BV11kMh6WEe5": {
-      "last_episode_notification_at": "2026-07-15T00:07:46+08:00"
+      "last_episode_notification_at": "2026-07-18T00:07:24+08:00"
     },
     "BV15yM86PEna": {
-      "last_episode_notification_at": "2026-07-13T20:57:52+08:00"
+      "last_episode_notification_at": "2026-07-18T00:07:28+08:00"
     },
     "BV17gMP6hETy": {
       "last_episode_notification_at": "2026-07-13T20:57:52+08:00"
@@ -552,7 +595,7 @@
       "last_episode_notification_at": "2026-07-16T00:07:48+08:00"
     },
     "BV1jhM56oE3t": {
-      "last_episode_notification_at": "2026-07-13T20:57:52+08:00"
+      "last_episode_notification_at": "2026-07-18T00:07:25+08:00"
     },
     "a_record_of_a_mortal_journey": {
       "last_episode_notification_at": "2026-07-13T20:57:52+08:00"
