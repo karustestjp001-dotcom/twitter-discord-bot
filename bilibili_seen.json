@@ -40,7 +40,7 @@
           "episode_no": 1
         }
       ],
-      "last_seen_at": "2026-07-18T00:07:21+08:00"
+      "last_seen_at": "2026-07-19T00:07:21+08:00"
     },
     "BV1Xi7s6iE3e": {
       "title": "【猫与龙】全12集 超清中字（未删减版）周更",
@@ -49,11 +49,12 @@
       "aid": "116822187775720",
       "thread_key": "cat_and_dragon",
       "pubdate": 1782566024,
-      "page_count": 3,
+      "page_count": 4,
       "seen_cids": [
         "39902249820",
         "39652098997",
-        "39856570819"
+        "39856570819",
+        "40074479334"
       ],
       "pages": [
         {
@@ -73,9 +74,15 @@
           "page": 3,
           "part": "03",
           "episode_no": 3
+        },
+        {
+          "cid": "40074479334",
+          "page": 4,
+          "part": "04",
+          "episode_no": 4
         }
       ],
-      "last_seen_at": "2026-07-18T00:07:22+08:00"
+      "last_seen_at": "2026-07-19T00:07:22+08:00"
     },
     "BV14qTo6fExY": {
       "title": "【独家】《凡人修仙传之慕兰之战》第5集【总第181集】",
@@ -96,7 +103,7 @@
           "episode_no": 5
         }
       ],
-      "last_seen_at": "2026-07-18T00:07:22+08:00"
+      "last_seen_at": "2026-07-19T00:07:23+08:00"
     },
     "BV1jhM56oE3t": {
       "title": "『雷霆三人行』第1话",
@@ -117,7 +124,7 @@
           "episode_no": 1
         }
       ],
-      "last_seen_at": "2026-07-18T00:07:23+08:00"
+      "last_seen_at": "2026-07-19T00:07:23+08:00"
     },
     "BV1N3MW6aEoQ": {
       "title": "『尼古喵喵』02【中文字幕】",
@@ -138,7 +145,7 @@
           "episode_no": 1
         }
       ],
-      "last_seen_at": "2026-07-18T00:07:21+08:00"
+      "last_seen_at": "2026-07-19T00:07:21+08:00"
     },
     "BV11iN76gEGa": {
       "title": "『第2话 先行 攻壳机动队 THE GHOST IN THE SHELL』",
@@ -222,7 +229,7 @@
           "episode_no": 3
         }
       ],
-      "last_seen_at": "2026-07-18T00:07:21+08:00"
+      "last_seen_at": "2026-07-19T00:07:21+08:00"
     },
     "BV1QvNA6CESz": {
       "title": "【黄泉的使者】第14集",
@@ -243,7 +250,7 @@
           "episode_no": 14
         }
       ],
-      "last_seen_at": "2026-07-18T00:07:22+08:00"
+      "last_seen_at": "2026-07-19T00:07:22+08:00"
     },
     "BV19CNC68Eiq": {
       "title": "《瑞克和莫蒂第九季》更至1-8集 超清双字(未删减)",
@@ -355,7 +362,7 @@
           "episode_no": 2
         }
       ],
-      "last_seen_at": "2026-07-18T00:07:22+08:00"
+      "last_seen_at": "2026-07-19T00:07:22+08:00"
     },
     "BV1smN26sEqQ": {
       "title": "【世界在起舞】第3话",
@@ -376,7 +383,7 @@
           "episode_no": 3
         }
       ],
-      "last_seen_at": "2026-07-18T00:07:21+08:00"
+      "last_seen_at": "2026-07-19T00:07:20+08:00"
     },
     "BV1jnNY6iEsQ": {
       "title": "【4K超清】与你相恋到生命尽头 第2话",
@@ -461,10 +468,52 @@
         }
       ],
       "last_seen_at": "2026-07-18T00:07:25+08:00"
+    },
+    "BV1HVNZ67Emb": {
+      "title": "【独家】《凡人修仙传之慕兰之战》第7集【总第183集】",
+      "owner": "哔哩哔哩国创",
+      "owner_mid": "98627270",
+      "aid": "116935870121583",
+      "thread_key": "a_record_of_a_mortal_journey",
+      "pubdate": 1784343605,
+      "page_count": 1,
+      "seen_cids": [
+        "40048264204"
+      ],
+      "pages": [
+        {
+          "cid": "40048264204",
+          "page": 1,
+          "part": "【独家】《凡人修仙传之慕兰之战》第7集【总第183集】",
+          "episode_no": 7
+        }
+      ],
+      "last_seen_at": "2026-07-19T00:07:24+08:00"
+    },
+    "BV1ZZKN68Eyu": {
+      "title": "【黄泉的使者】第15集",
+      "owner": "后宫补番",
+      "owner_mid": "4262884",
+      "aid": "116941591221268",
+      "thread_key": "BV17gMP6hETy",
+      "pubdate": 1784387628,
+      "page_count": 1,
+      "seen_cids": [
+        "40078607988"
+      ],
+      "pages": [
+        {
+          "cid": "40078607988",
+          "page": 1,
+          "part": "15",
+          "episode_no": 15
+        }
+      ],
+      "last_seen_at": "2026-07-19T00:07:26+08:00"
     }
   },
-  "last_checked_date": "2026-07-18",
-  "last_checked_at": "2026-07-18T00:07:28+08:00",
+  "last_checked_date": "2026-07-19",
+  "last_checked_at": "2026-07-19T00:07:29+08:00",
   "threads": {
     "BV11kMh6WEe5": {
       "thread_id": "1524206562405777498",
@@ -553,23 +602,24 @@
         "29416",
         "29350"
       ],
-      "last_checked_at": "2026-07-18T00:07:28+08:00"
+      "last_checked_at": "2026-07-19T00:07:28+08:00"
     }
   },
   "bangumi": {
     "a_record_of_a_mortal_journey": {
-      "last_checked_at": "2026-07-18T00:07:23+08:00",
-      "last_seen_pubdate": 1783738800
+      "last_checked_at": "2026-07-19T00:07:24+08:00",
+      "last_seen_pubdate": 1784343600
     }
   },
   "youtube": {
     "BV18yMA6EE9g": {
       "channel_id": "UCBxsPpM2YiwN6phyYgvc4Pw",
       "seen_video_ids": [
+        "A-mg03yEZ1s",
         "LyzHC6678gA",
         "MNA8W7XY6p0"
       ],
-      "last_checked_at": "2026-07-18T00:07:28+08:00"
+      "last_checked_at": "2026-07-19T00:07:29+08:00"
     }
   },
   "weekly_health": {
@@ -580,10 +630,10 @@
       "last_episode_notification_at": "2026-07-18T00:07:28+08:00"
     },
     "BV17gMP6hETy": {
-      "last_episode_notification_at": "2026-07-13T20:57:52+08:00"
+      "last_episode_notification_at": "2026-07-19T00:07:26+08:00"
     },
     "BV18yMA6EE9g": {
-      "last_episode_notification_at": "2026-07-13T20:57:52+08:00"
+      "last_episode_notification_at": "2026-07-19T00:07:29+08:00"
     },
     "BV1EFMF6QE41": {
       "last_episode_notification_at": "2026-07-13T20:57:52+08:00"
@@ -598,10 +648,10 @@
       "last_episode_notification_at": "2026-07-18T00:07:25+08:00"
     },
     "a_record_of_a_mortal_journey": {
-      "last_episode_notification_at": "2026-07-13T20:57:52+08:00"
+      "last_episode_notification_at": "2026-07-19T00:07:24+08:00"
     },
     "cat_and_dragon": {
-      "last_episode_notification_at": "2026-07-13T20:57:52+08:00"
+      "last_episode_notification_at": "2026-07-19T00:07:22+08:00"
     },
     "mushoku_tensei": {
       "last_episode_notification_at": "2026-07-13T20:57:52+08:00"
