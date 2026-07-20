@@ -252,76 +252,6 @@
       ],
       "last_seen_at": "2026-07-21T00:08:18+08:00"
     },
-    "BV19CNC68Eiq": {
-      "title": "《瑞克和莫蒂第九季》更至1-8集 超清双字(未删减)",
-      "owner": "光年字幕组",
-      "owner_mid": "3546894309526318",
-      "aid": "116910368754001",
-      "thread_key": "rick_and_morty_s9",
-      "pubdate": 1783911232,
-      "page_count": 8,
-      "seen_cids": [
-        "39898185950",
-        "39898188329",
-        "39898251410",
-        "39898253434",
-        "39898384755",
-        "39898516243",
-        "39898648401",
-        "39900220702"
-      ],
-      "pages": [
-        {
-          "cid": "39898185950",
-          "page": 1,
-          "part": "01",
-          "episode_no": 1
-        },
-        {
-          "cid": "39898188329",
-          "page": 2,
-          "part": "02",
-          "episode_no": 2
-        },
-        {
-          "cid": "39898251410",
-          "page": 3,
-          "part": "03",
-          "episode_no": 3
-        },
-        {
-          "cid": "39898253434",
-          "page": 4,
-          "part": "04",
-          "episode_no": 4
-        },
-        {
-          "cid": "39898384755",
-          "page": 5,
-          "part": "05",
-          "episode_no": 5
-        },
-        {
-          "cid": "39898516243",
-          "page": 6,
-          "part": "06",
-          "episode_no": 6
-        },
-        {
-          "cid": "39898648401",
-          "page": 7,
-          "part": "07",
-          "episode_no": 7
-        },
-        {
-          "cid": "39900220702",
-          "page": 8,
-          "part": "08",
-          "episode_no": 8
-        }
-      ],
-      "last_seen_at": "2026-07-16T00:07:44+08:00"
-    },
     "BV1RJNh6tEni": {
       "title": "『第2话 攻壳机动队 THE GHOST IN THE SHELL』",
       "owner": "KAYGEZ",
@@ -573,6 +503,34 @@
         }
       ],
       "last_seen_at": "2026-07-21T00:08:23+08:00"
+    },
+    "BV1RLK26gEdX": {
+      "title": "瑞克和莫蒂 第九季 第9集 Rick and Morty Season 9 (2026) S09E09",
+      "owner": "远鉴字幕组",
+      "owner_mid": "174619542",
+      "aid": "116950097264728",
+      "thread_key": "rick_and_morty_s9",
+      "pubdate": 1784517098,
+      "page_count": 2,
+      "seen_cids": [
+        "40117995212",
+        "40117997094"
+      ],
+      "pages": [
+        {
+          "cid": "40117995212",
+          "page": 1,
+          "part": "S09E09.1080p.VINEnc_trim",
+          "episode_no": 9
+        },
+        {
+          "cid": "40117997094",
+          "page": 2,
+          "part": "30min_final",
+          "episode_no": 2
+        }
+      ],
+      "last_seen_at": "2026-07-21T00:59:51+08:00"
     }
   },
   "last_checked_date": "2026-07-21",
@@ -641,7 +599,7 @@
     "rick_and_morty_s9": {
       "thread_id": "1524206589425487924",
       "title": "瑞克和莫蒂 第九季",
-      "bvid": "BV19CNC68Eiq",
+      "bvid": "BV1RLK26gEdX",
       "created_at": "2026-07-08T08:12:48+08:00"
     },
     "a_record_of_a_mortal_journey": {
@@ -724,9 +682,7 @@
       "alerted_at": "2026-07-21T00:08:24+08:00"
     },
     "rick_and_morty_s9": {
-      "last_episode_notification_at": "2026-07-13T21:08:21+08:00",
-      "alerted_for": "2026-07-13T21:08:21+08:00",
-      "alerted_at": "2026-07-21T00:08:24+08:00"
+      "last_episode_notification_at": "2026-07-21T00:59:51+08:00"
     },
     "world_is_dancing": {
       "last_episode_notification_at": "2026-07-21T00:08:23+08:00"

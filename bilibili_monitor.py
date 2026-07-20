@@ -437,8 +437,9 @@ def check_upload_monitor(
         bvid = archive["bvid"]
         thread_key = monitor["thread_key"]
         info = get_video_info(session, bvid)
+        pages_to_post = info["pages"][:1] if monitor.get("first_page_only") else info["pages"]
         print(f"[NEW] {monitor.get('name')} uploaded {bvid} for {thread_key}")
-        post_to_discord(webhook_url, info, info["pages"], state, thread_key)
+        post_to_discord(webhook_url, info, pages_to_post, state, thread_key)
         videos[bvid] = make_snapshot(info, thread_key)
 
     return True

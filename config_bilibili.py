@@ -11,7 +11,6 @@ WATCH_VIDEOS = [
     "BV1Xi7s6iE3e",
     "BV1QvNA6CESz",
     "BV15aNN6sECM",
-    "BV19CNC68Eiq",
     "BV14qTo6fExY",
     "BV1jhM56oE3t",
 ]
@@ -26,7 +25,6 @@ THREAD_KEY_OVERRIDES = {
     "BV1Xi7s6iE3e": "cat_and_dragon",
     "BV1QvNA6CESz": "BV17gMP6hETy",
     "BV15aNN6sECM": "BV1cUMK6VEzR",
-    "BV19CNC68Eiq": "rick_and_morty_s9",
     "BV14qTo6fExY": "a_record_of_a_mortal_journey",
 }
 
@@ -91,6 +89,13 @@ UPLOAD_MONITORS = [
         "mid": "3493112693394137",
         "thread_key": "BV1dEMb6wE2y",
         "keywords": ["与你相恋到生命尽头"],
+    },
+    {
+        "name": "远鉴字幕组",
+        "mid": "174619542",
+        "thread_key": "rick_and_morty_s9",
+        "keywords": ["瑞克和莫蒂", "Rick and Morty"],
+        "first_page_only": True,
     },
 ]
 
