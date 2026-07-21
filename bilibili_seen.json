@@ -531,6 +531,27 @@
         }
       ],
       "last_seen_at": "2026-07-21T00:59:51+08:00"
+    },
+    "BV1iWNZ66ESk": {
+      "title": "『描绘直至生命尽头』第3话",
+      "owner": "KAYGEZ",
+      "owner_mid": "690151424",
+      "aid": "116936088291814",
+      "thread_key": "BV1EFMF6QE41",
+      "pubdate": 1784303388,
+      "page_count": 1,
+      "seen_cids": [
+        "40057045461"
+      ],
+      "pages": [
+        {
+          "cid": "40057045461",
+          "page": 1,
+          "part": "(3)",
+          "episode_no": 3
+        }
+      ],
+      "last_seen_at": "2026-07-21T11:48:57+08:00"
     }
   },
   "last_checked_date": "2026-07-21",
@@ -657,9 +678,7 @@
       "last_episode_notification_at": "2026-07-19T00:07:29+08:00"
     },
     "BV1EFMF6QE41": {
-      "last_episode_notification_at": "2026-07-13T20:57:52+08:00",
-      "alerted_for": "2026-07-13T20:57:52+08:00",
-      "alerted_at": "2026-07-21T00:08:24+08:00"
+      "last_episode_notification_at": "2026-07-21T11:48:57+08:00"
     },
     "BV1cUMK6VEzR": {
       "last_episode_notification_at": "2026-07-21T00:08:22+08:00"

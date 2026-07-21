@@ -80,6 +80,14 @@ def today_taipei() -> str:
     return datetime.now(TIMEZONE).date().isoformat()
 
 
+def should_skip_daily_check(state: dict, today: str, force: bool) -> bool:
+    return (
+        not force
+        and state.get("last_checked_date") == today
+        and state.get("last_check_complete") is True
+    )
+
+
 def get_video_info(session: requests.Session, bvid: str) -> dict:
     resp = session.get(
         "https://api.bilibili.com/x/web-interface/view",
@@ -748,7 +756,7 @@ def main() -> None:
     state = load_state()
     state.setdefault("threads", {})
     today = today_taipei()
-    if state.get("last_checked_date") == today and not force:
+    if should_skip_daily_check(state, today, force):
         print(f"[OK] Bilibili already checked today ({today}); skip")
         return
 
@@ -767,6 +775,13 @@ def main() -> None:
 
     videos = state.setdefault("videos", {})
     success_count = 0
+    expected_count = (
+        len(WATCH_VIDEOS)
+        + len(BANGUMI_MONITORS)
+        + len(UPLOAD_MONITORS)
+        + len(ANIME1_MONITORS)
+        + len(YOUTUBE_MONITORS)
+    )
 
     for bvid in WATCH_VIDEOS:
         old = videos.get(bvid)
@@ -828,16 +843,16 @@ def main() -> None:
 
     if success_count or health_success:
         state["last_checked_date"] = today
+        state["last_check_complete"] = success_count == expected_count
         state["last_checked_at"] = datetime.now(TIMEZONE).isoformat(timespec="seconds")
         save_state(state)
-        expected_count = (
-            len(WATCH_VIDEOS)
-            + len(BANGUMI_MONITORS)
-            + len(UPLOAD_MONITORS)
-            + len(ANIME1_MONITORS)
-            + len(YOUTUBE_MONITORS)
-        )
-        print(f"[OK] Bilibili check done: {success_count}/{expected_count}")
+        if state["last_check_complete"]:
+            print(f"[OK] Bilibili check done: {success_count}/{expected_count}")
+        else:
+            print(
+                f"[WARN] Bilibili check partial: {success_count}/{expected_count}; "
+                "retry on next dispatch"
+            )
     else:
         print("[ERROR] Bilibili all checks failed; state not updated")
 

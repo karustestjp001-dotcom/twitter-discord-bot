@@ -2,17 +2,13 @@ WEBHOOK_ENV = "WEBHOOK_BILIBILI"
 FORUM_THREAD_PREFIX = "Bilibili 更新"
 
 WATCH_VIDEOS = [
-    "BV11kMh6WEe5",
     "BV1smN26sEqQ",
-    "BV1jnNY6iEsQ",
     "BV1N3MW6aEoQ",
     "BV14JN36oEwX",
-    "BV1EFMF6QE41",
     "BV1Xi7s6iE3e",
     "BV1QvNA6CESz",
     "BV15aNN6sECM",
     "BV14qTo6fExY",
-    "BV1jhM56oE3t",
 ]
 
 # Same show can sometimes be uploaded as separate BVIDs. Videos with the same
@@ -58,7 +54,7 @@ UPLOAD_MONITORS = [
         "name": "KAYGEZ",
         "mid": "690151424",
         "thread_key": "BV1EFMF6QE41",
-        "keywords": ["描绘直至生命尽头"],
+        "keywords": ["描绘直至生命尽头", "画完这个再去死", "これ描いて死ね"],
     },
     {
         "name": "KAYGEZ",
