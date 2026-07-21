@@ -45,7 +45,7 @@ NON_EPISODE_PART_KEYWORDS = (
     "点个",
     "點個",
 )
-UPLOAD_SEARCH_PAGE_SIZE = 10
+UPLOAD_SEARCH_PAGE_SIZE = 30
 WEEKLY_UPDATE_TIMEOUT = timedelta(days=7)
 ANIME1_ENTRY_RE = re.compile(
     r'<h2 class="entry-title"><a href="([^"]+)"[^>]*>(.*?)</a>.*?'
@@ -384,38 +384,44 @@ def get_latest_pubdate_for_thread(videos: dict, thread_key: str) -> int:
     return max(pubdates, default=0)
 
 
-def find_new_upload_archives(session: requests.Session, monitor: dict, videos: dict) -> list[dict]:
+def find_new_upload_archives(
+    session: requests.Session,
+    monitor: dict,
+    videos: dict,
+    archive_cache: dict[str, list[dict]],
+) -> list[dict]:
     keywords = monitor.get("keywords") or []
     if not keywords:
         return []
 
-    params = {
-        "mid": monitor["mid"],
-        "keywords": keywords[0],
-        "ps": UPLOAD_SEARCH_PAGE_SIZE,
-        "pn": 1,
-    }
-    resp = session.get(
-        "https://api.bilibili.com/x/series/recArchivesByKeywords",
-        params=params,
-        timeout=REQUEST_TIMEOUT,
-    )
-    resp.raise_for_status()
-    payload = resp.json()
-    if payload.get("code") != 0:
-        raise RuntimeError(
-            f"Bilibili upload search error for {monitor.get('name')}: "
-            f"{payload.get('code')} {payload.get('message')}"
+    mid = str(monitor["mid"])
+    if mid not in archive_cache:
+        resp = session.get(
+            "https://api.bilibili.com/x/series/recArchivesByKeywords",
+            params={
+                "mid": mid,
+                "keywords": "",
+                "ps": UPLOAD_SEARCH_PAGE_SIZE,
+                "pn": 1,
+            },
+            timeout=REQUEST_TIMEOUT,
         )
+        resp.raise_for_status()
+        payload = resp.json()
+        if payload.get("code") != 0:
+            raise RuntimeError(
+                f"Bilibili upload search error for {monitor.get('name')}: "
+                f"{payload.get('code')} {payload.get('message')}"
+            )
+        archive_cache[mid] = ((payload.get("data") or {}).get("archives") or [])
 
     thread_key = monitor["thread_key"]
     latest_seen_pubdate = get_latest_pubdate_for_thread(videos, thread_key)
     if not latest_seen_pubdate:
         return []
 
-    archives = ((payload.get("data") or {}).get("archives") or [])
     matches = []
-    for archive in archives:
+    for archive in archive_cache[mid]:
         bvid = archive.get("bvid")
         title = archive.get("title") or ""
         pubdate = int(archive.get("pubdate") or 0)
@@ -434,9 +440,10 @@ def check_upload_monitor(
     webhook_url: str,
     state: dict,
     monitor: dict,
+    archive_cache: dict[str, list[dict]],
 ) -> bool:
     videos = state.setdefault("videos", {})
-    new_archives = find_new_upload_archives(session, monitor, videos)
+    new_archives = find_new_upload_archives(session, monitor, videos, archive_cache)
     if not new_archives:
         print(f"[NOOP] {monitor.get('name')} upload search: {monitor.get('thread_key')} no new videos")
         return True
@@ -814,9 +821,10 @@ def main() -> None:
         except Exception as exc:
             print(f"[WARN] Bangumi monitor {monitor.get('name')} check failed: {repr(exc)}")
 
+    upload_archive_cache: dict[str, list[dict]] = {}
     for monitor in UPLOAD_MONITORS:
         try:
-            if check_upload_monitor(session, webhook_url, state, monitor):
+            if check_upload_monitor(session, webhook_url, state, monitor, upload_archive_cache):
                 success_count += 1
         except Exception as exc:
             print(f"[WARN] upload monitor {monitor.get('name')} check failed: {repr(exc)}")
