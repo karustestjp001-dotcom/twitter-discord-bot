@@ -38,7 +38,7 @@ THREAD_TITLES = {
     "rick_and_morty_s9": "瑞克和莫蒂 第九季",
     "a_record_of_a_mortal_journey": "凡人修仙传",
     "BV1jhM56oE3t": "雷霆三人行",
-    "stuart_fails_to_save_the_universe": "斯图尔特未能拯救宇宙",
+    "stuart_fails_to_save_the_universe": "生活大爆炸衍生劇《斯圖爾特未能拯救宇宙》",
 }
 
 # Some uploaders publish every episode as a new BVID instead of updating one

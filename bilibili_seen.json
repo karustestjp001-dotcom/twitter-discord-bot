@@ -712,7 +712,7 @@
           "episode_no": 1
         }
       ],
-      "last_seen_at": "2026-07-25T01:42:36+08:00"
+      "last_seen_at": "2026-07-25T01:49:07+08:00"
     }
   },
   "last_checked_date": "2026-07-25",
@@ -797,10 +797,10 @@
       "created_at": "2026-07-10T09:02:27+08:00"
     },
     "stuart_fails_to_save_the_universe": {
-      "thread_id": "1530268910761545828",
-      "title": "斯图尔特未能拯救宇宙",
+      "thread_id": "1530270626055458967",
+      "title": "生活大爆炸衍生劇《斯圖爾特未能拯救宇宙》",
       "bvid": "BV1wMga6WEau",
-      "created_at": "2026-07-25T01:42:36+08:00"
+      "created_at": "2026-07-25T01:49:07+08:00"
     }
   },
   "anime1": {
@@ -875,7 +875,7 @@
       "last_episode_notification_at": "2026-07-21T00:08:23+08:00"
     },
     "stuart_fails_to_save_the_universe": {
-      "last_episode_notification_at": "2026-07-25T01:42:36+08:00"
+      "last_episode_notification_at": "2026-07-25T01:49:07+08:00"
     }
   },
   "last_check_complete": false
