@@ -82,7 +82,7 @@
           "episode_no": 4
         }
       ],
-      "last_seen_at": "2026-07-24T23:08:10+08:00"
+      "last_seen_at": "2026-07-24T23:38:11+08:00"
     },
     "BV14qTo6fExY": {
       "title": "【独家】《凡人修仙传之慕兰之战》第5集【总第181集】",
@@ -103,7 +103,7 @@
           "episode_no": 5
         }
       ],
-      "last_seen_at": "2026-07-24T23:08:10+08:00"
+      "last_seen_at": "2026-07-24T23:38:11+08:00"
     },
     "BV1jhM56oE3t": {
       "title": "『雷霆三人行』第1话",
@@ -250,7 +250,7 @@
           "episode_no": 14
         }
       ],
-      "last_seen_at": "2026-07-24T23:08:10+08:00"
+      "last_seen_at": "2026-07-24T23:38:11+08:00"
     },
     "BV1RJNh6tEni": {
       "title": "『第2话 攻壳机动队 THE GHOST IN THE SHELL』",
@@ -292,7 +292,7 @@
           "episode_no": 2
         }
       ],
-      "last_seen_at": "2026-07-24T23:08:10+08:00"
+      "last_seen_at": "2026-07-24T23:38:11+08:00"
     },
     "BV1smN26sEqQ": {
       "title": "【世界在起舞】第3话",
@@ -636,10 +636,45 @@
         }
       ],
       "last_seen_at": "2026-07-23T01:08:15+08:00"
+    },
+    "BV1uBge6rE3a": {
+      "title": "『第1~3话 攻壳机动队 THE GHOST IN THE SHELL』",
+      "owner": "KAYGEZ",
+      "owner_mid": "690151424",
+      "aid": "116975162428106",
+      "thread_key": "BV11kMh6WEe5",
+      "pubdate": 1784900322,
+      "page_count": 3,
+      "seen_cids": [
+        "40261519778",
+        "40261650299",
+        "40261779904"
+      ],
+      "pages": [
+        {
+          "cid": "40261519778",
+          "page": 1,
+          "part": "(1)",
+          "episode_no": 1
+        },
+        {
+          "cid": "40261650299",
+          "page": 2,
+          "part": "(2)",
+          "episode_no": 2
+        },
+        {
+          "cid": "40261779904",
+          "page": 3,
+          "part": "(3)",
+          "episode_no": 3
+        }
+      ],
+      "last_seen_at": "2026-07-24T23:38:13+08:00"
     }
   },
   "last_checked_date": "2026-07-24",
-  "last_checked_at": "2026-07-24T23:08:14+08:00",
+  "last_checked_at": "2026-07-24T23:38:15+08:00",
   "threads": {
     "BV11kMh6WEe5": {
       "thread_id": "1524206562405777498",
@@ -729,12 +764,12 @@
         "29416",
         "29350"
       ],
-      "last_checked_at": "2026-07-24T23:08:14+08:00"
+      "last_checked_at": "2026-07-24T23:38:15+08:00"
     }
   },
   "bangumi": {
     "a_record_of_a_mortal_journey": {
-      "last_checked_at": "2026-07-24T23:08:11+08:00",
+      "last_checked_at": "2026-07-24T23:38:12+08:00",
       "last_seen_pubdate": 1784343600
     }
   },
@@ -746,12 +781,12 @@
         "LyzHC6678gA",
         "MNA8W7XY6p0"
       ],
-      "last_checked_at": "2026-07-24T23:08:14+08:00"
+      "last_checked_at": "2026-07-24T23:38:15+08:00"
     }
   },
   "weekly_health": {
     "BV11kMh6WEe5": {
-      "last_episode_notification_at": "2026-07-22T01:02:59+08:00"
+      "last_episode_notification_at": "2026-07-24T23:38:13+08:00"
     },
     "BV15yM86PEna": {
       "last_episode_notification_at": "2026-07-24T00:38:15+08:00"
