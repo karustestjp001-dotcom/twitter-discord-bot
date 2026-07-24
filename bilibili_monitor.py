@@ -167,7 +167,7 @@ def extract_episode_no(text: str) -> int | None:
     if match:
         return int(match.group(1))
 
-    match = re.search(r"[Ee](\d{1,3})\b", str(text))
+    match = re.search(r"\b[Ee][Pp]?\s*(\d{1,3})\b", str(text))
     if match:
         return int(match.group(1))
 
@@ -428,6 +428,8 @@ def find_new_upload_archives(
         if not bvid or bvid in videos or pubdate <= latest_seen_pubdate:
             continue
         if not any(keyword in title for keyword in keywords):
+            continue
+        if monitor.get("require_episode_number") and extract_episode_no(title) is None:
             continue
 
         matches.append(archive)

@@ -692,6 +692,27 @@
         }
       ],
       "last_seen_at": "2026-07-25T01:08:15+08:00"
+    },
+    "BV1wMga6WEau": {
+      "title": "生活大爆炸衍生剧《斯图尔特未能拯救宇宙》 EP01. 剧透：盖瑞死了⁩",
+      "owner": "a-skethes",
+      "owner_mid": "314790542",
+      "aid": "116972444452628",
+      "thread_key": "stuart_fails_to_save_the_universe",
+      "pubdate": 1784858081,
+      "page_count": 1,
+      "seen_cids": [
+        "40241334305"
+      ],
+      "pages": [
+        {
+          "cid": "40241334305",
+          "page": 1,
+          "part": "生活大爆炸衍生剧《斯图尔特未能拯救宇宙》 EP01. 剧透：盖瑞死了⁩",
+          "episode_no": 1
+        }
+      ],
+      "last_seen_at": "2026-07-25T01:42:36+08:00"
     }
   },
   "last_checked_date": "2026-07-25",
@@ -774,6 +795,12 @@
       "title": "雷霆三人行",
       "bvid": "BV1jhM56oE3t",
       "created_at": "2026-07-10T09:02:27+08:00"
+    },
+    "stuart_fails_to_save_the_universe": {
+      "thread_id": "1530268910761545828",
+      "title": "斯图尔特未能拯救宇宙",
+      "bvid": "BV1wMga6WEau",
+      "created_at": "2026-07-25T01:42:36+08:00"
     }
   },
   "anime1": {
@@ -846,6 +873,9 @@
     },
     "world_is_dancing": {
       "last_episode_notification_at": "2026-07-21T00:08:23+08:00"
+    },
+    "stuart_fails_to_save_the_universe": {
+      "last_episode_notification_at": "2026-07-25T01:42:36+08:00"
     }
   },
   "last_check_complete": false
