@@ -39,6 +39,7 @@ THREAD_TITLES = {
     "a_record_of_a_mortal_journey": "凡人修仙传",
     "BV1jhM56oE3t": "雷霆三人行",
     "stuart_fails_to_save_the_universe": "生活大爆炸衍生劇《斯圖爾特未能拯救宇宙》",
+    "president_curtis_s1": "柯蒂斯總統 第一季",
 }
 
 # Some uploaders publish every episode as a new BVID instead of updating one
@@ -102,6 +103,18 @@ UPLOAD_MONITORS = [
             "斯图尔特未能拯救宇宙",
             "斯圖爾特未能拯救宇宙",
             "Stuart Fails to Save the Universe",
+        ],
+        "first_page_only": True,
+        "require_episode_number": True,
+    },
+    {
+        "name": "a-skethes",
+        "mid": "314790542",
+        "thread_key": "president_curtis_s1",
+        "keywords": [
+            "柯蒂斯总统",
+            "柯蒂斯總統",
+            "President Curtis",
         ],
         "first_page_only": True,
         "require_episode_number": True,

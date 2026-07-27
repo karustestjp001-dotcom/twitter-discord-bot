@@ -811,6 +811,27 @@
         }
       ],
       "last_seen_at": "2026-07-27T11:37:23+08:00"
+    },
+    "BV1TNgf6uEV9": {
+      "title": "[👉惊喜] 柯蒂斯总统 第一季 EP01. 试播集",
+      "owner": "a-skethes",
+      "owner_mid": "314790542",
+      "aid": "116989842688673",
+      "thread_key": "president_curtis_s1",
+      "pubdate": 1785123742,
+      "page_count": 1,
+      "seen_cids": [
+        "40334393347"
+      ],
+      "pages": [
+        {
+          "cid": "40334393347",
+          "page": 1,
+          "part": "[👉惊喜] 柯蒂斯总统 第一季 EP01. 试播集",
+          "episode_no": 1
+        }
+      ],
+      "last_seen_at": "2026-07-27T19:55:48+08:00"
     }
   },
   "last_checked_date": "2026-07-27",
@@ -899,6 +920,12 @@
       "title": "生活大爆炸衍生劇《斯圖爾特未能拯救宇宙》",
       "bvid": "BV1wMga6WEau",
       "created_at": "2026-07-25T01:49:07+08:00"
+    },
+    "president_curtis_s1": {
+      "thread_id": "1531268870181097653",
+      "title": "柯蒂斯總統 第一季",
+      "bvid": "BV1TNgf6uEV9",
+      "created_at": "2026-07-27T19:55:48+08:00"
     }
   },
   "anime1": {
@@ -975,6 +1002,9 @@
     },
     "stuart_fails_to_save_the_universe": {
       "last_episode_notification_at": "2026-07-25T01:49:07+08:00"
+    },
+    "president_curtis_s1": {
+      "last_episode_notification_at": "2026-07-27T19:55:48+08:00"
     }
   },
   "last_check_complete": false
