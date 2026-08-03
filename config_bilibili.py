@@ -89,13 +89,6 @@ UPLOAD_MONITORS = [
         "keywords": ["与你相恋到生命尽头"],
     },
     {
-        "name": "远鉴字幕组",
-        "mid": "174619542",
-        "thread_key": "rick_and_morty_s9",
-        "keywords": ["瑞克和莫蒂", "Rick and Morty"],
-        "first_page_only": True,
-    },
-    {
         "name": "a-skethes",
         "mid": "314790542",
         "thread_key": "stuart_fails_to_save_the_universe",
