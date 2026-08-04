@@ -8,6 +8,7 @@ WATCH_VIDEOS = [
     "BV1QvNA6CESz",
     "BV15aNN6sECM",
     "BV14qTo6fExY",
+    "BV1g13d6gEWf",
 ]
 
 # Same show can sometimes be uploaded as separate BVIDs. Videos with the same
@@ -17,6 +18,7 @@ THREAD_KEY_OVERRIDES = {
     "BV1jnNY6iEsQ": "BV1dEMb6wE2y",
     "BV1N3MW6aEoQ": "BV15yM86PEna",
     "BV14JN36oEwX": "mushoku_tensei",
+    "BV1g13d6gEWf": "mushoku_tensei",
     "BV1Xi7s6iE3e": "cat_and_dragon",
     "BV1QvNA6CESz": "BV17gMP6hETy",
     "BV15aNN6sECM": "BV1cUMK6VEzR",
@@ -86,6 +88,14 @@ UPLOAD_MONITORS = [
         "mid": "3493112693394137",
         "thread_key": "BV1dEMb6wE2y",
         "keywords": ["与你相恋到生命尽头"],
+    },
+    {
+        "name": "晓月の诗 無職轉生",
+        "mid": "3493112693394137",
+        "thread_key": "mushoku_tensei",
+        "keywords": ["无职转生", "無職轉生", "传奇上锁王", "傳奇上鎖王"],
+        "first_page_only": True,
+        "require_episode_number": True,
     },
     {
         "name": "a-skethes",
