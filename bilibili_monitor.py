@@ -13,6 +13,7 @@ import re
 import xml.etree.ElementTree as ET
 from datetime import datetime, timedelta
 from html import unescape
+from html.parser import HTMLParser
 from urllib.parse import urlencode
 from zoneinfo import ZoneInfo
 
@@ -52,6 +53,50 @@ ANIME1_ENTRY_RE = re.compile(
     r'<time[^>]+datetime="([^"]+)"',
     re.DOTALL,
 )
+ANIME1_POST_URL_RE = re.compile(r"^https?://anime1\.me/(\d+)(?:[/?#].*)?$")
+
+
+class Anime1TelegramParser(HTMLParser):
+    def __init__(self) -> None:
+        super().__init__(convert_charrefs=True)
+        self.entries: list[dict] = []
+        self._current: dict | None = None
+
+    def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
+        if tag != "a":
+            return
+
+        href = dict(attrs).get("href") or ""
+        match = ANIME1_POST_URL_RE.match(href)
+        if match:
+            post_id = match.group(1)
+            self._current = {
+                "id": post_id,
+                "url": f"https://anime1.me/{post_id}",
+                "text": [],
+            }
+
+    def handle_data(self, data: str) -> None:
+        if self._current is not None:
+            self._current["text"].append(data)
+
+    def handle_endtag(self, tag: str) -> None:
+        if tag != "a" or self._current is None:
+            return
+
+        title = "".join(self._current.pop("text")).strip()
+        title = re.sub(r"\s*已更新\s*$", "", title).strip()
+        episode_match = re.search(r"\[(\d+)\]", title)
+        if title and episode_match:
+            self.entries.append(
+                {
+                    **self._current,
+                    "title": title,
+                    "episode_no": int(episode_match.group(1)),
+                    "published_at": "",
+                }
+            )
+        self._current = None
 
 
 def load_state() -> dict:
@@ -573,6 +618,28 @@ def get_anime1_entries(session: requests.Session, source_url: str) -> list[dict]
     return entries
 
 
+def get_anime1_telegram_entries(
+    session: requests.Session,
+    source_url: str,
+    title_keywords: list[str],
+) -> list[dict]:
+    resp = session.get(source_url, timeout=REQUEST_TIMEOUT)
+    resp.raise_for_status()
+
+    parser = Anime1TelegramParser()
+    parser.feed(resp.text)
+    entries = []
+    seen_ids = set()
+    for entry in parser.entries:
+        if entry["id"] in seen_ids:
+            continue
+        if not any(keyword in entry["title"] for keyword in title_keywords):
+            continue
+        seen_ids.add(entry["id"])
+        entries.append(entry)
+    return entries
+
+
 def post_anime1_to_discord(
     webhook_url: str,
     entry: dict,
@@ -614,13 +681,26 @@ def check_anime1_monitor(
     state: dict,
     monitor: dict,
 ) -> bool:
-    entries = get_anime1_entries(session, monitor["url"])
-    if not entries:
-        raise RuntimeError("Anime1 category page returned no episode entries")
-
     anime1_state = state.setdefault("anime1", {})
     state_key = monitor["thread_key"]
     old = anime1_state.get(state_key)
+    feed_url = monitor.get("feed_url")
+    if feed_url:
+        entries = get_anime1_telegram_entries(
+            session,
+            feed_url,
+            monitor.get("title_keywords") or [],
+        )
+        if not entries and old and old.get("source_url") == monitor["url"]:
+            old["last_checked_at"] = datetime.now(TIMEZONE).isoformat(timespec="seconds")
+            print(f"[NOOP] Anime1 {state_key} no matching recent feed entries")
+            return True
+    else:
+        entries = get_anime1_entries(session, monitor["url"])
+
+    if not entries:
+        raise RuntimeError("Anime1 source returned no episode entries")
+
     current_ids = [entry["id"] for entry in entries]
     if not old or old.get("source_url") != monitor["url"]:
         anime1_state[state_key] = {
@@ -637,7 +717,11 @@ def check_anime1_monitor(
         print(f"[NEW] Anime1 {entry['title']} for {state_key}")
         post_anime1_to_discord(webhook_url, entry, state, monitor)
 
-    old["seen_post_ids"] = current_ids
+    old["seen_post_ids"] = sorted(
+        seen_post_ids | set(current_ids),
+        key=int,
+        reverse=True,
+    )[:200]
     old["last_checked_at"] = datetime.now(TIMEZONE).isoformat(timespec="seconds")
     print(f"[NOOP] Anime1 {state_key} no new episodes" if not new_entries else f"[OK] Anime1 posted {len(new_entries)} episodes")
     return True
