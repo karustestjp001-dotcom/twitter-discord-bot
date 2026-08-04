@@ -4,7 +4,6 @@ FORUM_THREAD_PREFIX = "Bilibili 更新"
 WATCH_VIDEOS = [
     "BV1smN26sEqQ",
     "BV1N3MW6aEoQ",
-    "BV14JN36oEwX",
     "BV1Xi7s6iE3e",
     "BV1QvNA6CESz",
     "BV15aNN6sECM",
@@ -122,6 +121,12 @@ ANIME1_MONITORS = [
         "url": "https://anime1.me/category/2026%E5%B9%B4%E5%A4%8F%E5%AD%A3/%E5%B0%BC%E5%8F%A4%E5%96%B5%E5%96%B5",
         "thread_key": "BV15yM86PEna",
         "label": "無刪減版",
+    },
+    {
+        "name": "Anime1",
+        "url": "https://anime1.me/category/2026%E5%B9%B4%E6%98%A5%E5%AD%A3/%E7%84%A1%E8%81%B7%E8%BD%89%E7%94%9F-%E5%88%B0%E4%BA%86%E7%95%B0%E4%B8%96%E7%95%8C%E5%B0%B1%E6%8B%BF%E5%87%BA%E7%9C%9F%E6%9C%AC%E4%BA%8B-%E7%AC%AC%E4%B8%89%E5%AD%A3",
+        "thread_key": "mushoku_tensei",
+        "label": "Anime1",
     },
 ]
 
