@@ -110,7 +110,7 @@
           "episode_no": 8
         }
       ],
-      "last_seen_at": "2026-08-17T11:38:03+08:00"
+      "last_seen_at": "2026-08-17T12:08:00+08:00"
     },
     "BV14qTo6fExY": {
       "title": "【独家】《凡人修仙传之慕兰之战》第5集【总第181集】",
@@ -131,7 +131,7 @@
           "episode_no": 5
         }
       ],
-      "last_seen_at": "2026-08-17T11:38:04+08:00"
+      "last_seen_at": "2026-08-17T12:08:01+08:00"
     },
     "BV1jhM56oE3t": {
       "title": "『雷霆三人行』第1话",
@@ -299,7 +299,7 @@
           "episode_no": 14
         }
       ],
-      "last_seen_at": "2026-08-17T11:38:03+08:00"
+      "last_seen_at": "2026-08-17T12:08:01+08:00"
     },
     "BV1RJNh6tEni": {
       "title": "『第2话 攻壳机动队 THE GHOST IN THE SHELL』",
@@ -341,7 +341,7 @@
           "episode_no": 2
         }
       ],
-      "last_seen_at": "2026-08-17T11:38:04+08:00"
+      "last_seen_at": "2026-08-17T12:08:01+08:00"
     },
     "BV1smN26sEqQ": {
       "title": "【世界在起舞】第3话",
@@ -1896,10 +1896,31 @@
         }
       ],
       "last_seen_at": "2026-08-16T23:38:12+08:00"
+    },
+    "BV1vvbY6bETT": {
+      "title": "柯蒂斯总统 第一季 EP04. 购地案",
+      "owner": "a-skethes",
+      "owner_mid": "314790542",
+      "aid": "117108742556606",
+      "thread_key": "president_curtis_s1",
+      "pubdate": 1786937898,
+      "page_count": 1,
+      "seen_cids": [
+        "40983658606"
+      ],
+      "pages": [
+        {
+          "cid": "40983658606",
+          "page": 1,
+          "part": "柯蒂斯总统 第一季 EP04. 购地案",
+          "episode_no": 4
+        }
+      ],
+      "last_seen_at": "2026-08-17T12:08:06+08:00"
     }
   },
   "last_checked_date": "2026-08-17",
-  "last_checked_at": "2026-08-17T11:38:11+08:00",
+  "last_checked_at": "2026-08-17T12:08:06+08:00",
   "threads": {
     "BV11kMh6WEe5": {
       "thread_id": "1524206562405777498",
@@ -2004,7 +2025,7 @@
         "29416",
         "29350"
       ],
-      "last_checked_at": "2026-08-17T11:38:10+08:00"
+      "last_checked_at": "2026-08-17T12:08:06+08:00"
     },
     "mushoku_tensei": {
       "source_url": "https://anime1.me/category/2026%E5%B9%B4%E6%98%A5%E5%AD%A3/%E7%84%A1%E8%81%B7%E8%BD%89%E7%94%9F-%E5%88%B0%E4%BA%86%E7%95%B0%E4%B8%96%E7%95%8C%E5%B0%B1%E6%8B%BF%E5%87%BA%E7%9C%9F%E6%9C%AC%E4%BA%8B-%E7%AC%AC%E4%B8%89%E5%AD%A3",
@@ -2018,12 +2039,12 @@
         "29391",
         "29376"
       ],
-      "last_checked_at": "2026-08-17T11:38:10+08:00"
+      "last_checked_at": "2026-08-17T12:08:06+08:00"
     }
   },
   "bangumi": {
     "a_record_of_a_mortal_journey": {
-      "last_checked_at": "2026-08-17T11:38:05+08:00",
+      "last_checked_at": "2026-08-17T12:08:02+08:00",
       "last_seen_pubdate": 1786762800
     }
   },
@@ -2039,7 +2060,7 @@
         "Rw0v_S6dR7Y",
         "_quVxUQ6LHc"
       ],
-      "last_checked_at": "2026-08-17T11:38:11+08:00"
+      "last_checked_at": "2026-08-17T12:08:06+08:00"
     }
   },
   "weekly_health": {
@@ -2085,7 +2106,7 @@
       "last_episode_notification_at": "2026-08-14T11:08:06+08:00"
     },
     "president_curtis_s1": {
-      "last_episode_notification_at": "2026-08-14T00:08:06+08:00"
+      "last_episode_notification_at": "2026-08-17T12:08:06+08:00"
     }
   },
   "last_check_complete": false
