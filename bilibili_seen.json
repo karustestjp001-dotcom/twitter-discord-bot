@@ -49,7 +49,7 @@
       "aid": "116822187775720",
       "thread_key": "cat_and_dragon",
       "pubdate": 1782566024,
-      "page_count": 10,
+      "page_count": 11,
       "seen_cids": [
         "39902249820",
         "40110721980",
@@ -60,7 +60,8 @@
         "41200716635",
         "41434416792",
         "41163295688",
-        "41399944980"
+        "41399944980",
+        "41612017858"
       ],
       "pages": [
         {
@@ -122,9 +123,15 @@
           "page": 10,
           "part": "10",
           "episode_no": 10
+        },
+        {
+          "cid": "41612017858",
+          "page": 11,
+          "part": "11",
+          "episode_no": 11
         }
       ],
-      "last_seen_at": "2026-09-04T12:59:51+08:00"
+      "last_seen_at": "2026-09-06T00:37:27+08:00"
     },
     "BV14qTo6fExY": {
       "title": "【独家】《凡人修仙传之慕兰之战》第5集【总第181集】",
@@ -2438,7 +2445,7 @@
     }
   },
   "last_checked_date": "2026-09-06",
-  "last_checked_at": "2026-09-06T00:07:36+08:00",
+  "last_checked_at": "2026-09-06T00:37:34+08:00",
   "threads": {
     "BV11kMh6WEe5": {
       "thread_id": "1524206562405777498",
@@ -2545,7 +2552,7 @@
         "29416",
         "29350"
       ],
-      "last_checked_at": "2026-09-06T00:07:36+08:00"
+      "last_checked_at": "2026-09-06T00:37:33+08:00"
     },
     "mushoku_tensei": {
       "source_url": "https://anime1.me/category/2026%E5%B9%B4%E6%98%A5%E5%AD%A3/%E7%84%A1%E8%81%B7%E8%BD%89%E7%94%9F-%E5%88%B0%E4%BA%86%E7%95%B0%E4%B8%96%E7%95%8C%E5%B0%B1%E6%8B%BF%E5%87%BA%E7%9C%9F%E6%9C%AC%E4%BA%8B-%E7%AC%AC%E4%B8%89%E5%AD%A3",
@@ -2561,12 +2568,12 @@
         "29391",
         "29376"
       ],
-      "last_checked_at": "2026-09-06T00:07:36+08:00"
+      "last_checked_at": "2026-09-06T00:37:34+08:00"
     }
   },
   "bangumi": {
     "a_record_of_a_mortal_journey": {
-      "last_checked_at": "2026-09-06T00:07:33+08:00",
+      "last_checked_at": "2026-09-06T00:37:29+08:00",
       "last_seen_pubdate": 1788577200
     }
   },
@@ -2585,7 +2592,7 @@
         "WGYmhjNBWlA",
         "_quVxUQ6LHc"
       ],
-      "last_checked_at": "2026-09-06T00:07:36+08:00"
+      "last_checked_at": "2026-09-06T00:37:34+08:00"
     }
   },
   "weekly_health": {
@@ -2598,7 +2605,9 @@
       "last_episode_notification_at": "2026-09-04T00:38:15+08:00"
     },
     "BV17gMP6hETy": {
-      "last_episode_notification_at": "2026-08-30T00:08:13+08:00"
+      "last_episode_notification_at": "2026-08-30T00:08:13+08:00",
+      "alerted_for": "2026-08-30T00:08:13+08:00",
+      "alerted_at": "2026-09-06T00:37:34+08:00"
     },
     "BV18yMA6EE9g": {
       "last_episode_notification_at": "2026-09-05T17:07:40+08:00"
@@ -2627,9 +2636,7 @@
       "last_episode_notification_at": "2026-09-05T23:37:30+08:00"
     },
     "cat_and_dragon": {
-      "last_episode_notification_at": "2026-08-29T21:08:10+08:00",
-      "alerted_for": "2026-08-29T21:08:10+08:00",
-      "alerted_at": "2026-09-05T21:37:39+08:00"
+      "last_episode_notification_at": "2026-09-06T00:37:27+08:00"
     },
     "mushoku_tensei": {
       "last_episode_notification_at": "2026-08-31T23:08:15+08:00"
