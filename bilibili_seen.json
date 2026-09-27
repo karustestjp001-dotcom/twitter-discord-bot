@@ -2827,10 +2827,31 @@
         }
       ],
       "last_seen_at": "2026-09-28T05:07:25+08:00"
+    },
+    "BV1Kpax6KESa": {
+      "title": "【魔法光源股份有限公司 第二季】第12集",
+      "owner": "后宫补番",
+      "owner_mid": "4262884",
+      "aid": "117338573704412",
+      "thread_key": "BV1cUMK6VEzR",
+      "pubdate": 1790445360,
+      "page_count": 1,
+      "seen_cids": [
+        "42229892791"
+      ],
+      "pages": [
+        {
+          "cid": "42229892791",
+          "page": 1,
+          "part": "12",
+          "episode_no": 12
+        }
+      ],
+      "last_seen_at": "2026-09-28T05:37:36+08:00"
     }
   },
   "last_checked_date": "2026-09-28",
-  "last_checked_at": "2026-09-28T05:32:21+08:00",
+  "last_checked_at": "2026-09-28T05:37:38+08:00",
   "threads": {
     "BV11kMh6WEe5": {
       "thread_id": "1524206562405777498",
@@ -2940,7 +2961,7 @@
         "29416",
         "29350"
       ],
-      "last_checked_at": "2026-09-28T05:32:21+08:00"
+      "last_checked_at": "2026-09-28T05:37:38+08:00"
     },
     "mushoku_tensei": {
       "source_url": "https://anime1.me/category/2026%E5%B9%B4%E6%98%A5%E5%AD%A3/%E7%84%A1%E8%81%B7%E8%BD%89%E7%94%9F-%E5%88%B0%E4%BA%86%E7%95%B0%E4%B8%96%E7%95%8C%E5%B0%B1%E6%8B%BF%E5%87%BA%E7%9C%9F%E6%9C%AC%E4%BA%8B-%E7%AC%AC%E4%B8%89%E5%AD%A3",
@@ -2960,12 +2981,12 @@
         "29391",
         "29376"
       ],
-      "last_checked_at": "2026-09-28T05:32:21+08:00"
+      "last_checked_at": "2026-09-28T05:37:38+08:00"
     }
   },
   "bangumi": {
     "a_record_of_a_mortal_journey": {
-      "last_checked_at": "2026-09-28T05:32:17+08:00",
+      "last_checked_at": "2026-09-28T05:37:35+08:00",
       "last_seen_pubdate": 1790391600
     }
   },
@@ -2985,7 +3006,7 @@
         "WGYmhjNBWlA",
         "_quVxUQ6LHc"
       ],
-      "last_checked_at": "2026-09-28T05:32:21+08:00"
+      "last_checked_at": "2026-09-28T05:37:38+08:00"
     }
   },
   "weekly_health": {
@@ -3011,9 +3032,7 @@
       "last_episode_notification_at": "2026-09-28T05:07:25+08:00"
     },
     "BV1cUMK6VEzR": {
-      "last_episode_notification_at": "2026-09-20T03:37:44+08:00",
-      "alerted_for": "2026-09-20T03:37:44+08:00",
-      "alerted_at": "2026-09-27T04:07:32+08:00"
+      "last_episode_notification_at": "2026-09-28T05:37:36+08:00"
     },
     "BV1dEMb6wE2y": {
       "last_episode_notification_at": "2026-08-26T10:07:35+08:00",
