@@ -125,11 +125,21 @@ def today_taipei() -> str:
     return datetime.now(TIMEZONE).date().isoformat()
 
 
-def should_skip_daily_check(state: dict, today: str, force: bool) -> bool:
+def should_skip_daily_check(
+    state: dict,
+    today: str,
+    force: bool,
+    bilibili_sources_available: bool,
+) -> bool:
+    if force or state.get("last_checked_date") != today:
+        return False
+
+    if state.get("last_check_complete") is True:
+        return True
+
     return (
-        not force
-        and state.get("last_checked_date") == today
-        and state.get("last_check_complete") is True
+        not bilibili_sources_available
+        and state.get("last_check_blocked") == "missing_bilibili_cookie"
     )
 
 
@@ -232,21 +242,55 @@ def record_episode_notification(state: dict, thread_key: str) -> None:
 
 
 def get_active_thread_keys() -> set[str]:
-    thread_keys = {THREAD_KEY_OVERRIDES.get(bvid, bvid) for bvid in WATCH_VIDEOS}
-    for monitors in (UPLOAD_MONITORS, ANIME1_MONITORS, BANGUMI_MONITORS, YOUTUBE_MONITORS):
-        thread_keys.update(monitor["thread_key"] for monitor in monitors)
-    return thread_keys
+    return set(get_active_source_ids_by_thread())
 
 
-def check_weekly_update_health(webhook_url: str, state: dict) -> bool:
+def get_active_source_ids_by_thread() -> dict[str, set[str]]:
+    source_ids: dict[str, set[str]] = {}
+
+    def add(thread_key: str, source_id: str) -> None:
+        source_ids.setdefault(thread_key, set()).add(source_id)
+
+    for bvid in WATCH_VIDEOS:
+        add(THREAD_KEY_OVERRIDES.get(bvid, bvid), f"video:{bvid}")
+    for monitor in UPLOAD_MONITORS:
+        add(monitor["thread_key"], f"upload:{monitor['mid']}:{monitor['thread_key']}")
+    for monitor in ANIME1_MONITORS:
+        add(
+            monitor["thread_key"],
+            f"anime1:{monitor.get('feed_url') or monitor['url']}:{monitor['thread_key']}",
+        )
+    for monitor in BANGUMI_MONITORS:
+        add(monitor["thread_key"], f"bangumi:{monitor['season_id']}")
+    for monitor in YOUTUBE_MONITORS:
+        add(monitor["thread_key"], f"youtube:{monitor['channel_id']}")
+
+    return source_ids
+
+
+def check_weekly_update_health(
+    webhook_url: str,
+    state: dict,
+    checked_source_ids: dict[str, set[str]],
+) -> bool:
     now = datetime.now(TIMEZONE)
     health_state = state.setdefault("weekly_health", {})
     threads = state.setdefault("threads", {})
+    source_ids_by_thread = get_active_source_ids_by_thread()
 
-    for thread_key in sorted(get_active_thread_keys()):
+    for thread_key in sorted(source_ids_by_thread):
         thread = threads.get(thread_key) or {}
         thread_id = thread.get("thread_id")
         if not thread_id:
+            continue
+
+        expected_source_ids = source_ids_by_thread[thread_key]
+        missing_source_ids = expected_source_ids - checked_source_ids.get(thread_key, set())
+        if missing_source_ids:
+            print(
+                f"[HEALTH-SKIP] {thread.get('title') or thread_key}: "
+                "source verification incomplete"
+            )
             continue
 
         health = health_state.setdefault(thread_key, {})
@@ -406,13 +450,6 @@ def detect_new_pages(old: dict | None, info: dict) -> list[dict]:
         and page["cid"] not in old_cids
         and page.get("page") not in old_page_numbers
     ]
-
-
-def has_existing_video_for_thread(videos: dict, current_bvid: str, thread_key: str) -> bool:
-    for bvid, snapshot in videos.items():
-        if bvid != current_bvid and snapshot.get("thread_key") == thread_key:
-            return True
-    return False
 
 
 def get_latest_pubdate_for_thread(videos: dict, thread_key: str) -> int:
@@ -849,7 +886,9 @@ def main() -> None:
     state = load_state()
     state.setdefault("threads", {})
     today = today_taipei()
-    if should_skip_daily_check(state, today, force):
+    cookie = os.environ.get("BILIBILI_COOKIE")
+    bilibili_sources_available = bool(cookie)
+    if should_skip_daily_check(state, today, force, bilibili_sources_available):
         print(f"[OK] Bilibili already checked today ({today}); skip")
         return
 
@@ -862,9 +901,13 @@ def main() -> None:
         }
     )
 
-    cookie = os.environ.get("BILIBILI_COOKIE")
     if cookie:
         session.headers.update({"Cookie": cookie})
+    else:
+        print(
+            "[WARN] Missing BILIBILI_COOKIE; skip Bilibili video and UP checks. "
+            "Weekly alerts for affected threads are suppressed."
+        )
 
     videos = state.setdefault("videos", {})
     success_count = 0
@@ -875,49 +918,66 @@ def main() -> None:
         + len(ANIME1_MONITORS)
         + len(YOUTUBE_MONITORS)
     )
+    checked_source_ids: dict[str, set[str]] = {}
 
-    for bvid in WATCH_VIDEOS:
-        old = videos.get(bvid)
-        try:
-            info = get_video_info(session, bvid)
-            thread_key = get_thread_key(info)
-            new_pages = detect_new_pages(old, info)
-            if not old and has_existing_video_for_thread(videos, bvid, thread_key):
-                new_pages = info["pages"]
-            if bootstrap_threads and not state["threads"].get(thread_key):
-                print(f"[THREAD] {bvid} create Discord thread")
-                post_to_discord(webhook_url, info, info["pages"], state, thread_key, bootstrap=True)
-            elif new_pages:
-                print(f"[NEW] {bvid} has {len(new_pages)} new pages")
-                post_to_discord(webhook_url, info, new_pages, state, thread_key)
-            elif old:
-                print(f"[NOOP] {bvid} no new pages")
-            else:
-                print(f"[INIT] {bvid} first seen")
+    def record_source_check(thread_key: str, source_id: str) -> None:
+        checked_source_ids.setdefault(thread_key, set()).add(source_id)
 
-            videos[bvid] = make_snapshot(info, thread_key)
-            success_count += 1
-        except Exception as exc:
-            print(f"[WARN] {bvid} check failed: {repr(exc)}")
+    if bilibili_sources_available:
+        for bvid in WATCH_VIDEOS:
+            old = videos.get(bvid)
+            try:
+                info = get_video_info(session, bvid)
+                thread_key = get_thread_key(info)
+                new_pages = detect_new_pages(old, info)
+                if bootstrap_threads and not state["threads"].get(thread_key):
+                    print(f"[THREAD] {bvid} create Discord thread")
+                    post_to_discord(webhook_url, info, info["pages"], state, thread_key, bootstrap=True)
+                elif new_pages:
+                    print(f"[NEW] {bvid} has {len(new_pages)} new pages")
+                    post_to_discord(webhook_url, info, new_pages, state, thread_key)
+                elif old:
+                    print(f"[NOOP] {bvid} no new pages")
+                else:
+                    print(f"[INIT] {bvid} first seen")
+
+                videos[bvid] = make_snapshot(info, thread_key)
+                record_source_check(thread_key, f"video:{bvid}")
+                success_count += 1
+            except Exception as exc:
+                print(f"[WARN] {bvid} check failed: {repr(exc)}")
 
     for monitor in BANGUMI_MONITORS:
         try:
             if check_bangumi_monitor(session, webhook_url, state, monitor):
+                record_source_check(
+                    monitor["thread_key"],
+                    f"bangumi:{monitor['season_id']}",
+                )
                 success_count += 1
         except Exception as exc:
             print(f"[WARN] Bangumi monitor {monitor.get('name')} check failed: {repr(exc)}")
 
-    upload_archive_cache: dict[str, list[dict]] = {}
-    for monitor in UPLOAD_MONITORS:
-        try:
-            if check_upload_monitor(session, webhook_url, state, monitor, upload_archive_cache):
-                success_count += 1
-        except Exception as exc:
-            print(f"[WARN] upload monitor {monitor.get('name')} check failed: {repr(exc)}")
+    if bilibili_sources_available:
+        upload_archive_cache: dict[str, list[dict]] = {}
+        for monitor in UPLOAD_MONITORS:
+            try:
+                if check_upload_monitor(session, webhook_url, state, monitor, upload_archive_cache):
+                    record_source_check(
+                        monitor["thread_key"],
+                        f"upload:{monitor['mid']}:{monitor['thread_key']}",
+                    )
+                    success_count += 1
+            except Exception as exc:
+                print(f"[WARN] upload monitor {monitor.get('name')} check failed: {repr(exc)}")
 
     for monitor in ANIME1_MONITORS:
         try:
             if check_anime1_monitor(session, webhook_url, state, monitor):
+                record_source_check(
+                    monitor["thread_key"],
+                    f"anime1:{monitor.get('feed_url') or monitor['url']}:{monitor['thread_key']}",
+                )
                 success_count += 1
         except Exception as exc:
             print(f"[WARN] Anime1 monitor {monitor.get('name')} check failed: {repr(exc)}")
@@ -925,23 +985,36 @@ def main() -> None:
     for monitor in YOUTUBE_MONITORS:
         try:
             if check_youtube_monitor(session, webhook_url, state, monitor):
+                record_source_check(
+                    monitor["thread_key"],
+                    f"youtube:{monitor['channel_id']}",
+                )
                 success_count += 1
         except Exception as exc:
             print(f"[WARN] YouTube monitor {monitor.get('name')} check failed: {repr(exc)}")
 
     health_success = False
     try:
-        health_success = check_weekly_update_health(webhook_url, state)
+        health_success = check_weekly_update_health(webhook_url, state, checked_source_ids)
     except Exception as exc:
         print(f"[WARN] weekly update health check failed: {repr(exc)}")
 
     if success_count or health_success:
         state["last_checked_date"] = today
         state["last_check_complete"] = success_count == expected_count
+        if bilibili_sources_available:
+            state.pop("last_check_blocked", None)
+        else:
+            state["last_check_blocked"] = "missing_bilibili_cookie"
         state["last_checked_at"] = datetime.now(TIMEZONE).isoformat(timespec="seconds")
         save_state(state)
         if state["last_check_complete"]:
             print(f"[OK] Bilibili check done: {success_count}/{expected_count}")
+        elif state.get("last_check_blocked") == "missing_bilibili_cookie":
+            print(
+                f"[WARN] Bilibili check partial: {success_count}/{expected_count}; "
+                "waiting for BILIBILI_COOKIE"
+            )
         else:
             print(
                 f"[WARN] Bilibili check partial: {success_count}/{expected_count}; "

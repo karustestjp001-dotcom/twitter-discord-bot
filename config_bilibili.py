@@ -2,8 +2,6 @@ WEBHOOK_ENV = "WEBHOOK_BILIBILI"
 FORUM_THREAD_PREFIX = "Bilibili 更新"
 
 WATCH_VIDEOS = [
-    "BV1smN26sEqQ",
-    "BV1N3MW6aEoQ",
     "BV1Xi7s6iE3e",
     "BV1QvNA6CESz",
     "BV15aNN6sECM",
