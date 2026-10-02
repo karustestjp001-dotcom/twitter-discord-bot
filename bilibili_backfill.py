@@ -3,6 +3,7 @@
 import argparse
 import json
 import os
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 import requests
@@ -29,11 +30,20 @@ def verify_receipt(webhook, receipt, bvid):
     print(f"[VERIFIED] Discord message={receipt['message_id']} thread={receipt['thread_id']}")
 
 
-def prepare_item(session, state, item):
+def prepare_item(session, state, item, reviewed=False):
     key = item["thread_key"]
     if not (state.get("threads", {}).get(key) or {}).get("thread_id"):
         raise ValueError(f"Missing existing Discord thread: {key}")
-    info = monitor.get_video_info(session, item["bvid"])
+    if reviewed:
+        verified_at = datetime.fromisoformat(item["verified_at"])
+        age = datetime.now(timezone.utc) - verified_at
+        if not timedelta(0) <= age <= timedelta(hours=24):
+            raise ValueError("Reviewed source metadata expired; verify again locally")
+        info = item["verified_info"]
+        if info["bvid"] != item["bvid"] or not monitor.is_episode_title(info["title"]):
+            raise ValueError("Reviewed metadata identity mismatch")
+    else:
+        info = monitor.get_video_info(session, item["bvid"])
     if item["title_keyword"] not in info["title"] or info["owner_mid"] != item["owner_mid"]:
         raise ValueError(f"Repair source identity changed: {item['bvid']}")
     requested = set(item["episodes"])
@@ -43,7 +53,7 @@ def prepare_item(session, state, item):
     return info, pages
 
 
-def run(plan_path, send=False):
+def run(plan_path, send=False, reviewed=False, export_reviewed=None):
     plan = json.loads(Path(plan_path).read_text(encoding="utf-8"))
     state = monitor.load_state()
     session = monitor.make_source_session(os.environ.get("BILIBILI_COOKIE", ""))
@@ -51,7 +61,14 @@ def run(plan_path, send=False):
     if send and not webhook:
         raise ValueError("Missing Discord webhook environment variable")
     # Verify every source before sending the first item.
-    prepared = [(item, *prepare_item(session, state, item)) for item in plan["items"]]
+    if export_reviewed and (send or reviewed):
+        raise ValueError("Export must use fresh live sources without sending")
+    prepared = [(item, *prepare_item(session, state, item, reviewed)) for item in plan["items"]]
+    if export_reviewed:
+        for item, info, _ in prepared:
+            item["verified_at"] = datetime.now(timezone.utc).isoformat(timespec="seconds")
+            item["verified_info"] = info
+        Path(export_reviewed).write_text(json.dumps(plan, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     for item, info, pages in prepared:
         print(f"[PLAN] {item['thread_key']} {info['bvid']} episodes {[p['episode_no'] for p in pages]}")
         if not send:
@@ -74,5 +91,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("plan", type=Path)
     parser.add_argument("--send", action="store_true")
+    parser.add_argument("--use-reviewed-metadata", action="store_true")
+    parser.add_argument("--export-reviewed", type=Path)
     args = parser.parse_args()
-    run(args.plan, args.send)
+    run(args.plan, args.send, args.use_reviewed_metadata, args.export_reviewed)

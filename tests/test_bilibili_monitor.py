@@ -3,7 +3,7 @@ import os
 import tempfile
 import unittest
 from contextlib import ExitStack
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from unittest.mock import Mock, patch
 
@@ -207,6 +207,15 @@ class MonitorTests(unittest.TestCase):
     def test_completed_shows_do_not_trigger_seven_day_alert(self):
         for key in monitor.COMPLETED_THREADS:
             self.assertNotIn(key, monitor.get_active_source_ids_by_thread())
+
+    def test_reviewed_metadata_requires_matching_identity_and_fresh_timestamp(self):
+        item = {"thread_key": "show", "bvid": "BVtest", "owner_mid": "123",
+                "title_keyword": "Test", "episodes": [1], "verified_info": video_info(),
+                "verified_at": datetime.now(timezone.utc).isoformat()}
+        prepare_item(Mock(), self.state, item, reviewed=True)
+        item["verified_at"] = (datetime.now(timezone.utc) - timedelta(days=2)).isoformat()
+        with self.assertRaises(ValueError):
+            prepare_item(Mock(), self.state, item, reviewed=True)
 
 
 if __name__ == "__main__":

@@ -63,7 +63,7 @@ jobs:
           REPAIR_BATCH: ${{ inputs.repair_batch }}
         run: |
           case "$REPAIR_BATCH" in
-            2026-10-03) python bilibili_backfill.py repairs/2026-10-03.json --send ;;
+            2026-10-03) python bilibili_backfill.py repairs/2026-10-03.verified.json --use-reviewed-metadata --send ;;
             none|'') python bilibili_monitor.py ;;
             *) echo 'Unknown repair batch'; exit 1 ;;
           esac
