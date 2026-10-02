@@ -14,6 +14,7 @@ import xml.etree.ElementTree as ET
 from datetime import datetime, timedelta
 from html import unescape
 from html.parser import HTMLParser
+from http.cookies import SimpleCookie
 from urllib.parse import urlencode
 from zoneinfo import ZoneInfo
 
@@ -22,6 +23,7 @@ import requests
 from config_bilibili import (
     ANIME1_MONITORS,
     BANGUMI_MONITORS,
+    COMPLETED_THREADS,
     FORUM_THREAD_PREFIX,
     THREAD_KEY_OVERRIDES,
     THREAD_TITLES,
@@ -45,6 +47,10 @@ NON_EPISODE_PART_KEYWORDS = (
     "周更",
     "点个",
     "點個",
+)
+NON_EPISODE_TITLE_KEYWORDS = (
+    "预告", "預告", "片段", "抢先看", "搶先看", "解说", "解說", "彩蛋",
+    "trailer", "preview", "reaction",
 )
 UPLOAD_SEARCH_PAGE_SIZE = 30
 WEEKLY_UPDATE_TIMEOUT = timedelta(days=7)
@@ -104,10 +110,9 @@ def load_state() -> dict:
         return {"videos": {}}
 
     with open(STATE_FILE, "r", encoding="utf-8") as f:
-        try:
-            state = json.load(f)
-        except Exception:
-            return {"videos": {}}
+        state = json.load(f)
+    if not isinstance(state, dict):
+        raise ValueError("Invalid monitor state; refusing to reset delivery history")
 
     if "videos" not in state or not isinstance(state["videos"], dict):
         state["videos"] = {}
@@ -117,8 +122,10 @@ def load_state() -> dict:
 
 
 def save_state(state: dict) -> None:
-    with open(STATE_FILE, "w", encoding="utf-8") as f:
+    temporary = STATE_FILE + ".tmp"
+    with open(temporary, "w", encoding="utf-8") as f:
         json.dump(state, f, ensure_ascii=False, indent=2)
+    os.replace(temporary, STATE_FILE)
 
 
 def today_taipei() -> str:
@@ -129,7 +136,7 @@ def should_skip_daily_check(
     state: dict,
     today: str,
     force: bool,
-    bilibili_sources_available: bool,
+    bilibili_sources_available: bool = True,
 ) -> bool:
     if force or state.get("last_checked_date") != today:
         return False
@@ -137,10 +144,31 @@ def should_skip_daily_check(
     if state.get("last_check_complete") is True:
         return True
 
-    return (
-        not bilibili_sources_available
-        and state.get("last_check_blocked") == "missing_bilibili_cookie"
-    )
+    return False
+
+
+def make_source_session(cookie: str = "") -> requests.Session:
+    session = requests.Session()
+    session.headers.update({"User-Agent": "Mozilla/5.0"})
+    # A raw Cookie header on a shared session would leak to Anime1/YouTube.
+    jar = SimpleCookie()
+    jar.load(cookie)
+    for name, value in jar.items():
+        session.cookies.set(name, value.value, domain=".bilibili.com", path="/")
+    return session
+
+
+def get_public_video_data(session: requests.Session, bvid: str) -> dict:
+    resp = session.get(f"https://www.bilibili.com/video/{bvid}/", timeout=REQUEST_TIMEOUT)
+    resp.raise_for_status()
+    marker = re.search(r"window\.__INITIAL_STATE__\s*=\s*", resp.text)
+    if not marker:
+        raise RuntimeError(f"Public video page has no metadata: {bvid}")
+    initial, _ = json.JSONDecoder().raw_decode(resp.text[marker.end():])
+    data = initial.get("videoData") or {}
+    if data.get("bvid") != bvid or not data.get("pages"):
+        raise RuntimeError(f"Public video page is missing or mismatched: {bvid}")
+    return data
 
 
 def get_video_info(session: requests.Session, bvid: str) -> dict:
@@ -149,23 +177,29 @@ def get_video_info(session: requests.Session, bvid: str) -> dict:
         params={"bvid": bvid},
         timeout=REQUEST_TIMEOUT,
     )
-    resp.raise_for_status()
-    payload = resp.json()
-    if payload.get("code") != 0:
-        raise RuntimeError(f"Bilibili API error for {bvid}: {payload.get('code')} {payload.get('message')}")
-
-    data = payload["data"]
+    if resp.status_code in (403, 412, 429):
+        print(f"[FALLBACK] {bvid}: public HTML metadata (API {resp.status_code})")
+        data = get_public_video_data(session, bvid)
+    else:
+        resp.raise_for_status()
+        payload = resp.json()
+        if payload.get("code") in (-352, -412, -403):
+            data = get_public_video_data(session, bvid)
+        elif payload.get("code") != 0:
+            raise RuntimeError(f"Bilibili API error for {bvid}: {payload.get('code')}")
+        else:
+            data = payload["data"]
     title = data.get("title") or bvid
     raw_pages = data.get("pages") or []
     pages = []
     for page in raw_pages:
         part = page.get("part") or f"P{page.get('page')}"
-        if not is_episode_part(part):
+        if not is_episode_part(part) or not is_episode_title(title):
             continue
 
         episode_no = extract_episode_no(part)
-        if episode_no is None and len(raw_pages) == 1:
-            episode_no = extract_episode_no(title)
+        if len(raw_pages) == 1:
+            episode_no = extract_episode_no(title) or episode_no
 
         pages.append(
             {
@@ -183,7 +217,7 @@ def get_video_info(session: requests.Session, bvid: str) -> dict:
         "owner": (data.get("owner") or {}).get("name") or "",
         "owner_mid": str((data.get("owner") or {}).get("mid") or ""),
         "pubdate": int(data.get("pubdate") or 0),
-        "page_count": len(pages) or 1,
+        "page_count": len(pages),
         "pages": pages,
     }
 
@@ -218,6 +252,13 @@ def is_episode_part(part: str) -> bool:
 
 
 def extract_episode_no(text: str) -> int | None:
+    text = str(text).strip()
+    match = re.fullmatch(r"[（(]?\s*(\d{1,3})\s*[）)]?", text)
+    if match:
+        return int(match.group(1))
+    match = re.search(r"\bS\d{1,2}E(\d{1,3})\b", text, re.IGNORECASE)
+    if match:
+        return int(match.group(1))
     match = re.search(r"第\s*(\d+)\s*[话話集幕]", str(text))
     if match:
         return int(match.group(1))
@@ -227,6 +268,32 @@ def extract_episode_no(text: str) -> int | None:
         return int(match.group(1))
 
     return None
+
+
+def is_episode_title(title: str) -> bool:
+    return not any(word in title.casefold() for word in NON_EPISODE_TITLE_KEYWORDS)
+
+
+def send_discord_message(webhook_url: str, payload: dict, thread_id: str | None) -> dict:
+    params = {"wait": "true"}
+    if thread_id:
+        params["thread_id"] = thread_id
+    try:
+        resp = requests.post(
+            append_query(webhook_url, params),
+            json={**payload, "allowed_mentions": {"parse": []}},
+            timeout=REQUEST_TIMEOUT,
+        )
+    except requests.RequestException:
+        raise RuntimeError("Discord delivery uncertain; check receipts before retrying") from None
+    if resp.status_code != 200:
+        raise RuntimeError(f"Discord delivery failed: HTTP {resp.status_code}")
+    message = resp.json()
+    if not message.get("id") or not message.get("channel_id"):
+        raise RuntimeError("Discord response has no message receipt")
+    if thread_id and str(message["channel_id"]) != str(thread_id):
+        raise RuntimeError("Discord receipt belongs to a different thread")
+    return {"message_id": str(message["id"]), "thread_id": str(message["channel_id"])}
 
 
 def append_query(url: str, params: dict[str, str]) -> str:
@@ -249,7 +316,8 @@ def get_active_source_ids_by_thread() -> dict[str, set[str]]:
     source_ids: dict[str, set[str]] = {}
 
     def add(thread_key: str, source_id: str) -> None:
-        source_ids.setdefault(thread_key, set()).add(source_id)
+        if thread_key not in COMPLETED_THREADS:
+            source_ids.setdefault(thread_key, set()).add(source_id)
 
     for bvid in WATCH_VIDEOS:
         add(THREAD_KEY_OVERRIDES.get(bvid, bvid), f"video:{bvid}")
@@ -286,13 +354,6 @@ def check_weekly_update_health(
 
         expected_source_ids = source_ids_by_thread[thread_key]
         missing_source_ids = expected_source_ids - checked_source_ids.get(thread_key, set())
-        if missing_source_ids:
-            print(
-                f"[HEALTH-SKIP] {thread.get('title') or thread_key}: "
-                "source verification incomplete"
-            )
-            continue
-
         health = health_state.setdefault(thread_key, {})
         last_notification_text = health.get("last_episode_notification_at")
         if not last_notification_text:
@@ -314,25 +375,29 @@ def check_weekly_update_health(
             continue
 
         title = thread.get("title") or thread_key
+        status_text = (
+            "已超過 7 天沒有發片通知；本次部分來源查詢失敗，無法確認是否有新集數。"
+            if missing_source_ids else
+            "已超過 7 天沒有偵測到下一集。今日已重新檢查設定來源，仍未找到新內容。"
+        )
         payload = {
             "content": "\n".join(
                 [
                     "追番監控異常提醒喵",
                     f"追蹤：{title}",
                     f"最近一次發片通知：{last_notification.astimezone(TIMEZONE).strftime('%Y-%m-%d %H:%M')}",
-                    "已超過 7 天沒有偵測到下一集。今日已重新檢查設定來源，仍未找到新內容。",
+                    status_text,
                     "可能原因：來源刪文、改用新網址、官方延期，或日本重大節日停播。",
                     "請人工確認來源狀態。",
                 ]
             )
         }
-        post_url = append_query(webhook_url, {"thread_id": thread_id, "wait": "true"})
-        resp = requests.post(post_url, json=payload, timeout=REQUEST_TIMEOUT)
-        if resp.status_code not in (200, 204):
-            raise RuntimeError(f"Discord health alert error {resp.status_code}: {resp.text[:300]}")
-
+        receipt = send_discord_message(webhook_url, payload, thread_id)
         health["alerted_for"] = last_notification_text
         health["alerted_at"] = now.isoformat(timespec="seconds")
+        health["alert_receipt"] = receipt
+        health["source_check_complete"] = not missing_source_ids
+        save_state(state)
         print(f"[ALERT] {title} has no episode notification for 7 days")
 
     return True
@@ -374,55 +439,49 @@ def post_to_discord(
     thread_key: str,
     bootstrap: bool = False,
 ) -> None:
+    if not new_pages:
+        raise ValueError("Refusing to announce a video without verified episode pages")
     video_url = f"https://www.vxbilibili.com/video/{info['bvid']}/"
     thread_title = get_thread_title(info, thread_key)
-    lines = [
+    header = [
         "Bilibili 追番串建立喵" if bootstrap else "Bilibili 影片更新喵",
         f"追蹤：{thread_title}",
         f"原標題：{info['title']}",
     ]
     if info["owner"]:
-        lines.append(f"UP：{info['owner']}")
-
-    if new_pages:
-        lines.append("")
-        lines.append(f"新增 {len(new_pages)} 個分P：")
-        for index, page in enumerate(new_pages[:10]):
-            page_no = page.get("page") or ""
-            episode_no = page.get("episode_no") or page_no
-            part = page.get("part") or f"P{page_no}"
-            page_url = format_bilibili_page_url(video_url, page_no, suppress_embed=index > 0)
-            lines.append(f"- 第{episode_no}集：P{page_no} {part} {page_url}")
-    else:
-        lines.append(video_url)
-
-    payload = {
-        "content": "\n".join(lines),
-    }
-    post_url = append_query(webhook_url, {"wait": "true"})
-
+        header.append(f"UP：{info['owner']}")
+    header = "\n".join(header)[:600] + "\n"
+    receipts = state.setdefault("delivery_receipts", {})
+    pending = [p for p in new_pages if f"bilibili:{info['bvid']}:{p['page']}" not in receipts]
     thread_id = (state.setdefault("threads", {}).get(thread_key) or {}).get("thread_id")
-    if thread_id:
-        post_url = append_query(webhook_url, {"thread_id": thread_id, "wait": "true"})
-    else:
-        payload["thread_name"] = truncate_thread_name(f"{FORUM_THREAD_PREFIX} - {thread_title}")
-
-    resp = requests.post(post_url, json=payload, timeout=REQUEST_TIMEOUT)
-    if resp.status_code not in (200, 204):
-        raise RuntimeError(f"Discord webhook error {resp.status_code}: {resp.text[:300]}")
-
-    if not thread_id and resp.text:
-        message = resp.json()
-        channel_id = message.get("channel_id")
-        if channel_id:
+    while pending:
+        chunk, lines = [], [header]
+        for page in pending:
+            number = page["page"]
+            url = format_bilibili_page_url(video_url, number, suppress_embed=bool(chunk))
+            line = f"- 第{page.get('episode_no') or number}集：P{number} {str(page.get('part') or '')[:160]} {url}"
+            if chunk and (len(chunk) >= 10 or len("\n".join(lines + [line])) > 1900):
+                break
+            chunk.append(page)
+            lines.append(line)
+        payload = {"content": "\n".join(lines)}
+        if not thread_id:
+            payload["thread_name"] = truncate_thread_name(f"{FORUM_THREAD_PREFIX} - {thread_title}")
+        receipt = send_discord_message(webhook_url, payload, thread_id)
+        if not thread_id:
+            thread_id = receipt["thread_id"]
             state["threads"][thread_key] = {
-                "thread_id": channel_id,
+                "thread_id": thread_id,
                 "title": thread_title,
                 "bvid": info["bvid"],
                 "created_at": datetime.now(TIMEZONE).isoformat(timespec="seconds"),
             }
-
-    record_episode_notification(state, thread_key)
+        for page in chunk:
+            receipts[f"bilibili:{info['bvid']}:{page['page']}"] = receipt
+        record_episode_notification(state, thread_key)
+        save_state(state)
+        print(f"[DELIVERED] {thread_key} pages {[p['page'] for p in chunk]} message={receipt['message_id']}")
+        pending = pending[len(chunk):]
 
 
 def detect_new_pages(old: dict | None, info: dict) -> list[dict]:
@@ -498,8 +557,12 @@ def find_new_upload_archives(
         archive_cache[mid] = ((payload.get("data") or {}).get("archives") or [])
 
     thread_key = monitor["thread_key"]
-    latest_seen_pubdate = get_latest_pubdate_for_thread(videos, thread_key)
-    if not latest_seen_pubdate:
+    baseline = min(
+        (int(s.get("pubdate") or 0) for s in videos.values()
+         if s.get("thread_key") == thread_key and s.get("pubdate")),
+        default=0,
+    )
+    if not baseline:
         return []
 
     matches = []
@@ -507,9 +570,11 @@ def find_new_upload_archives(
         bvid = archive.get("bvid")
         title = archive.get("title") or ""
         pubdate = int(archive.get("pubdate") or 0)
-        if not bvid or bvid in videos or pubdate <= latest_seen_pubdate:
+        if not bvid or pubdate < baseline:
             continue
-        if not any(keyword in title for keyword in keywords):
+        if not any(keyword.casefold() in title.casefold() for keyword in keywords):
+            continue
+        if not is_episode_title(title):
             continue
         if monitor.get("require_episode_number") and extract_episode_no(title) is None:
             continue
@@ -532,16 +597,48 @@ def check_upload_monitor(
         print(f"[NOOP] {monitor.get('name')} upload search: {monitor.get('thread_key')} no new videos")
         return True
 
+    failures = []
     for archive in new_archives:
         bvid = archive["bvid"]
         thread_key = monitor["thread_key"]
-        info = get_video_info(session, bvid)
+        try:
+            info = get_video_info(session, bvid)
+            if info["owner_mid"] != str(monitor["mid"]):
+                raise RuntimeError(f"Uploader mismatch for {bvid}")
+            if not any(k.casefold() in info["title"].casefold() for k in monitor["keywords"]):
+                raise RuntimeError(f"Title mismatch for {bvid}")
+        except Exception as exc:
+            failures.append(bvid)
+            print(f"[WARN] upload {bvid}: {exc}")
+            continue
         pages_to_post = info["pages"][:1] if monitor.get("first_page_only") else info["pages"]
+        if monitor.get("first_page_only") and pages_to_post and extract_episode_no(info["title"]):
+            pages_to_post[0]["episode_no"] = extract_episode_no(info["title"])
+        if bvid in videos:
+            added = {p["page"] for p in detect_new_pages(videos[bvid], info)}
+            pages_to_post = [p for p in pages_to_post if p["page"] in added]
+        pages_to_post = select_unseen_episodes(videos, thread_key, pages_to_post)
         print(f"[NEW] {monitor.get('name')} uploaded {bvid} for {thread_key}")
-        post_to_discord(webhook_url, info, pages_to_post, state, thread_key)
+        if pages_to_post:
+            post_to_discord(webhook_url, info, pages_to_post, state, thread_key)
         videos[bvid] = make_snapshot(info, thread_key)
+        save_state(state)
 
+    if failures:
+        raise RuntimeError(f"Upload metadata unavailable: {', '.join(failures)}")
     return True
+
+
+def select_unseen_episodes(videos: dict, thread_key: str, pages: list[dict]) -> list[dict]:
+    seen = set()
+    for old in videos.values():
+        if old.get("thread_key") != thread_key or not is_episode_title(old.get("title", "")):
+            continue
+        for page in old.get("pages") or []:
+            number = page.get("episode_no") or extract_episode_no(page.get("part", ""))
+            if number:
+                seen.add(int(number))
+    return [page for page in pages if int(page.get("episode_no") or 0) not in seen]
 
 
 def get_bangumi_episodes(session: requests.Session, season_id: str) -> list[dict]:
@@ -704,12 +801,13 @@ def post_anime1_to_discord(
             ]
         )
     }
-    post_url = append_query(webhook_url, {"thread_id": thread_id, "wait": "true"})
-    resp = requests.post(post_url, json=payload, timeout=REQUEST_TIMEOUT)
-    if resp.status_code not in (200, 204):
-        raise RuntimeError(f"Discord webhook error {resp.status_code}: {resp.text[:300]}")
-
+    key = f"anime1:{thread_key}:{entry['id']}"
+    receipts = state.setdefault("delivery_receipts", {})
+    if key in receipts:
+        return
+    receipts[key] = send_discord_message(webhook_url, payload, thread_id)
     record_episode_notification(state, thread_key)
+    save_state(state)
 
 
 def check_anime1_monitor(
@@ -753,6 +851,9 @@ def check_anime1_monitor(
     for entry in sorted(new_entries, key=lambda item: int(item["id"])):
         print(f"[NEW] Anime1 {entry['title']} for {state_key}")
         post_anime1_to_discord(webhook_url, entry, state, monitor)
+        seen_post_ids.add(entry["id"])
+        old["seen_post_ids"] = sorted(seen_post_ids, key=int, reverse=True)
+        save_state(state)
 
     old["seen_post_ids"] = sorted(
         seen_post_ids | set(current_ids),
@@ -829,12 +930,13 @@ def post_youtube_to_discord(
             ]
         )
     }
-    post_url = append_query(webhook_url, {"thread_id": thread_id, "wait": "true"})
-    resp = requests.post(post_url, json=payload, timeout=REQUEST_TIMEOUT)
-    if resp.status_code not in (200, 204):
-        raise RuntimeError(f"Discord webhook error {resp.status_code}: {resp.text[:300]}")
-
+    key = f"youtube:{thread_key}:{entry['id']}"
+    receipts = state.setdefault("delivery_receipts", {})
+    if key in receipts:
+        return
+    receipts[key] = send_discord_message(webhook_url, payload, thread_id)
     record_episode_notification(state, thread_key)
+    save_state(state)
 
 
 def check_youtube_monitor(
@@ -868,10 +970,31 @@ def check_youtube_monitor(
     for entry in sorted(new_entries, key=lambda item: item["published_at"]):
         print(f"[NEW] YouTube {entry['title']} for {state_key}")
         post_youtube_to_discord(webhook_url, entry, state, monitor)
+        seen_video_ids.add(entry["id"])
+        old["seen_video_ids"] = sorted(seen_video_ids)
+        save_state(state)
 
     old["seen_video_ids"] = sorted(seen_video_ids | set(current_ids))[-100:]
     old["last_checked_at"] = datetime.now(TIMEZONE).isoformat(timespec="seconds")
     print(f"[NOOP] YouTube {state_key} no new videos" if not new_entries else f"[OK] YouTube posted {len(new_entries)} videos")
+    return True
+
+
+def check_fixed_video(session, webhook_url, state, bvid, bootstrap_threads=False) -> bool:
+    videos = state.setdefault("videos", {})
+    old = videos.get(bvid)
+    info = get_video_info(session, bvid)
+    if not info["pages"]:
+        raise RuntimeError(f"No episode pages for {bvid}")
+    thread_key = get_thread_key(info)
+    new_pages = detect_new_pages(old, info)
+    if bootstrap_threads and not state["threads"].get(thread_key):
+        post_to_discord(webhook_url, info, info["pages"], state, thread_key, bootstrap=True)
+    elif new_pages:
+        post_to_discord(webhook_url, info, new_pages, state, thread_key)
+    else:
+        print(f"[NOOP] {bvid}: {'no new pages' if old else 'baseline saved'}")
+    videos[bvid] = make_snapshot(info, thread_key)
     return True
 
 
@@ -887,141 +1010,66 @@ def main() -> None:
     state.setdefault("threads", {})
     today = today_taipei()
     cookie = os.environ.get("BILIBILI_COOKIE")
-    bilibili_sources_available = bool(cookie)
-    if should_skip_daily_check(state, today, force, bilibili_sources_available):
+    if should_skip_daily_check(state, today, force):
         print(f"[OK] Bilibili already checked today ({today}); skip")
         return
 
-    session = requests.Session()
-    session.headers.update(
-        {
-            "User-Agent": "Mozilla/5.0",
-            "Referer": "https://www.bilibili.com/",
-            "Origin": "https://www.bilibili.com",
-        }
-    )
-
-    if cookie:
-        session.headers.update({"Cookie": cookie})
-    else:
-        print(
-            "[WARN] Missing BILIBILI_COOKIE; skip Bilibili video and UP checks. "
-            "Weekly alerts for affected threads are suppressed."
-        )
-
-    videos = state.setdefault("videos", {})
+    session = make_source_session(cookie or "")
+    if not cookie:
+        print("[INFO] Using public Bilibili sources; login Cookie is optional")
     success_count = 0
-    expected_count = (
-        len(WATCH_VIDEOS)
-        + len(BANGUMI_MONITORS)
-        + len(UPLOAD_MONITORS)
-        + len(ANIME1_MONITORS)
-        + len(YOUTUBE_MONITORS)
-    )
+    expected_count = sum(len(ids) for ids in get_active_source_ids_by_thread().values())
     checked_source_ids: dict[str, set[str]] = {}
+    failures = {}
 
-    def record_source_check(thread_key: str, source_id: str) -> None:
-        checked_source_ids.setdefault(thread_key, set()).add(source_id)
-
-    if bilibili_sources_available:
-        for bvid in WATCH_VIDEOS:
-            old = videos.get(bvid)
-            try:
-                info = get_video_info(session, bvid)
-                thread_key = get_thread_key(info)
-                new_pages = detect_new_pages(old, info)
-                if bootstrap_threads and not state["threads"].get(thread_key):
-                    print(f"[THREAD] {bvid} create Discord thread")
-                    post_to_discord(webhook_url, info, info["pages"], state, thread_key, bootstrap=True)
-                elif new_pages:
-                    print(f"[NEW] {bvid} has {len(new_pages)} new pages")
-                    post_to_discord(webhook_url, info, new_pages, state, thread_key)
-                elif old:
-                    print(f"[NOOP] {bvid} no new pages")
-                else:
-                    print(f"[INIT] {bvid} first seen")
-
-                videos[bvid] = make_snapshot(info, thread_key)
-                record_source_check(thread_key, f"video:{bvid}")
+    def run_check(thread_key, source_id, check, *args):
+        nonlocal success_count
+        if thread_key in COMPLETED_THREADS:
+            return
+        try:
+            if check(session, webhook_url, state, *args):
+                checked_source_ids.setdefault(thread_key, set()).add(source_id)
                 success_count += 1
-            except Exception as exc:
-                print(f"[WARN] {bvid} check failed: {repr(exc)}")
+        except Exception as exc:
+            failures[source_id] = str(exc)
+            print(f"[WARN] {source_id}: {exc}")
+        finally:
+            save_state(state)
 
+    for bvid in WATCH_VIDEOS:
+        run_check(THREAD_KEY_OVERRIDES.get(bvid, bvid), f"video:{bvid}",
+                  check_fixed_video, bvid, bootstrap_threads)
     for monitor in BANGUMI_MONITORS:
-        try:
-            if check_bangumi_monitor(session, webhook_url, state, monitor):
-                record_source_check(
-                    monitor["thread_key"],
-                    f"bangumi:{monitor['season_id']}",
-                )
-                success_count += 1
-        except Exception as exc:
-            print(f"[WARN] Bangumi monitor {monitor.get('name')} check failed: {repr(exc)}")
-
-    if bilibili_sources_available:
-        upload_archive_cache: dict[str, list[dict]] = {}
-        for monitor in UPLOAD_MONITORS:
-            try:
-                if check_upload_monitor(session, webhook_url, state, monitor, upload_archive_cache):
-                    record_source_check(
-                        monitor["thread_key"],
-                        f"upload:{monitor['mid']}:{monitor['thread_key']}",
-                    )
-                    success_count += 1
-            except Exception as exc:
-                print(f"[WARN] upload monitor {monitor.get('name')} check failed: {repr(exc)}")
-
+        run_check(monitor["thread_key"], f"bangumi:{monitor['season_id']}",
+                  check_bangumi_monitor, monitor)
+    upload_archive_cache = {}
+    for monitor in UPLOAD_MONITORS:
+        run_check(monitor["thread_key"], f"upload:{monitor['mid']}:{monitor['thread_key']}",
+                  check_upload_monitor, monitor, upload_archive_cache)
     for monitor in ANIME1_MONITORS:
-        try:
-            if check_anime1_monitor(session, webhook_url, state, monitor):
-                record_source_check(
-                    monitor["thread_key"],
-                    f"anime1:{monitor.get('feed_url') or monitor['url']}:{monitor['thread_key']}",
-                )
-                success_count += 1
-        except Exception as exc:
-            print(f"[WARN] Anime1 monitor {monitor.get('name')} check failed: {repr(exc)}")
-
+        run_check(monitor["thread_key"],
+                  f"anime1:{monitor.get('feed_url') or monitor['url']}:{monitor['thread_key']}",
+                  check_anime1_monitor, monitor)
     for monitor in YOUTUBE_MONITORS:
-        try:
-            if check_youtube_monitor(session, webhook_url, state, monitor):
-                record_source_check(
-                    monitor["thread_key"],
-                    f"youtube:{monitor['channel_id']}",
-                )
-                success_count += 1
-        except Exception as exc:
-            print(f"[WARN] YouTube monitor {monitor.get('name')} check failed: {repr(exc)}")
+        run_check(monitor["thread_key"], f"youtube:{monitor['channel_id']}",
+                  check_youtube_monitor, monitor)
 
     health_success = False
     try:
         health_success = check_weekly_update_health(webhook_url, state, checked_source_ids)
     except Exception as exc:
+        failures["weekly_health"] = str(exc)
         print(f"[WARN] weekly update health check failed: {repr(exc)}")
 
-    if success_count or health_success:
-        state["last_checked_date"] = today
-        state["last_check_complete"] = success_count == expected_count
-        if bilibili_sources_available:
-            state.pop("last_check_blocked", None)
-        else:
-            state["last_check_blocked"] = "missing_bilibili_cookie"
-        state["last_checked_at"] = datetime.now(TIMEZONE).isoformat(timespec="seconds")
-        save_state(state)
-        if state["last_check_complete"]:
-            print(f"[OK] Bilibili check done: {success_count}/{expected_count}")
-        elif state.get("last_check_blocked") == "missing_bilibili_cookie":
-            print(
-                f"[WARN] Bilibili check partial: {success_count}/{expected_count}; "
-                "waiting for BILIBILI_COOKIE"
-            )
-        else:
-            print(
-                f"[WARN] Bilibili check partial: {success_count}/{expected_count}; "
-                "retry on next dispatch"
-            )
-    else:
-        print("[ERROR] Bilibili all checks failed; state not updated")
+    state["last_checked_date"] = today
+    state["last_check_complete"] = success_count == expected_count and health_success
+    state.pop("last_check_blocked", None)
+    state["last_check_failures"] = failures
+    state["last_checked_at"] = datetime.now(TIMEZONE).isoformat(timespec="seconds")
+    save_state(state)
+    print(f"[SUMMARY] Checked {success_count}/{expected_count}; failures={len(failures)}")
+    if failures:
+        raise SystemExit(1)
 
 
 if __name__ == "__main__":

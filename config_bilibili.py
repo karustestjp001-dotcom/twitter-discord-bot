@@ -1,6 +1,15 @@
 WEBHOOK_ENV = "WEBHOOK_BILIBILI"
 FORUM_THREAD_PREFIX = "Bilibili 更新"
 
+# Keep routing/history for a later season; completed shows have no next-week alarm.
+COMPLETED_THREADS = {
+    "rick_and_morty_s9": 10,
+    "BV11kMh6WEe5": 10,
+    "world_is_dancing": 13,
+    "BV1dEMb6wE2y": 13,
+    "president_curtis_s1": 10,
+}
+
 WATCH_VIDEOS = [
     "BV1Xi7s6iE3e",
     "BV1QvNA6CESz",

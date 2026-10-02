@@ -1,0 +1,33 @@
+{
+  "id": "2026-10-03-dc-recheck",
+  "items": [
+    {
+      "thread_key": "president_curtis_s1",
+      "bvid": "BV1EoaV6WESw",
+      "title_keyword": "柯蒂斯总统",
+      "owner_mid": "3546894309526318",
+      "episodes": [8, 9, 10]
+    },
+    {
+      "thread_key": "BV11kMh6WEe5",
+      "bvid": "BV1Rkay6PEcc",
+      "title_keyword": "攻壳机动队",
+      "owner_mid": "690151424",
+      "episodes": [9]
+    },
+    {
+      "thread_key": "BV1dEMb6wE2y",
+      "bvid": "BV1heam6TEeg",
+      "title_keyword": "与你相恋到生命尽头",
+      "owner_mid": "690151424",
+      "episodes": [7, 9, 10, 11, 12, 13]
+    },
+    {
+      "thread_key": "world_is_dancing",
+      "bvid": "BV1HHab6YEYk",
+      "title_keyword": "世界在起舞",
+      "owner_mid": "154244413",
+      "episodes": [7, 8, 9, 10, 11, 12, 13]
+    }
+  ]
+}

@@ -10,6 +10,17 @@ on:
         description: 'Trigger source'
         required: false
         default: 'manual'
+      force:
+        description: 'Retry even after a successful daily scan'
+        type: boolean
+        default: false
+      repair_batch:
+        description: 'Send a reviewed, idempotent episode repair batch only'
+        type: choice
+        default: none
+        options:
+          - none
+          - '2026-10-03'
 
 # 需要寫入權限才能 commit bilibili_seen.json
 permissions:
@@ -41,14 +52,25 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
+      - name: Test monitor safeguards
+        run: python -m unittest discover -s tests -v
+
       - name: Run Bilibili monitor
         env:
           WEBHOOK_BILIBILI: ${{ secrets.WEBHOOK_BILIBILI }}
           BILIBILI_COOKIE:  ${{ secrets.BILIBILI_COOKIE }}
-        run: python bilibili_monitor.py
+          BILIBILI_FORCE: ${{ inputs.force && '1' || '0' }}
+          REPAIR_BATCH: ${{ inputs.repair_batch }}
+        run: |
+          case "$REPAIR_BATCH" in
+            2026-10-03) python bilibili_backfill.py repairs/2026-10-03.json --send ;;
+            none|'') python bilibili_monitor.py ;;
+            *) echo 'Unknown repair batch'; exit 1 ;;
+          esac
 
       # 把更新後的 bilibili_seen.json commit 回 repo
       - name: Save Bilibili progress
+        if: always()
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
