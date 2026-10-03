@@ -100,11 +100,9 @@ class MonitorTests(unittest.TestCase):
 
     def test_pagelist_recovers_blocked_view_with_verified_archive_identity(self):
         session = Mock()
-        html = Mock()
-        html.raise_for_status.side_effect = requests.HTTPError("412")
         pagelist = Mock()
         pagelist.json.return_value = {"code": 0, "data": [{"cid": 99, "page": 1, "part": "(12)"}]}
-        session.get.side_effect = [Mock(status_code=412), html, pagelist]
+        session.get.side_effect = [Mock(status_code=412), pagelist]
         source = {"bvid": "BVtest", "title": "Test 第12话", "owner_mid": "123", "metadata_source": "archive"}
         info = monitor.get_video_info(session, "BVtest", source)
         self.assertEqual(info["owner_mid"], "123")
@@ -116,6 +114,16 @@ class MonitorTests(unittest.TestCase):
         session.get.return_value.json.return_value = {"code": -404}
         with self.assertRaises(RuntimeError):
             monitor.get_pagelist_video_data(session, "BVtest", {"bvid": "BVtest", "title": "Test"})
+
+    @patch.object(monitor.time, "sleep")
+    def test_rate_limited_upload_gets_one_bounded_retry(self, sleep):
+        session = Mock()
+        success = Mock(status_code=200)
+        success.json.return_value = {"code": 0, "data": {"archives": []}}
+        session.get.side_effect = [Mock(status_code=412), success]
+        monitor.find_new_upload_archives(session, {"mid": "123", "thread_key": "show", "keywords": ["Test"]}, {}, {})
+        self.assertEqual(session.get.call_count, 2)
+        sleep.assert_called_once_with(3)
 
     def test_corrupt_state_fails_closed(self):
         self.path.write_text("{broken", encoding="utf-8")

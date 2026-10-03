@@ -10,12 +10,13 @@ from __future__ import annotations
 import json
 import os
 import re
+import time
 import xml.etree.ElementTree as ET
 from datetime import datetime, timedelta
 from html import unescape
 from html.parser import HTMLParser
 from http.cookies import SimpleCookie
-from urllib.parse import urlencode
+from urllib.parse import urlencode, urlsplit
 from zoneinfo import ZoneInfo
 
 import requests
@@ -147,8 +148,25 @@ def should_skip_daily_check(
     return False
 
 
+class SourceSession(requests.Session):
+    """Space public Bilibili requests; do not hammer a rate-limited uploader."""
+
+    def __init__(self):
+        super().__init__()
+        self._last_bilibili_request = 0.0
+
+    def request(self, method, url, **kwargs):
+        host = urlsplit(url).hostname or ""
+        if host == "bilibili.com" or host.endswith(".bilibili.com"):
+            delay = 1.5 - (time.monotonic() - self._last_bilibili_request)
+            if delay > 0:
+                time.sleep(delay)
+            self._last_bilibili_request = time.monotonic()
+        return super().request(method, url, **kwargs)
+
+
 def make_source_session(cookie: str = "") -> requests.Session:
-    session = requests.Session()
+    session = SourceSession()
     session.headers.update({"User-Agent": "Mozilla/5.0"})
     # A raw Cookie header on a shared session would leak to Anime1/YouTube.
     jar = SimpleCookie()
@@ -189,12 +207,9 @@ def get_pagelist_video_data(session: requests.Session, bvid: str, metadata: dict
 
 def get_video_info(session: requests.Session, bvid: str, source_metadata: dict | None = None) -> dict:
     def fallback():
-        try:
-            return get_public_video_data(session, bvid)
-        except (requests.RequestException, RuntimeError, ValueError):
-            if source_metadata:
-                return get_pagelist_video_data(session, bvid, source_metadata)
-            raise
+        if source_metadata:
+            return get_pagelist_video_data(session, bvid, source_metadata)
+        return get_public_video_data(session, bvid)
 
     resp = session.get(
         "https://api.bilibili.com/x/web-interface/view",
@@ -202,7 +217,7 @@ def get_video_info(session: requests.Session, bvid: str, source_metadata: dict |
         timeout=REQUEST_TIMEOUT,
     )
     if resp.status_code in (403, 412, 429):
-        print(f"[FALLBACK] {bvid}: public HTML metadata (API {resp.status_code})")
+        print(f"[FALLBACK] {bvid}: public source fallback (API {resp.status_code})")
         data = fallback()
     else:
         resp.raise_for_status()
@@ -572,6 +587,13 @@ def find_new_upload_archives(
             },
             timeout=REQUEST_TIMEOUT,
         )
+        if resp.status_code in (412, 429):
+            time.sleep(3)
+            resp = session.get(
+                "https://api.bilibili.com/x/series/recArchivesByKeywords",
+                params={"mid": mid, "keywords": "", "ps": UPLOAD_SEARCH_PAGE_SIZE, "pn": 1},
+                timeout=REQUEST_TIMEOUT,
+            )
         resp.raise_for_status()
         payload = resp.json()
         if payload.get("code") != 0:
