@@ -138,7 +138,7 @@
           "episode_no": 12
         }
       ],
-      "last_seen_at": "2026-10-03T01:08:01+08:00"
+      "last_seen_at": "2026-10-03T08:02:25+08:00"
     },
     "BV14qTo6fExY": {
       "title": "【独家】《凡人修仙传之慕兰之战》第5集【总第181集】",
@@ -159,7 +159,7 @@
           "episode_no": 5
         }
       ],
-      "last_seen_at": "2026-10-02T14:38:03+08:00"
+      "last_seen_at": "2026-10-03T08:02:28+08:00"
     },
     "BV1jhM56oE3t": {
       "title": "『雷霆三人行』第1话",
@@ -327,7 +327,7 @@
           "episode_no": 14
         }
       ],
-      "last_seen_at": "2026-10-02T21:38:00+08:00"
+      "last_seen_at": "2026-10-03T08:02:26+08:00"
     },
     "BV1RJNh6tEni": {
       "title": "『第2话 攻壳机动队 THE GHOST IN THE SHELL』",
@@ -369,7 +369,7 @@
           "episode_no": 2
         }
       ],
-      "last_seen_at": "2026-10-01T19:37:35+08:00"
+      "last_seen_at": "2026-10-03T08:02:27+08:00"
     },
     "BV1smN26sEqQ": {
       "title": "【世界在起舞】第3话",
@@ -2858,17 +2858,17 @@
       "pubdate": 1790787635,
       "page_count": 1,
       "seen_cids": [
-        "42348711246"
+        "42379184496"
       ],
       "pages": [
         {
-          "cid": "42348711246",
+          "cid": "42379184496",
           "page": 1,
-          "part": "『雷霆三人行』第12话",
+          "part": "(12)",
           "episode_no": 12
         }
       ],
-      "last_seen_at": "2026-10-01T17:07:38+08:00"
+      "last_seen_at": "2026-10-03T08:02:31+08:00"
     },
     "BV1EoaV6WESw": {
       "title": "《柯蒂斯总统第一季》全10集 超清双字(未删减)",
@@ -3250,7 +3250,7 @@
     }
   },
   "last_checked_date": "2026-10-03",
-  "last_checked_at": "2026-10-03T07:56:12+08:00",
+  "last_checked_at": "2026-10-03T08:02:32+08:00",
   "threads": {
     "BV11kMh6WEe5": {
       "thread_id": "1524206562405777498",
@@ -3360,7 +3360,7 @@
         "29416",
         "29350"
       ],
-      "last_checked_at": "2026-10-03T07:56:11+08:00"
+      "last_checked_at": "2026-10-03T08:02:32+08:00"
     },
     "mushoku_tensei": {
       "source_url": "https://anime1.me/category/2026%E5%B9%B4%E6%98%A5%E5%AD%A3/%E7%84%A1%E8%81%B7%E8%BD%89%E7%94%9F-%E5%88%B0%E4%BA%86%E7%95%B0%E4%B8%96%E7%95%8C%E5%B0%B1%E6%8B%BF%E5%87%BA%E7%9C%9F%E6%9C%AC%E4%BA%8B-%E7%AC%AC%E4%B8%89%E5%AD%A3",
@@ -3380,12 +3380,12 @@
         "29391",
         "29376"
       ],
-      "last_checked_at": "2026-10-03T07:56:12+08:00"
+      "last_checked_at": "2026-10-03T08:02:32+08:00"
     }
   },
   "bangumi": {
     "a_record_of_a_mortal_journey": {
-      "last_checked_at": "2026-10-03T07:56:08+08:00",
+      "last_checked_at": "2026-10-03T08:02:29+08:00",
       "last_seen_pubdate": 1790391600
     }
   },
@@ -3405,7 +3405,7 @@
         "WGYmhjNBWlA",
         "_quVxUQ6LHc"
       ],
-      "last_checked_at": "2026-10-03T07:56:12+08:00"
+      "last_checked_at": "2026-10-03T08:02:32+08:00"
     }
   },
   "weekly_health": {
@@ -3651,11 +3651,8 @@
     }
   },
   "last_check_failures": {
-    "video:BV1Xi7s6iE3e": "412 Client Error: Precondition Failed for url: https://www.bilibili.com/video/BV1Xi7s6iE3e/",
-    "video:BV1QvNA6CESz": "412 Client Error: Precondition Failed for url: https://www.bilibili.com/video/BV1QvNA6CESz/",
-    "video:BV15aNN6sECM": "412 Client Error: Precondition Failed for url: https://www.bilibili.com/video/BV15aNN6sECM/",
-    "video:BV14qTo6fExY": "412 Client Error: Precondition Failed for url: https://www.bilibili.com/video/BV14qTo6fExY/",
-    "video:BV1g13d6gEWf": "412 Client Error: Precondition Failed for url: https://www.bilibili.com/video/BV1g13d6gEWf/",
-    "upload:690151424:BV1jhM56oE3t": "Upload metadata unavailable: BV1xNaf6dEKh"
+    "upload:4262884:BV17gMP6hETy": "412 Client Error: Precondition Failed for url: https://api.bilibili.com/x/series/recArchivesByKeywords?mid=4262884&keywords=&ps=30&pn=1",
+    "upload:4262884:BV1cUMK6VEzR": "412 Client Error: Precondition Failed for url: https://api.bilibili.com/x/series/recArchivesByKeywords?mid=4262884&keywords=&ps=30&pn=1",
+    "upload:3493112693394137:mushoku_tensei": "412 Client Error: Precondition Failed for url: https://api.bilibili.com/x/series/recArchivesByKeywords?mid=3493112693394137&keywords=&ps=30&pn=1"
   }
 }
