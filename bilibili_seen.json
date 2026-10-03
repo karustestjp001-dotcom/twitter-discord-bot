@@ -138,7 +138,7 @@
           "episode_no": 12
         }
       ],
-      "last_seen_at": "2026-10-03T12:37:54+08:00"
+      "last_seen_at": "2026-10-03T13:07:55+08:00"
     },
     "BV14qTo6fExY": {
       "title": "【独家】《凡人修仙传之慕兰之战》第5集【总第181集】",
@@ -159,7 +159,7 @@
           "episode_no": 5
         }
       ],
-      "last_seen_at": "2026-10-03T12:38:03+08:00"
+      "last_seen_at": "2026-10-03T13:08:04+08:00"
     },
     "BV1jhM56oE3t": {
       "title": "『雷霆三人行』第1话",
@@ -327,7 +327,7 @@
           "episode_no": 14
         }
       ],
-      "last_seen_at": "2026-10-03T12:37:57+08:00"
+      "last_seen_at": "2026-10-03T13:07:58+08:00"
     },
     "BV1RJNh6tEni": {
       "title": "『第2话 攻壳机动队 THE GHOST IN THE SHELL』",
@@ -369,7 +369,7 @@
           "episode_no": 2
         }
       ],
-      "last_seen_at": "2026-10-03T12:38:00+08:00"
+      "last_seen_at": "2026-10-03T13:08:01+08:00"
     },
     "BV1smN26sEqQ": {
       "title": "【世界在起舞】第3话",
@@ -2868,7 +2868,7 @@
           "episode_no": 12
         }
       ],
-      "last_seen_at": "2026-10-03T12:38:12+08:00"
+      "last_seen_at": "2026-10-03T13:08:13+08:00"
     },
     "BV1EoaV6WESw": {
       "title": "《柯蒂斯总统第一季》全10集 超清双字(未删减)",
@@ -3268,10 +3268,108 @@
         }
       ],
       "last_seen_at": "2026-10-03T11:08:10+08:00"
+    },
+    "BV13zHh6YEDM": {
+      "title": "『描绘直至生命尽头』全12话",
+      "owner": "KAYGEZ",
+      "owner_mid": "690151424",
+      "aid": "117374611096661",
+      "thread_key": "BV1EFMF6QE41",
+      "pubdate": 1791003600,
+      "page_count": 12,
+      "seen_cids": [
+        "42414050083",
+        "42414113528",
+        "42414115468",
+        "42414179305",
+        "42414244330",
+        "42414247785",
+        "42414312868",
+        "42414376642",
+        "42414440723",
+        "42414443541",
+        "42414508229",
+        "42414572606"
+      ],
+      "pages": [
+        {
+          "cid": "42414050083",
+          "page": 1,
+          "part": "(1)",
+          "episode_no": 1
+        },
+        {
+          "cid": "42414113528",
+          "page": 2,
+          "part": "(2)",
+          "episode_no": 2
+        },
+        {
+          "cid": "42414115468",
+          "page": 3,
+          "part": "(3)",
+          "episode_no": 3
+        },
+        {
+          "cid": "42414179305",
+          "page": 4,
+          "part": "(4)",
+          "episode_no": 4
+        },
+        {
+          "cid": "42414244330",
+          "page": 5,
+          "part": "(5)",
+          "episode_no": 5
+        },
+        {
+          "cid": "42414247785",
+          "page": 6,
+          "part": "(6)",
+          "episode_no": 6
+        },
+        {
+          "cid": "42414312868",
+          "page": 7,
+          "part": "(7)",
+          "episode_no": 7
+        },
+        {
+          "cid": "42414376642",
+          "page": 8,
+          "part": "(8)",
+          "episode_no": 8
+        },
+        {
+          "cid": "42414440723",
+          "page": 9,
+          "part": "(9)",
+          "episode_no": 9
+        },
+        {
+          "cid": "42414443541",
+          "page": 10,
+          "part": "(10)",
+          "episode_no": 10
+        },
+        {
+          "cid": "42414508229",
+          "page": 11,
+          "part": "(11)",
+          "episode_no": 11
+        },
+        {
+          "cid": "42414572606",
+          "page": 12,
+          "part": "(12)",
+          "episode_no": 12
+        }
+      ],
+      "last_seen_at": "2026-10-03T13:08:10+08:00"
     }
   },
   "last_checked_date": "2026-10-03",
-  "last_checked_at": "2026-10-03T12:38:24+08:00",
+  "last_checked_at": "2026-10-03T13:08:22+08:00",
   "threads": {
     "BV11kMh6WEe5": {
       "thread_id": "1524206562405777498",
@@ -3381,7 +3479,7 @@
         "29416",
         "29350"
       ],
-      "last_checked_at": "2026-10-03T12:38:24+08:00"
+      "last_checked_at": "2026-10-03T13:08:21+08:00"
     },
     "mushoku_tensei": {
       "source_url": "https://anime1.me/category/2026%E5%B9%B4%E6%98%A5%E5%AD%A3/%E7%84%A1%E8%81%B7%E8%BD%89%E7%94%9F-%E5%88%B0%E4%BA%86%E7%95%B0%E4%B8%96%E7%95%8C%E5%B0%B1%E6%8B%BF%E5%87%BA%E7%9C%9F%E6%9C%AC%E4%BA%8B-%E7%AC%AC%E4%B8%89%E5%AD%A3",
@@ -3401,12 +3499,12 @@
         "29391",
         "29376"
       ],
-      "last_checked_at": "2026-10-03T12:38:24+08:00"
+      "last_checked_at": "2026-10-03T13:08:22+08:00"
     }
   },
   "bangumi": {
     "a_record_of_a_mortal_journey": {
-      "last_checked_at": "2026-10-03T12:38:05+08:00",
+      "last_checked_at": "2026-10-03T13:08:06+08:00",
       "last_seen_pubdate": 1790996400
     }
   },
@@ -3449,7 +3547,7 @@
       "alerted_at": "2026-09-19T17:37:46+08:00"
     },
     "BV1EFMF6QE41": {
-      "last_episode_notification_at": "2026-09-28T05:07:25+08:00"
+      "last_episode_notification_at": "2026-10-03T13:08:10+08:00"
     },
     "BV1cUMK6VEzR": {
       "last_episode_notification_at": "2026-09-28T05:37:36+08:00"
@@ -3556,6 +3654,10 @@
     "bilibili:BV1DxYP62EF3:1": {
       "message_id": "1555778462625701940",
       "thread_id": "1524213532445376613"
+    },
+    "bilibili:BV13zHh6YEDM:9": {
+      "message_id": "1555808662566608959",
+      "thread_id": "1524206575739469864"
     }
   },
   "repair_batches": {
@@ -3676,8 +3778,6 @@
     }
   },
   "last_check_failures": {
-    "upload:3493112693394137:mushoku_tensei": "412 Client Error: Precondition Failed for url: https://api.bilibili.com/x/series/recArchivesByKeywords?mid=3493112693394137&keywords=&ps=30&pn=1",
-    "upload:314790542:stuart_fails_to_save_the_universe": "412 Client Error: Precondition Failed for url: https://api.bilibili.com/x/series/recArchivesByKeywords?mid=314790542&keywords=&ps=30&pn=1",
     "youtube:UCBxsPpM2YiwN6phyYgvc4Pw": "404 Client Error: Not Found for url: https://www.youtube.com/feeds/videos.xml?channel_id=UCBxsPpM2YiwN6phyYgvc4Pw"
   }
 }
