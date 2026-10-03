@@ -1082,6 +1082,7 @@ def main() -> None:
         try:
             if check(session, webhook_url, state, *args):
                 checked_source_ids.setdefault(thread_key, set()).add(source_id)
+                failures.pop(source_id, None)
                 success_count += 1
         except Exception as exc:
             failures[source_id] = str(exc)
@@ -1099,6 +1100,12 @@ def main() -> None:
     for monitor in UPLOAD_MONITORS:
         run_check(monitor["thread_key"], f"upload:{monitor['mid']}:{monitor['thread_key']}",
                   check_upload_monitor, monitor, upload_archive_cache)
+    # A later rule for the same UP may recover the shared archive request.
+    for monitor in UPLOAD_MONITORS:
+        source_id = f"upload:{monitor['mid']}:{monitor['thread_key']}"
+        if source_id in failures and str(monitor["mid"]) in upload_archive_cache:
+            run_check(monitor["thread_key"], source_id, check_upload_monitor,
+                      monitor, upload_archive_cache)
     for monitor in ANIME1_MONITORS:
         run_check(monitor["thread_key"],
                   f"anime1:{monitor.get('feed_url') or monitor['url']}:{monitor['thread_key']}",

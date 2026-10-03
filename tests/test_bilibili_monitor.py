@@ -61,6 +61,31 @@ class MonitorTests(unittest.TestCase):
         self.assertTrue(self.state["last_check_complete"])
         self.assertNotIn("last_check_blocked", self.state)
 
+    def test_later_shared_up_recovery_rechecks_failed_earlier_rule(self):
+        calls = []
+
+        def check(session, webhook, state, rule, cache):
+            calls.append(rule["thread_key"])
+            if len(calls) == 1:
+                raise RuntimeError("temporary block")
+            cache["123"] = []
+            return True
+
+        with ExitStack() as stack:
+            stack.enter_context(patch.dict(os.environ, {monitor.WEBHOOK_ENV: "test", "BILIBILI_FORCE": "1"}))
+            for name, value in {"WATCH_VIDEOS": [], "BANGUMI_MONITORS": [], "ANIME1_MONITORS": [],
+                                "YOUTUBE_MONITORS": [], "COMPLETED_THREADS": {},
+                                "UPLOAD_MONITORS": [{"mid": "123", "thread_key": "one"},
+                                                    {"mid": "123", "thread_key": "two"}]}.items():
+                stack.enter_context(patch.object(monitor, name, value))
+            stack.enter_context(patch.object(monitor, "check_upload_monitor", side_effect=check))
+            stack.enter_context(patch.object(monitor, "check_weekly_update_health", return_value=True))
+            stack.enter_context(patch.object(monitor, "load_state", return_value=self.state))
+            monitor.main()
+        self.assertEqual(calls, ["one", "two", "one"])
+        self.assertTrue(self.state["last_check_complete"])
+        self.assertEqual(self.state["last_check_failures"], {})
+
     def test_cookie_only_goes_to_bilibili(self):
         session = monitor.make_source_session("SESSDATA=test-only; other=value")
         bili = session.prepare_request(requests.Request("GET", "https://api.bilibili.com/x"))
