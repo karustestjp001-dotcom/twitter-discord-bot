@@ -98,6 +98,25 @@ class MonitorTests(unittest.TestCase):
             "title": "Test S01E10", "pages": [{"cid": 1, "page": 1, "part": "(1)"}]}}
         self.assertEqual(monitor.get_video_info(session, "BVtest")["pages"][0]["episode_no"], 10)
 
+    def test_pagelist_recovers_blocked_view_with_verified_archive_identity(self):
+        session = Mock()
+        html = Mock()
+        html.raise_for_status.side_effect = requests.HTTPError("412")
+        pagelist = Mock()
+        pagelist.json.return_value = {"code": 0, "data": [{"cid": 99, "page": 1, "part": "(12)"}]}
+        session.get.side_effect = [Mock(status_code=412), html, pagelist]
+        source = {"bvid": "BVtest", "title": "Test 第12话", "owner_mid": "123", "metadata_source": "archive"}
+        info = monitor.get_video_info(session, "BVtest", source)
+        self.assertEqual(info["owner_mid"], "123")
+        self.assertEqual(info["pages"][0]["episode_no"], 12)
+        self.assertEqual(info["metadata_source"], "archive")
+
+    def test_pagelist_does_not_resurrect_deleted_source(self):
+        session = Mock()
+        session.get.return_value.json.return_value = {"code": -404}
+        with self.assertRaises(RuntimeError):
+            monitor.get_pagelist_video_data(session, "BVtest", {"bvid": "BVtest", "title": "Test"})
+
     def test_corrupt_state_fails_closed(self):
         self.path.write_text("{broken", encoding="utf-8")
         with self.assertRaises(json.JSONDecodeError):

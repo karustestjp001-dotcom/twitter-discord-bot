@@ -171,7 +171,31 @@ def get_public_video_data(session: requests.Session, bvid: str) -> dict:
     return data
 
 
-def get_video_info(session: requests.Session, bvid: str) -> dict:
+def get_pagelist_video_data(session: requests.Session, bvid: str, metadata: dict) -> dict:
+    if metadata.get("bvid") != bvid or not metadata.get("title"):
+        raise ValueError("Pagelist fallback requires previously verified source identity")
+    resp = session.get("https://api.bilibili.com/x/player/pagelist",
+                       params={"bvid": bvid}, timeout=REQUEST_TIMEOUT)
+    resp.raise_for_status()
+    payload = resp.json()
+    if payload.get("code") != 0 or not payload.get("data"):
+        raise RuntimeError(f"Bilibili pagelist unavailable for {bvid}: {payload.get('code')}")
+    print(f"[FALLBACK] {bvid}: public pagelist with {metadata.get('metadata_source', 'archive')} identity")
+    return {"bvid": bvid, "aid": metadata.get("aid", ""), "title": metadata["title"],
+            "owner": {"name": metadata.get("owner", ""), "mid": metadata.get("owner_mid", "")},
+            "pubdate": metadata.get("pubdate", 0), "pages": payload["data"],
+            "metadata_source": metadata.get("metadata_source", "archive")}
+
+
+def get_video_info(session: requests.Session, bvid: str, source_metadata: dict | None = None) -> dict:
+    def fallback():
+        try:
+            return get_public_video_data(session, bvid)
+        except (requests.RequestException, RuntimeError, ValueError):
+            if source_metadata:
+                return get_pagelist_video_data(session, bvid, source_metadata)
+            raise
+
     resp = session.get(
         "https://api.bilibili.com/x/web-interface/view",
         params={"bvid": bvid},
@@ -179,12 +203,12 @@ def get_video_info(session: requests.Session, bvid: str) -> dict:
     )
     if resp.status_code in (403, 412, 429):
         print(f"[FALLBACK] {bvid}: public HTML metadata (API {resp.status_code})")
-        data = get_public_video_data(session, bvid)
+        data = fallback()
     else:
         resp.raise_for_status()
         payload = resp.json()
         if payload.get("code") in (-352, -412, -403):
-            data = get_public_video_data(session, bvid)
+            data = fallback()
         elif payload.get("code") != 0:
             raise RuntimeError(f"Bilibili API error for {bvid}: {payload.get('code')}")
         else:
@@ -219,6 +243,7 @@ def get_video_info(session: requests.Session, bvid: str) -> dict:
         "pubdate": int(data.get("pubdate") or 0),
         "page_count": len(pages),
         "pages": pages,
+        "metadata_source": data.get("metadata_source", "live_view"),
     }
 
 
@@ -446,7 +471,7 @@ def post_to_discord(
     header = [
         "Bilibili 追番串建立喵" if bootstrap else "Bilibili 影片更新喵",
         f"追蹤：{thread_title}",
-        f"原標題：{info['title']}",
+        f"{'來源記錄標題' if info.get('metadata_source') == 'state' else '原標題'}：{info['title']}",
     ]
     if info["owner"]:
         header.append(f"UP：{info['owner']}")
@@ -602,7 +627,9 @@ def check_upload_monitor(
         bvid = archive["bvid"]
         thread_key = monitor["thread_key"]
         try:
-            info = get_video_info(session, bvid)
+            source_metadata = {**archive, "owner_mid": str(monitor["mid"]),
+                               "owner": monitor.get("name", ""), "metadata_source": "archive"}
+            info = get_video_info(session, bvid, source_metadata)
             if info["owner_mid"] != str(monitor["mid"]):
                 raise RuntimeError(f"Uploader mismatch for {bvid}")
             if not any(k.casefold() in info["title"].casefold() for k in monitor["keywords"]):
@@ -704,7 +731,10 @@ def check_bangumi_monitor(
         and episode["pubdate"] > latest_seen_pubdate
     ]
     for episode in new_episodes:
-        info = get_video_info(session, episode["bvid"])
+        metadata = {"bvid": episode["bvid"], "pubdate": episode["pubdate"],
+                    "title": f"{monitor['name']} 第{episode['episode_no']}集 {episode['long_title']}",
+                    "owner": "Bilibili 番剧", "metadata_source": "bangumi"}
+        info = get_video_info(session, episode["bvid"], metadata)
         if not info["pages"]:
             raise RuntimeError(f"Bangumi episode {episode['bvid']} has no playable pages")
 
@@ -983,7 +1013,8 @@ def check_youtube_monitor(
 def check_fixed_video(session, webhook_url, state, bvid, bootstrap_threads=False) -> bool:
     videos = state.setdefault("videos", {})
     old = videos.get(bvid)
-    info = get_video_info(session, bvid)
+    source_metadata = {**old, "bvid": bvid, "metadata_source": "state"} if old else None
+    info = get_video_info(session, bvid, source_metadata)
     if not info["pages"]:
         raise RuntimeError(f"No episode pages for {bvid}")
     thread_key = get_thread_key(info)

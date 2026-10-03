@@ -15,7 +15,6 @@ WATCH_VIDEOS = [
     "BV1QvNA6CESz",
     "BV15aNN6sECM",
     "BV14qTo6fExY",
-    "BV1g13d6gEWf",
 ]
 
 # Same show can sometimes be uploaded as separate BVIDs. Videos with the same
