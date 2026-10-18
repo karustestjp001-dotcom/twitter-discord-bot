@@ -61,7 +61,8 @@ class MonitorTests(unittest.TestCase):
         self.assertTrue(self.state["last_check_complete"])
         self.assertNotIn("last_check_blocked", self.state)
 
-    def test_later_shared_up_recovery_rechecks_failed_earlier_rule(self):
+    @patch.object(monitor.time, "sleep")
+    def test_later_shared_up_recovery_rechecks_failed_earlier_rule(self, sleep):
         calls = []
 
         def check(session, webhook, state, rule, cache):
@@ -83,6 +84,24 @@ class MonitorTests(unittest.TestCase):
             stack.enter_context(patch.object(monitor, "load_state", return_value=self.state))
             monitor.main()
         self.assertEqual(calls, ["one", "two", "one"])
+        self.assertTrue(self.state["last_check_complete"])
+        self.assertEqual(self.state["last_check_failures"], {})
+
+    @patch.object(monitor.time, "sleep")
+    def test_scoped_up_failure_retries_once_even_without_shared_cache(self, sleep):
+        with ExitStack() as stack:
+            stack.enter_context(patch.dict(os.environ, {monitor.WEBHOOK_ENV: "test", "BILIBILI_FORCE": "1"}))
+            for name, value in {"WATCH_VIDEOS": [], "BANGUMI_MONITORS": [], "ANIME1_MONITORS": [],
+                                "YOUTUBE_MONITORS": [], "COMPLETED_THREADS": {},
+                                "UPLOAD_MONITORS": [{"mid": "123", "thread_key": "show", "search_keyword": "Test"}]}.items():
+                stack.enter_context(patch.object(monitor, name, value))
+            check = stack.enter_context(patch.object(monitor, "check_upload_monitor",
+                                                     side_effect=[RuntimeError("412"), True]))
+            stack.enter_context(patch.object(monitor, "check_weekly_update_health", return_value=True))
+            stack.enter_context(patch.object(monitor, "load_state", return_value=self.state))
+            monitor.main()
+        self.assertEqual(check.call_count, 2)
+        sleep.assert_called_once_with(5)
         self.assertTrue(self.state["last_check_complete"])
         self.assertEqual(self.state["last_check_failures"], {})
 

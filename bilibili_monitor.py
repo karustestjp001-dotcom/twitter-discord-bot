@@ -1152,10 +1152,13 @@ def main() -> None:
     for monitor in UPLOAD_MONITORS:
         run_check(monitor["thread_key"], f"upload:{monitor['mid']}:{monitor['thread_key']}",
                   check_upload_monitor, monitor, upload_archive_cache)
-    # A later rule for the same UP may recover the shared archive request.
+    # Give blocked searches one delayed pass after the other UPs, including
+    # keyword-scoped searches that cannot benefit from another rule's cache.
+    if any(source_id.startswith("upload:") for source_id in failures):
+        time.sleep(5)
     for monitor in UPLOAD_MONITORS:
         source_id = f"upload:{monitor['mid']}:{monitor['thread_key']}"
-        if source_id in failures and upload_cache_key(monitor) in upload_archive_cache:
+        if source_id in failures:
             run_check(monitor["thread_key"], source_id, check_upload_monitor,
                       monitor, upload_archive_cache)
     for monitor in ANIME1_MONITORS:
