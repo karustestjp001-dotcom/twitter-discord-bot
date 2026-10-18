@@ -389,15 +389,38 @@ def get_active_source_ids_by_thread() -> dict[str, set[str]]:
     return source_ids
 
 
+def describe_source_failure(source_id: str, error: str = "") -> str:
+    fields = source_id.split(":")
+    if fields[0] == "video":
+        label = f"影片 {fields[1]}"
+    elif fields[0] == "upload":
+        rule = next((r for r in UPLOAD_MONITORS
+                     if str(r["mid"]) == fields[1] and r["thread_key"] == fields[2]), None)
+        label = f"UP {(rule or {}).get('name') or fields[1]} 的新 BV 搜尋"
+    else:
+        label = {"bangumi": "B 站番劇", "anime1": "Anime1", "youtube": "YouTube"}.get(fields[0], "監控來源")
+    if re.search(r"(?<![A-Za-z0-9])-?404(?![A-Za-z0-9])", error):
+        reason = "已刪除或無法存取（404）"
+    elif re.search(r"(?<![A-Za-z0-9])-?(?:412|429|352)(?![A-Za-z0-9])", error):
+        reason = "B 站限流或拒絕查詢，重試後仍失敗，暫時無法確認更新"
+    elif "timeout" in error.casefold() or "timed out" in error.casefold():
+        reason = "查詢逾時，暫時無法確認更新"
+    else:
+        reason = "來源查詢失敗，暫時無法確認更新"
+    return f"{label}：{reason}"
+
+
 def check_weekly_update_health(
     webhook_url: str,
     state: dict,
     checked_source_ids: dict[str, set[str]],
+    source_failures: dict[str, str] | None = None,
 ) -> bool:
     now = datetime.now(TIMEZONE)
     health_state = state.setdefault("weekly_health", {})
     threads = state.setdefault("threads", {})
     source_ids_by_thread = get_active_source_ids_by_thread()
+    delivery_failures = []
 
     for thread_key in sorted(source_ids_by_thread):
         thread = threads.get(thread_key) or {}
@@ -408,51 +431,66 @@ def check_weekly_update_health(
         expected_source_ids = source_ids_by_thread[thread_key]
         missing_source_ids = expected_source_ids - checked_source_ids.get(thread_key, set())
         health = health_state.setdefault(thread_key, {})
+        health["source_check_complete"] = not missing_source_ids
+        source_alerts = health.setdefault("source_alerts", {})
+        for source_id in checked_source_ids.get(thread_key, set()):
+            alert = source_alerts.get(source_id)
+            if alert and alert.get("active"):
+                alert["active"] = False
+                alert["recovered_at"] = now.isoformat(timespec="seconds")
+        new_source_failures = sorted(
+            source_id for source_id in missing_source_ids
+            if not source_alerts.get(source_id, {}).get("active")
+        )
         last_notification_text = health.get("last_episode_notification_at")
-        if not last_notification_text:
-            health["last_episode_notification_at"] = now.isoformat(timespec="seconds")
-            continue
-
         try:
             last_notification = datetime.fromisoformat(last_notification_text)
             if last_notification.tzinfo is None:
                 last_notification = last_notification.replace(tzinfo=TIMEZONE)
         except (TypeError, ValueError):
-            health["last_episode_notification_at"] = now.isoformat(timespec="seconds")
+            last_notification = now
+            last_notification_text = now.isoformat(timespec="seconds")
+            health["last_episode_notification_at"] = last_notification_text
             health.pop("alerted_for", None)
-            continue
 
-        if now - last_notification < WEEKLY_UPDATE_TIMEOUT:
-            continue
-        if health.get("alerted_for") == last_notification_text:
+        weekly_due = (now - last_notification >= WEEKLY_UPDATE_TIMEOUT
+                      and health.get("alerted_for") != last_notification_text)
+        if not new_source_failures and not weekly_due:
             continue
 
         title = thread.get("title") or thread_key
-        status_text = (
-            "已超過 7 天沒有發片通知；本次部分來源查詢失敗，無法確認是否有新集數。"
-            if missing_source_ids else
-            "已超過 7 天沒有偵測到下一集。今日已重新檢查設定來源，仍未找到新內容。"
-        )
-        payload = {
-            "content": "\n".join(
-                [
-                    "追番監控異常提醒喵",
-                    f"追蹤：{title}",
-                    f"最近一次發片通知：{last_notification.astimezone(TIMEZONE).strftime('%Y-%m-%d %H:%M')}",
-                    status_text,
-                    "可能原因：來源刪文、改用新網址、官方延期，或日本重大節日停播。",
-                    "請人工確認來源狀態。",
-                ]
+        lines = ["追番監控異常提醒喵", f"追蹤：{title}",
+                 f"最近一次發片通知：{last_notification.astimezone(TIMEZONE).strftime('%Y-%m-%d %H:%M')}"]
+        if new_source_failures:
+            lines.append("來源查詢失敗；目前無法完整確認是否有新集數，已保留後續重試。")
+            lines.extend("- " + describe_source_failure(s, (source_failures or {}).get(s, ""))
+                         for s in new_source_failures)
+        if weekly_due:
+            lines.append(
+                "已超過 7 天沒有發片通知；本次部分來源查詢失敗，無法確認是否有新集數。"
+                if missing_source_ids else
+                "已超過 7 天沒有偵測到下一集。今日已重新檢查設定來源，仍未找到新內容。"
             )
-        }
-        receipt = send_discord_message(webhook_url, payload, thread_id)
-        health["alerted_for"] = last_notification_text
-        health["alerted_at"] = now.isoformat(timespec="seconds")
-        health["alert_receipt"] = receipt
-        health["source_check_complete"] = not missing_source_ids
+            lines.append("可能原因：來源刪文、改用新網址、官方延期，或日本重大節日停播。")
+        lines.append("請人工確認來源狀態；其他可用來源仍會繼續追蹤。")
+        try:
+            receipt = send_discord_message(webhook_url, {"content": "\n".join(lines)[:1900]}, thread_id)
+        except Exception:
+            delivery_failures.append(thread_key)
+            continue
+        for source_id in new_source_failures:
+            source_alerts[source_id] = {"active": True, "alerted_at": now.isoformat(timespec="seconds"),
+                                       "receipt": receipt}
+        if weekly_due:
+            health["alerted_for"] = last_notification_text
+            health["alerted_at"] = now.isoformat(timespec="seconds")
+            health["alert_receipt"] = receipt
         save_state(state)
-        print(f"[ALERT] {title} has no episode notification for 7 days")
+        print(f"[ALERT] {title}: source_failures={len(new_source_failures)}, weekly_overdue={weekly_due}")
 
+    save_state(state)
+    if delivery_failures:
+        raise RuntimeError("Discord health alert delivery failed: " + ", ".join(delivery_failures))
     return True
 
 
@@ -1171,7 +1209,7 @@ def main() -> None:
 
     health_success = False
     try:
-        health_success = check_weekly_update_health(webhook_url, state, checked_source_ids)
+        health_success = check_weekly_update_health(webhook_url, state, checked_source_ids, failures)
     except Exception as exc:
         failures["weekly_health"] = str(exc)
         print(f"[WARN] weekly update health check failed: {repr(exc)}")
