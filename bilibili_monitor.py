@@ -48,10 +48,14 @@ NON_EPISODE_PART_KEYWORDS = (
     "周更",
     "点个",
     "點個",
+    "更新中",
+    "待更新",
+    "敬请期待",
+    "敬請期待",
 )
 NON_EPISODE_TITLE_KEYWORDS = (
     "预告", "預告", "片段", "抢先看", "搶先看", "解说", "解說", "彩蛋",
-    "trailer", "preview", "reaction",
+    "trailer", "preview", "reaction", "先行图", "先行圖", "pv",
 )
 UPLOAD_SEARCH_PAGE_SIZE = 30
 WEEKLY_UPDATE_TIMEOUT = timedelta(days=7)
@@ -246,6 +250,8 @@ def get_video_info(session: requests.Session, bvid: str, source_metadata: dict |
                 "page": int(page.get("page") or 0),
                 "part": part,
                 "episode_no": episode_no or len(pages) + 1,
+                "episode_no_explicit": episode_no is not None,
+                "duration": int(page.get("duration") or 0),
             }
         )
 
@@ -304,6 +310,13 @@ def extract_episode_no(text: str) -> int | None:
         return int(match.group(1))
 
     match = re.search(r"\b[Ee][Pp]?\s*(\d{1,3})\b", str(text))
+    if match:
+        return int(match.group(1))
+
+    match = re.search(r"[』】」]\s*(\d{1,3})\s*(?:[【\[]|$)", text)
+    if match:
+        return int(match.group(1))
+    match = re.fullmatch(r"(\d{1,3})\s*(?:简中|繁中|中字|簡中)", text)
     if match:
         return int(match.group(1))
 
@@ -576,12 +589,14 @@ def find_new_upload_archives(
         return []
 
     mid = str(monitor["mid"])
-    if mid not in archive_cache:
+    search_keyword = monitor.get("search_keyword", "")
+    cache_key = upload_cache_key(monitor)
+    if cache_key not in archive_cache:
         resp = session.get(
             "https://api.bilibili.com/x/series/recArchivesByKeywords",
             params={
                 "mid": mid,
-                "keywords": "",
+                "keywords": search_keyword,
                 "ps": UPLOAD_SEARCH_PAGE_SIZE,
                 "pn": 1,
             },
@@ -591,7 +606,7 @@ def find_new_upload_archives(
             time.sleep(3)
             resp = session.get(
                 "https://api.bilibili.com/x/series/recArchivesByKeywords",
-                params={"mid": mid, "keywords": "", "ps": UPLOAD_SEARCH_PAGE_SIZE, "pn": 1},
+                params={"mid": mid, "keywords": search_keyword, "ps": UPLOAD_SEARCH_PAGE_SIZE, "pn": 1},
                 timeout=REQUEST_TIMEOUT,
             )
         resp.raise_for_status()
@@ -601,7 +616,7 @@ def find_new_upload_archives(
                 f"Bilibili upload search error for {monitor.get('name')}: "
                 f"{payload.get('code')} {payload.get('message')}"
             )
-        archive_cache[mid] = ((payload.get("data") or {}).get("archives") or [])
+        archive_cache[cache_key] = ((payload.get("data") or {}).get("archives") or [])
 
     thread_key = monitor["thread_key"]
     baseline = min(
@@ -613,15 +628,20 @@ def find_new_upload_archives(
         return []
 
     matches = []
-    for archive in archive_cache[mid]:
+    for archive in archive_cache[cache_key]:
         bvid = archive.get("bvid")
         title = archive.get("title") or ""
         pubdate = int(archive.get("pubdate") or 0)
         if not bvid or pubdate < baseline:
             continue
+        # This recommendation endpoint can include another uploader's archives.
+        if archive.get("upMid") and str(archive["upMid"]) != mid:
+            continue
         if not any(keyword.casefold() in title.casefold() for keyword in keywords):
             continue
         if not is_episode_title(title):
+            continue
+        if int(archive.get("duration") or 0) < int(monitor.get("min_episode_duration") or 0):
             continue
         if monitor.get("require_episode_number") and extract_episode_no(title) is None:
             continue
@@ -629,6 +649,30 @@ def find_new_upload_archives(
         matches.append(archive)
 
     return sorted(matches, key=lambda archive: int(archive.get("pubdate") or 0))
+
+
+def upload_cache_key(monitor: dict) -> str:
+    keyword = monitor.get("search_keyword", "")
+    return f"{monitor['mid']}:{keyword}" if keyword else str(monitor["mid"])
+
+
+def filter_monitored_pages(info: dict, rule: dict) -> dict:
+    minimum = int(rule.get("min_episode_duration") or 0)
+    if not minimum:
+        return info
+    if info["owner_mid"] != str(rule["mid"]):
+        raise RuntimeError(f"Uploader mismatch for {info['bvid']}")
+    if not any(k.casefold() in info["title"].casefold() for k in rule["keywords"]):
+        raise RuntimeError(f"Title mismatch for {info['bvid']}")
+    candidate_pages = info["pages"]
+    title_episode = extract_episode_no(info["title"])
+    if rule.get("first_page_only") and title_episode and candidate_pages:
+        candidate_pages = [{**candidate_pages[0], "episode_no": title_episode,
+                            "episode_no_explicit": True}]
+    # New shows require explicit episode labels, not guessed page positions.
+    pages = [p for p in candidate_pages
+             if int(p.get("duration") or 0) >= minimum and p.get("episode_no_explicit")]
+    return {**info, "pages": pages, "page_count": len(pages)}
 
 
 def check_upload_monitor(
@@ -651,6 +695,8 @@ def check_upload_monitor(
         try:
             source_metadata = {**archive, "owner_mid": str(monitor["mid"]),
                                "owner": monitor.get("name", ""), "metadata_source": "archive"}
+            if str(archive.get("upMid", "")) != str(monitor["mid"]):
+                source_metadata = None
             info = get_video_info(session, bvid, source_metadata)
             if info["owner_mid"] != str(monitor["mid"]):
                 raise RuntimeError(f"Uploader mismatch for {bvid}")
@@ -660,6 +706,7 @@ def check_upload_monitor(
             failures.append(bvid)
             print(f"[WARN] upload {bvid}: {exc}")
             continue
+        info = filter_monitored_pages(info, monitor)
         pages_to_post = info["pages"][:1] if monitor.get("first_page_only") else info["pages"]
         if monitor.get("first_page_only") and pages_to_post and extract_episode_no(info["title"]):
             pages_to_post[0]["episode_no"] = extract_episode_no(info["title"])
@@ -1037,14 +1084,19 @@ def check_fixed_video(session, webhook_url, state, bvid, bootstrap_threads=False
     old = videos.get(bvid)
     source_metadata = {**old, "bvid": bvid, "metadata_source": "state"} if old else None
     info = get_video_info(session, bvid, source_metadata)
+    thread_key = get_thread_key(info)
+    for rule in UPLOAD_MONITORS:
+        if rule["thread_key"] == thread_key and rule.get("min_episode_duration"):
+            info = filter_monitored_pages(info, rule)
     if not info["pages"]:
         raise RuntimeError(f"No episode pages for {bvid}")
-    thread_key = get_thread_key(info)
     new_pages = detect_new_pages(old, info)
     if bootstrap_threads and not state["threads"].get(thread_key):
         post_to_discord(webhook_url, info, info["pages"], state, thread_key, bootstrap=True)
     elif new_pages:
-        post_to_discord(webhook_url, info, new_pages, state, thread_key)
+        new_pages = select_unseen_episodes(videos, thread_key, new_pages)
+        if new_pages:
+            post_to_discord(webhook_url, info, new_pages, state, thread_key)
     else:
         print(f"[NOOP] {bvid}: {'no new pages' if old else 'baseline saved'}")
     videos[bvid] = make_snapshot(info, thread_key)
@@ -1103,7 +1155,7 @@ def main() -> None:
     # A later rule for the same UP may recover the shared archive request.
     for monitor in UPLOAD_MONITORS:
         source_id = f"upload:{monitor['mid']}:{monitor['thread_key']}"
-        if source_id in failures and str(monitor["mid"]) in upload_archive_cache:
+        if source_id in failures and upload_cache_key(monitor) in upload_archive_cache:
             run_check(monitor["thread_key"], source_id, check_upload_monitor,
                       monitor, upload_archive_cache)
     for monitor in ANIME1_MONITORS:

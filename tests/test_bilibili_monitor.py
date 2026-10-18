@@ -100,6 +100,77 @@ class MonitorTests(unittest.TestCase):
             self.assertFalse(monitor.is_episode_title(title))
         self.assertTrue(monitor.is_episode_title("柯蒂斯总统 S01E10 中英字幕"))
 
+    def test_new_show_labels_and_placeholders(self):
+        self.assertEqual(monitor.extract_episode_no("『药屋少女的呢喃 第三季』03【中文字幕】"), 3)
+        self.assertEqual(monitor.extract_episode_no("01简中"), 1)
+        self.assertIsNone(monitor.extract_episode_no("全12集"))
+        self.assertIsNone(monitor.extract_episode_no("01-03话"))
+        for part in ["更新中", "待更新", "敬請期待", "此合集每周更新"]:
+            self.assertFalse(monitor.is_episode_part(part))
+        for title in ["Test 第4话先行图公开", "Test 第4话 PV"]:
+            self.assertFalse(monitor.is_episode_title(title))
+
+    def test_keyword_scoped_up_cache_cannot_mix_shows(self):
+        session = Mock()
+        session.get.return_value.status_code = 200
+        session.get.return_value.json.return_value = {"code": 0, "data": {"archives": []}}
+        cache = {}
+        for keyword in ["Show A", "Show B", "Show A"]:
+            monitor.find_new_upload_archives(session, {
+                "mid": "123", "thread_key": "show", "keywords": [keyword],
+                "search_keyword": keyword,
+            }, {}, cache)
+        self.assertEqual(session.get.call_count, 2)
+        self.assertEqual(set(cache), {"123:Show A", "123:Show B"})
+        self.assertEqual(session.get.call_args.kwargs["params"]["keywords"], "Show B")
+
+    def test_recommendations_from_other_up_and_short_clips_are_rejected(self):
+        rule = {"mid": "123", "thread_key": "show", "keywords": ["Test"],
+                "min_episode_duration": 900, "require_episode_number": True}
+        base = {"title": "Test 第4话", "pubdate": 200, "duration": 1400, "upMid": 123}
+        cache = {"123": [dict(base, bvid="good"), dict(base, bvid="wrong", upMid=999),
+                         dict(base, bvid="short", duration=60),
+                         dict(base, bvid="collection", title="Test 全12集")]}
+        videos = {"old": {"thread_key": "show", "pubdate": 100}}
+        found = monitor.find_new_upload_archives(Mock(), rule, videos, cache)
+        self.assertEqual([a["bvid"] for a in found], ["good"])
+
+    def test_new_source_pages_require_identity_duration_and_explicit_episode(self):
+        info = video_info(3)
+        info["pages"][0].update(duration=1400, episode_no_explicit=True)
+        info["pages"][1].update(duration=60, episode_no_explicit=True)
+        info["pages"][2].update(duration=1400, episode_no_explicit=False)
+        rule = {"mid": "123", "keywords": ["Test"], "min_episode_duration": 900}
+        filtered = monitor.filter_monitored_pages(info, rule)
+        self.assertEqual(filtered["page_count"], 1)
+        self.assertEqual(filtered["pages"][0]["episode_no"], 1)
+        self.assertEqual(len(info["pages"]), 3)
+        with self.assertRaises(RuntimeError):
+            monitor.filter_monitored_pages({**info, "owner_mid": "999"}, rule)
+
+    def test_explicit_single_upload_title_wins_over_generic_part_and_extras(self):
+        info = video_info(2)
+        info["title"] = "Test 第4话"
+        for page in info["pages"]:
+            page.update(duration=1400, episode_no_explicit=False)
+        rule = {"mid": "123", "keywords": ["Test"], "min_episode_duration": 900,
+                "first_page_only": True}
+        filtered = monitor.filter_monitored_pages(info, rule)
+        self.assertEqual([p["episode_no"] for p in filtered["pages"]], [4])
+        self.assertEqual(len(info["pages"]), 2)
+
+    @patch.object(monitor, "post_to_discord")
+    @patch.object(monitor, "get_video_info", return_value=video_info(2))
+    def test_collection_does_not_repost_an_episode_already_sent_by_up(self, get_info, post):
+        self.state["videos"]["BVtest"] = monitor.make_snapshot(video_info(), "show")
+        other = video_info()
+        other["pages"][0]["episode_no"] = 2
+        self.state["videos"]["separate"] = monitor.make_snapshot(other, "show")
+        with patch.object(monitor, "THREAD_KEY_OVERRIDES", {"BVtest": "show"}):
+            monitor.check_fixed_video(Mock(), "webhook", self.state, "BVtest")
+        post.assert_not_called()
+        self.assertEqual(self.state["videos"]["BVtest"]["page_count"], 2)
+
     def test_api_412_uses_public_html_without_login(self):
         data = {"bvid": "BVtest", "aid": 1, "title": "Test 第2集", "owner": {"mid": 123},
                 "pages": [{"cid": 2, "page": 1, "part": "第2集"},
