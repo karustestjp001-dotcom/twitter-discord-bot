@@ -20,7 +20,6 @@ CLOSED_THREADS = {
     "cat_and_dragon",
     "BV17gMP6hETy",
     "BV1cUMK6VEzR",
-    "a_record_of_a_mortal_journey",
     "BV1jhM56oE3t",
 }
 
