@@ -24,6 +24,7 @@ import requests
 from config_bilibili import (
     ANIME1_MONITORS,
     BANGUMI_MONITORS,
+    CLOSED_THREADS,
     COMPLETED_THREADS,
     FORUM_THREAD_PREFIX,
     THREAD_KEY_OVERRIDES,
@@ -369,7 +370,7 @@ def get_active_source_ids_by_thread() -> dict[str, set[str]]:
     source_ids: dict[str, set[str]] = {}
 
     def add(thread_key: str, source_id: str) -> None:
-        if thread_key not in COMPLETED_THREADS:
+        if thread_key not in COMPLETED_THREADS and thread_key not in CLOSED_THREADS:
             source_ids.setdefault(thread_key, set()).add(source_id)
 
     for bvid in WATCH_VIDEOS:
@@ -1167,7 +1168,7 @@ def main() -> None:
 
     def run_check(thread_key, source_id, check, *args):
         nonlocal success_count
-        if thread_key in COMPLETED_THREADS:
+        if thread_key in COMPLETED_THREADS or thread_key in CLOSED_THREADS:
             return
         try:
             if check(session, webhook_url, state, *args):

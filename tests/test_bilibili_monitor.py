@@ -347,8 +347,46 @@ class MonitorTests(unittest.TestCase):
         self.assertNotIn("3", monitor.load_state()["anime1"]["show"]["seen_post_ids"])
 
     def test_completed_shows_do_not_trigger_seven_day_alert(self):
-        for key in monitor.COMPLETED_THREADS:
+        for key in set(monitor.COMPLETED_THREADS) | monitor.CLOSED_THREADS:
             self.assertNotIn(key, monitor.get_active_source_ids_by_thread())
+
+    def test_manually_closed_shows_skip_every_source_and_keep_history(self):
+        from copy import deepcopy
+
+        for key in monitor.CLOSED_THREADS:
+            self.state["threads"][key] = {"thread_id": "456", "title": key}
+        self.state["videos"]["historical"] = {"thread_key": "mushoku_tensei", "seen_cids": ["99"]}
+        self.state["weekly_health"] = {
+            key: {"last_episode_notification_at":
+                  (datetime.now(monitor.TIMEZONE) - timedelta(days=30)).isoformat(),
+                  "source_alerts": {"previous": {"active": True}}}
+            for key in monitor.CLOSED_THREADS
+        }
+        history = deepcopy(self.state)
+        with ExitStack() as stack:
+            stack.enter_context(patch.dict(os.environ, {monitor.WEBHOOK_ENV: "test", "BILIBILI_FORCE": "1"}))
+            stack.enter_context(patch.object(monitor, "WATCH_VIDEOS", ["BVcontrol", "BVclosed"]))
+            stack.enter_context(patch.object(monitor, "THREAD_KEY_OVERRIDES", {
+                "BVcontrol": "show", "BVclosed": "mushoku_tensei"}))
+            for name in ("UPLOAD_MONITORS", "ANIME1_MONITORS", "YOUTUBE_MONITORS", "BANGUMI_MONITORS"):
+                closed_rules = [r for r in getattr(monitor, name) if r["thread_key"] in monitor.CLOSED_THREADS]
+                stack.enter_context(patch.object(monitor, name, closed_rules))
+            stack.enter_context(patch.object(monitor, "load_state", return_value=self.state))
+            video = stack.enter_context(patch.object(monitor, "check_fixed_video", return_value=True))
+            other_checks = [stack.enter_context(patch.object(monitor, name)) for name in (
+                "check_upload_monitor", "check_anime1_monitor", "check_youtube_monitor", "check_bangumi_monitor")]
+            send = stack.enter_context(patch.object(monitor, "send_discord_message"))
+            monitor.main()
+        video.assert_called_once()
+        self.assertEqual(video.call_args.args[3], "BVcontrol")
+        for check in other_checks:
+            check.assert_not_called()
+        send.assert_not_called()
+        self.assertEqual(self.state["threads"], history["threads"])
+        self.assertEqual(self.state["videos"], history["videos"])
+        for key in monitor.CLOSED_THREADS:
+            self.assertEqual(self.state["weekly_health"][key], history["weekly_health"][key])
+        self.assertTrue(self.state["last_check_complete"])
 
     def test_reviewed_metadata_requires_matching_identity_and_fresh_timestamp(self):
         item = {"thread_key": "show", "bvid": "BVtest", "owner_mid": "123",

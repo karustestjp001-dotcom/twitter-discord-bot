@@ -10,6 +10,14 @@ COMPLETED_THREADS = {
     "president_curtis_s1": 10,
 }
 
+# Manually closed by the user; retain sources/history for possible reactivation.
+CLOSED_THREADS = {
+    "stuart_fails_to_save_the_universe",
+    "BV18yMA6EE9g",
+    "BV1EFMF6QE41",
+    "mushoku_tensei",
+}
+
 WATCH_VIDEOS = [
     "BV1Xi7s6iE3e",
     "BV1QvNA6CESz",
