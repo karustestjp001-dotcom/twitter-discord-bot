@@ -16,6 +16,12 @@ CLOSED_THREADS = {
     "BV18yMA6EE9g",
     "BV1EFMF6QE41",
     "mushoku_tensei",
+    "BV15yM86PEna",
+    "cat_and_dragon",
+    "BV17gMP6hETy",
+    "BV1cUMK6VEzR",
+    "a_record_of_a_mortal_journey",
+    "BV1jhM56oE3t",
 }
 
 WATCH_VIDEOS = [
