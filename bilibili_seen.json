@@ -185,7 +185,7 @@
           "duration": 1191
         }
       ],
-      "last_seen_at": "2026-10-29T00:37:34+08:00"
+      "last_seen_at": "2026-10-29T01:07:28+08:00"
     },
     "BV1jhM56oE3t": {
       "title": "『雷霆三人行』第1话",
@@ -3519,7 +3519,7 @@
           "duration": 1778
         }
       ],
-      "last_seen_at": "2026-10-29T00:37:39+08:00"
+      "last_seen_at": "2026-10-29T01:07:34+08:00"
     },
     "BV1yqp46GEdk": {
       "title": "【学生会也有洞！】全12集（未删减版）周更【超清中字】",
@@ -3569,7 +3569,7 @@
           "duration": 1773
         }
       ],
-      "last_seen_at": "2026-10-29T00:37:42+08:00"
+      "last_seen_at": "2026-10-29T01:07:36+08:00"
     },
     "BV1Pkph6sEee": {
       "title": "【4K超清】魔禁外传 某暗部的少女共栖 01-03话",
@@ -3610,7 +3610,7 @@
           "duration": 1848
         }
       ],
-      "last_seen_at": "2026-10-29T00:37:44+08:00"
+      "last_seen_at": "2026-10-29T01:07:39+08:00"
     },
     "BV1nWJX6KEst": {
       "title": "【萤火虫的出嫁】全12集 超清中字（未删减版）周更",
@@ -3747,7 +3747,7 @@
           "duration": 1798
         }
       ],
-      "last_seen_at": "2026-10-29T00:37:56+08:00"
+      "last_seen_at": "2026-10-29T01:07:51+08:00"
     },
     "BV1KsHj62Esc": {
       "title": "【与暗黑召唤师秘密恋爱中】全8集 超清中字（更新中）",
@@ -3797,7 +3797,7 @@
           "duration": 1648
         }
       ],
-      "last_seen_at": "2026-10-29T00:37:59+08:00"
+      "last_seen_at": "2026-10-29T01:07:54+08:00"
     },
     "BV1gjp36rEUf": {
       "title": "『脑洞学生会！』第2话【中文字幕】",
@@ -4050,7 +4050,7 @@
           "duration": 1848
         }
       ],
-      "last_seen_at": "2026-10-29T00:39:04+08:00"
+      "last_seen_at": "2026-10-29T01:08:50+08:00"
     },
     "BV1ojn86vEeU": {
       "title": "凡人修仙传 第197集 慕兰之战21",
@@ -4119,7 +4119,7 @@
           "duration": 1719
         }
       ],
-      "last_seen_at": "2026-10-29T00:38:36+08:00"
+      "last_seen_at": "2026-10-29T01:08:18+08:00"
     },
     "BV1unx36UEeR": {
       "title": "〖黑暗机器 DARK MACHINE〗第3话",
@@ -4146,7 +4146,7 @@
     }
   },
   "last_checked_date": "2026-10-29",
-  "last_checked_at": "2026-10-29T00:39:05+08:00",
+  "last_checked_at": "2026-10-29T01:09:02+08:00",
   "threads": {
     "BV11kMh6WEe5": {
       "thread_id": "1524206562405777498",
@@ -4335,7 +4335,7 @@
   },
   "bangumi": {
     "a_record_of_a_mortal_journey": {
-      "last_checked_at": "2026-10-29T00:38:02+08:00",
+      "last_checked_at": "2026-10-29T01:07:56+08:00",
       "last_seen_pubdate": 1792810800
     }
   },
@@ -4546,31 +4546,29 @@
     },
     "fx_fighter_kurumi": {
       "last_episode_notification_at": "2026-10-22T21:08:56+08:00",
-      "source_check_complete": true,
+      "source_check_complete": false,
       "source_alerts": {
         "upload:224267770:fx_fighter_kurumi": {
-          "active": false,
-          "alerted_at": "2026-10-28T23:09:08+08:00",
+          "active": true,
+          "alerted_at": "2026-10-29T01:09:00+08:00",
           "receipt": {
-            "message_id": "1565019596648480770",
+            "message_id": "1565049766071631933",
             "thread_id": "1561427411478905003"
-          },
-          "recovered_at": "2026-10-29T00:09:05+08:00"
+          }
         }
       }
     },
     "student_council_holes": {
       "last_episode_notification_at": "2026-10-25T00:38:41+08:00",
-      "source_check_complete": true,
+      "source_check_complete": false,
       "source_alerts": {
         "upload:224267770:student_council_holes": {
-          "active": false,
-          "alerted_at": "2026-10-28T21:38:55+08:00",
+          "active": true,
+          "alerted_at": "2026-10-29T01:09:00+08:00",
           "receipt": {
-            "message_id": "1564996893036253389",
+            "message_id": "1565049768369987673",
             "thread_id": "1561427418848297113"
-          },
-          "recovered_at": "2026-10-28T22:09:00+08:00"
+          }
         }
       }
     },
@@ -4672,31 +4670,29 @@
     },
     "dark_machine": {
       "last_episode_notification_at": "2026-10-28T02:38:42+08:00",
-      "source_check_complete": true,
+      "source_check_complete": false,
       "source_alerts": {
         "upload:3493112693394137:dark_machine": {
-          "active": false,
-          "alerted_at": "2026-10-28T14:09:12+08:00",
+          "active": true,
+          "alerted_at": "2026-10-29T01:09:00+08:00",
           "receipt": {
-            "message_id": "1564883718412173327",
+            "message_id": "1565049763500400684",
             "thread_id": "1561427446144696363"
-          },
-          "recovered_at": "2026-10-28T14:12:09+08:00"
+          }
         }
       }
     },
     "dating_dark_summoner": {
       "last_episode_notification_at": "2026-10-27T18:38:04+08:00",
-      "source_check_complete": true,
+      "source_check_complete": false,
       "source_alerts": {
         "upload:3546768887253334:dating_dark_summoner": {
-          "active": false,
-          "alerted_at": "2026-10-28T19:39:11+08:00",
+          "active": true,
+          "alerted_at": "2026-10-29T01:09:00+08:00",
           "receipt": {
-            "message_id": "1564966762695630859",
+            "message_id": "1565049764989509714",
             "thread_id": "1561427452084092941"
-          },
-          "recovered_at": "2026-10-28T20:08:47+08:00"
+          }
         }
       },
       "alert_receipt": {
@@ -5081,7 +5077,11 @@
     "video:BV1CPJY67E2o": "Bilibili pagelist unavailable for BV1CPJY67E2o: -404",
     "video:BV1nWJX6KEst": "Bilibili pagelist unavailable for BV1nWJX6KEst: -404",
     "video:BV1GTpn6BEsH": "Bilibili pagelist unavailable for BV1GTpn6BEsH: -404",
-    "video:BV1dNpe6jEj3": "Bilibili pagelist unavailable for BV1dNpe6jEj3: -404"
+    "video:BV1dNpe6jEj3": "Bilibili pagelist unavailable for BV1dNpe6jEj3: -404",
+    "upload:224267770:fx_fighter_kurumi": "412 Client Error: Precondition Failed for url: https://api.bilibili.com/x/series/recArchivesByKeywords?mid=224267770&keywords=FX%E6%88%98%E5%A3%AB%E4%B9%85%E7%95%99%E7%BE%8E&ps=30&pn=1",
+    "upload:224267770:student_council_holes": "412 Client Error: Precondition Failed for url: https://api.bilibili.com/x/series/recArchivesByKeywords?mid=224267770&keywords=%E5%AD%A6%E7%94%9F%E4%BC%9A&ps=30&pn=1",
+    "upload:3493112693394137:dark_machine": "412 Client Error: Precondition Failed for url: https://api.bilibili.com/x/series/recArchivesByKeywords?mid=3493112693394137&keywords=%E9%BB%91%E6%9A%97%E6%9C%BA%E5%99%A8&ps=30&pn=1",
+    "upload:3546768887253334:dating_dark_summoner": "412 Client Error: Precondition Failed for url: https://api.bilibili.com/x/series/recArchivesByKeywords?mid=3546768887253334&keywords=%E5%8F%AC%E5%94%A4%E5%B8%88&ps=30&pn=1"
   },
   "enrollment_batches": {
     "2026-10-19-autumn-nine": {
