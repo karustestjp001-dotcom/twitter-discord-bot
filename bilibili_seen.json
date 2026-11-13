@@ -185,7 +185,7 @@
           "duration": 1191
         }
       ],
-      "last_seen_at": "2026-11-13T23:37:28+08:00"
+      "last_seen_at": "2026-11-14T00:07:28+08:00"
     },
     "BV1jhM56oE3t": {
       "title": "『雷霆三人行』第1话",
@@ -3614,7 +3614,7 @@
           "duration": 1772
         }
       ],
-      "last_seen_at": "2026-11-13T23:37:37+08:00"
+      "last_seen_at": "2026-11-14T00:07:37+08:00"
     },
     "BV1Pkph6sEee": {
       "title": "【4K超清】魔禁外传 某暗部的少女共栖 01-05话",
@@ -3673,7 +3673,7 @@
           "duration": 1848
         }
       ],
-      "last_seen_at": "2026-11-13T23:37:40+08:00"
+      "last_seen_at": "2026-11-14T00:07:40+08:00"
     },
     "BV1nWJX6KEst": {
       "title": "【萤火虫的出嫁】全12集 超清中字（未删减版）周更",
@@ -3846,7 +3846,7 @@
           "duration": 1622
         }
       ],
-      "last_seen_at": "2026-11-13T23:37:52+08:00"
+      "last_seen_at": "2026-11-14T00:07:52+08:00"
     },
     "BV1KsHj62Esc": {
       "title": "【与暗黑召唤师秘密恋爱中】全8集 超清中字（更新中）",
@@ -3914,7 +3914,7 @@
           "duration": 1729
         }
       ],
-      "last_seen_at": "2026-11-13T23:37:55+08:00"
+      "last_seen_at": "2026-11-14T00:07:55+08:00"
     },
     "BV1gjp36rEUf": {
       "title": "『脑洞学生会！』第2话【中文字幕】",
@@ -4581,7 +4581,7 @@
           "duration": 1622
         }
       ],
-      "last_seen_at": "2026-11-13T23:08:51+08:00"
+      "last_seen_at": "2026-11-14T00:08:34+08:00"
     },
     "BV1MTWR68Eos": {
       "title": "『FX战士久留美』第7话【中文字幕】",
@@ -4604,7 +4604,7 @@
           "duration": 1778
         }
       ],
-      "last_seen_at": "2026-11-13T23:38:10+08:00"
+      "last_seen_at": "2026-11-14T00:08:06+08:00"
     },
     "BV15PWB6tEA9": {
       "title": "【药屋少女的呢喃 第三季】第7集",
@@ -4627,11 +4627,34 @@
           "duration": 1968
         }
       ],
-      "last_seen_at": "2026-11-13T23:38:56+08:00"
+      "last_seen_at": "2026-11-14T00:08:48+08:00"
+    },
+    "BV1m7WB6mEpv": {
+      "title": "〖某暗部的少女共栖〗第6话",
+      "owner": "晓月の诗",
+      "owner_mid": "3493112693394137",
+      "aid": "117609861219053",
+      "thread_key": "dark_side_item",
+      "pubdate": 1794584514,
+      "page_count": 1,
+      "seen_cids": [
+        "43578819794"
+      ],
+      "pages": [
+        {
+          "cid": "43578819794",
+          "page": 1,
+          "part": "〖某暗部的少女共栖〗第6话",
+          "episode_no": 6,
+          "episode_no_explicit": true,
+          "duration": 1719
+        }
+      ],
+      "last_seen_at": "2026-11-14T00:08:19+08:00"
     }
   },
-  "last_checked_date": "2026-11-13",
-  "last_checked_at": "2026-11-13T23:39:16+08:00",
+  "last_checked_date": "2026-11-14",
+  "last_checked_at": "2026-11-14T00:09:03+08:00",
   "threads": {
     "BV11kMh6WEe5": {
       "thread_id": "1524206562405777498",
@@ -4820,7 +4843,7 @@
   },
   "bangumi": {
     "a_record_of_a_mortal_journey": {
-      "last_checked_at": "2026-11-13T23:37:58+08:00",
+      "last_checked_at": "2026-11-14T00:07:57+08:00",
       "last_seen_pubdate": 1794020400
     }
   },
@@ -5079,16 +5102,17 @@
       }
     },
     "dark_side_item": {
-      "last_episode_notification_at": "2026-11-07T00:09:21+08:00",
-      "source_check_complete": false,
+      "last_episode_notification_at": "2026-11-14T00:08:19+08:00",
+      "source_check_complete": true,
       "source_alerts": {
         "upload:3493112693394137:dark_side_item": {
-          "active": true,
+          "active": false,
           "alerted_at": "2026-11-13T23:39:15+08:00",
           "receipt": {
             "message_id": "1570825383484325959",
             "thread_id": "1561427424594501652"
-          }
+          },
+          "recovered_at": "2026-11-14T00:09:02+08:00"
         }
       }
     },
@@ -5097,13 +5121,12 @@
       "source_check_complete": false,
       "source_alerts": {
         "upload:4262884:firefly_wedding": {
-          "active": false,
-          "alerted_at": "2026-11-13T19:39:03+08:00",
+          "active": true,
+          "alerted_at": "2026-11-14T00:09:02+08:00",
           "receipt": {
-            "message_id": "1570764933182918779",
+            "message_id": "1570832880186433719",
             "thread_id": "1561427429417947207"
-          },
-          "recovered_at": "2026-11-13T20:38:57+08:00"
+          }
         },
         "video:BV1nWJX6KEst": {
           "active": true,
@@ -5181,30 +5204,30 @@
     },
     "dark_machine": {
       "last_episode_notification_at": "2026-11-11T02:37:52+08:00",
-      "source_check_complete": false,
+      "source_check_complete": true,
       "source_alerts": {
         "upload:3493112693394137:dark_machine": {
-          "active": true,
+          "active": false,
           "alerted_at": "2026-11-13T23:39:15+08:00",
           "receipt": {
             "message_id": "1570825382620434565",
             "thread_id": "1561427446144696363"
-          }
+          },
+          "recovered_at": "2026-11-14T00:09:02+08:00"
         }
       }
     },
     "dating_dark_summoner": {
       "last_episode_notification_at": "2026-11-09T15:37:58+08:00",
-      "source_check_complete": true,
+      "source_check_complete": false,
       "source_alerts": {
         "upload:3546768887253334:dating_dark_summoner": {
-          "active": false,
-          "alerted_at": "2026-11-13T14:09:13+08:00",
+          "active": true,
+          "alerted_at": "2026-11-14T00:09:02+08:00",
           "receipt": {
-            "message_id": "1570681927667679260",
+            "message_id": "1570832878173036710",
             "thread_id": "1561427452084092941"
-          },
-          "recovered_at": "2026-11-13T14:38:54+08:00"
+          }
         }
       },
       "alert_receipt": {
@@ -5538,6 +5561,10 @@
     "bilibili:BV15PWB6tEA9:1": {
       "message_id": "1570825300558749796",
       "thread_id": "1561427405149831439"
+    },
+    "bilibili:BV1m7WB6mEpv:1": {
+      "message_id": "1570832696807002203",
+      "thread_id": "1561427424594501652"
     }
   },
   "repair_batches": {
@@ -5664,8 +5691,8 @@
     "video:BV1GTpn6BEsH": "Bilibili pagelist unavailable for BV1GTpn6BEsH: -404",
     "video:BV1dNpe6jEj3": "Bilibili pagelist unavailable for BV1dNpe6jEj3: -404",
     "upload:224267770:student_council_holes": "412 Client Error: Precondition Failed for url: https://api.bilibili.com/x/series/recArchivesByKeywords?mid=224267770&keywords=%E5%AD%A6%E7%94%9F%E4%BC%9A&ps=30&pn=1",
-    "upload:3493112693394137:dark_side_item": "412 Client Error: Precondition Failed for url: https://api.bilibili.com/x/series/recArchivesByKeywords?mid=3493112693394137&keywords=%E6%9F%90%E6%9A%97%E9%83%A8%E7%9A%84%E5%B0%91%E5%A5%B3%E5%85%B1%E6%A0%96&ps=30&pn=1",
-    "upload:3493112693394137:dark_machine": "412 Client Error: Precondition Failed for url: https://api.bilibili.com/x/series/recArchivesByKeywords?mid=3493112693394137&keywords=%E9%BB%91%E6%9A%97%E6%9C%BA%E5%99%A8&ps=30&pn=1"
+    "upload:4262884:firefly_wedding": "412 Client Error: Precondition Failed for url: https://api.bilibili.com/x/series/recArchivesByKeywords?mid=4262884&keywords=%E8%90%A4%E7%81%AB%E8%99%AB&ps=30&pn=1",
+    "upload:3546768887253334:dating_dark_summoner": "412 Client Error: Precondition Failed for url: https://api.bilibili.com/x/series/recArchivesByKeywords?mid=3546768887253334&keywords=%E5%8F%AC%E5%94%A4%E5%B8%88&ps=30&pn=1"
   },
   "enrollment_batches": {
     "2026-10-19-autumn-nine": {
