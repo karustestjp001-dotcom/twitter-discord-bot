@@ -185,7 +185,7 @@
           "duration": 1191
         }
       ],
-      "last_seen_at": "2026-11-15T00:37:31+08:00"
+      "last_seen_at": "2026-11-15T01:07:31+08:00"
     },
     "BV1jhM56oE3t": {
       "title": "『雷霆三人行』第1话",
@@ -3614,7 +3614,7 @@
           "duration": 1772
         }
       ],
-      "last_seen_at": "2026-11-15T00:37:40+08:00"
+      "last_seen_at": "2026-11-15T01:07:40+08:00"
     },
     "BV1Pkph6sEee": {
       "title": "【4K超清】魔禁外传 某暗部的少女共栖 01-05话",
@@ -3682,7 +3682,7 @@
           "duration": 1848
         }
       ],
-      "last_seen_at": "2026-11-15T00:37:43+08:00"
+      "last_seen_at": "2026-11-15T01:07:43+08:00"
     },
     "BV1nWJX6KEst": {
       "title": "【萤火虫的出嫁】全12集 超清中字（未删减版）周更",
@@ -3855,7 +3855,7 @@
           "duration": 1622
         }
       ],
-      "last_seen_at": "2026-11-15T00:37:55+08:00"
+      "last_seen_at": "2026-11-15T01:07:55+08:00"
     },
     "BV1KsHj62Esc": {
       "title": "【与暗黑召唤师秘密恋爱中】全8集 超清中字（更新中）",
@@ -3923,7 +3923,7 @@
           "duration": 1729
         }
       ],
-      "last_seen_at": "2026-11-15T00:37:58+08:00"
+      "last_seen_at": "2026-11-15T01:07:58+08:00"
     },
     "BV1gjp36rEUf": {
       "title": "『脑洞学生会！』第2话【中文字幕】",
@@ -4590,7 +4590,7 @@
           "duration": 1622
         }
       ],
-      "last_seen_at": "2026-11-15T00:38:40+08:00"
+      "last_seen_at": "2026-11-15T01:09:02+08:00"
     },
     "BV1MTWR68Eos": {
       "title": "『FX战士久留美』第7话【中文字幕】",
@@ -4613,7 +4613,7 @@
           "duration": 1778
         }
       ],
-      "last_seen_at": "2026-11-15T00:38:16+08:00"
+      "last_seen_at": "2026-11-15T01:08:44+08:00"
     },
     "BV15PWB6tEA9": {
       "title": "【药屋少女的呢喃 第三季】第7集",
@@ -4636,7 +4636,7 @@
           "duration": 1968
         }
       ],
-      "last_seen_at": "2026-11-15T00:38:08+08:00"
+      "last_seen_at": "2026-11-15T01:08:04+08:00"
     },
     "BV1m7WB6mEpv": {
       "title": "【4K超清】某暗部的少女共栖 第6话",
@@ -4659,7 +4659,7 @@
           "duration": 1848
         }
       ],
-      "last_seen_at": "2026-11-15T00:38:25+08:00"
+      "last_seen_at": "2026-11-15T01:08:18+08:00"
     },
     "BV1XNWB6dE6g": {
       "title": "凡人修仙传 第200集 慕兰之战24",
@@ -4709,7 +4709,7 @@
     }
   },
   "last_checked_date": "2026-11-15",
-  "last_checked_at": "2026-11-15T00:39:12+08:00",
+  "last_checked_at": "2026-11-15T01:09:08+08:00",
   "threads": {
     "BV11kMh6WEe5": {
       "thread_id": "1524206562405777498",
@@ -4898,7 +4898,7 @@
   },
   "bangumi": {
     "a_record_of_a_mortal_journey": {
-      "last_checked_at": "2026-11-15T00:38:01+08:00",
+      "last_checked_at": "2026-11-15T01:08:00+08:00",
       "last_seen_pubdate": 1794625200
     }
   },
@@ -5144,16 +5144,15 @@
     },
     "student_council_holes": {
       "last_episode_notification_at": "2026-11-15T00:39:09+08:00",
-      "source_check_complete": true,
+      "source_check_complete": false,
       "source_alerts": {
         "upload:224267770:student_council_holes": {
-          "active": false,
-          "alerted_at": "2026-11-14T21:39:04+08:00",
+          "active": true,
+          "alerted_at": "2026-11-15T01:09:07+08:00",
           "receipt": {
-            "message_id": "1571157526723166259",
+            "message_id": "1571210386651349155",
             "thread_id": "1561427418848297113"
-          },
-          "recovered_at": "2026-11-14T22:09:09+08:00"
+          }
         }
       }
     },
@@ -5276,16 +5275,15 @@
     },
     "dating_dark_summoner": {
       "last_episode_notification_at": "2026-11-09T15:37:58+08:00",
-      "source_check_complete": true,
+      "source_check_complete": false,
       "source_alerts": {
         "upload:3546768887253334:dating_dark_summoner": {
-          "active": false,
-          "alerted_at": "2026-11-14T14:09:04+08:00",
+          "active": true,
+          "alerted_at": "2026-11-15T01:09:07+08:00",
           "receipt": {
-            "message_id": "1571044279504207874",
+            "message_id": "1571210385695183041",
             "thread_id": "1561427452084092941"
-          },
-          "recovered_at": "2026-11-14T14:39:04+08:00"
+          }
         }
       },
       "alert_receipt": {
@@ -5755,7 +5753,9 @@
     "video:BV1akH96fEjw": "Bilibili pagelist unavailable for BV1akH96fEjw: -404",
     "video:BV1nWJX6KEst": "Bilibili pagelist unavailable for BV1nWJX6KEst: -404",
     "video:BV1GTpn6BEsH": "Bilibili pagelist unavailable for BV1GTpn6BEsH: -404",
-    "video:BV1dNpe6jEj3": "Bilibili pagelist unavailable for BV1dNpe6jEj3: -404"
+    "video:BV1dNpe6jEj3": "Bilibili pagelist unavailable for BV1dNpe6jEj3: -404",
+    "upload:224267770:student_council_holes": "412 Client Error: Precondition Failed for url: https://api.bilibili.com/x/series/recArchivesByKeywords?mid=224267770&keywords=%E5%AD%A6%E7%94%9F%E4%BC%9A&ps=30&pn=1",
+    "upload:3546768887253334:dating_dark_summoner": "412 Client Error: Precondition Failed for url: https://api.bilibili.com/x/series/recArchivesByKeywords?mid=3546768887253334&keywords=%E5%8F%AC%E5%94%A4%E5%B8%88&ps=30&pn=1"
   },
   "enrollment_batches": {
     "2026-10-19-autumn-nine": {
