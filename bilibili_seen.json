@@ -185,7 +185,7 @@
           "duration": 1191
         }
       ],
-      "last_seen_at": "2026-11-18T02:07:28+08:00"
+      "last_seen_at": "2026-11-18T02:37:40+08:00"
     },
     "BV1jhM56oE3t": {
       "title": "『雷霆三人行』第1话",
@@ -3623,7 +3623,7 @@
           "duration": 1773
         }
       ],
-      "last_seen_at": "2026-11-18T02:07:37+08:00"
+      "last_seen_at": "2026-11-18T02:37:49+08:00"
     },
     "BV1Pkph6sEee": {
       "title": "【4K超清】魔禁外传 某暗部的少女共栖 01-05话",
@@ -3691,7 +3691,7 @@
           "duration": 1848
         }
       ],
-      "last_seen_at": "2026-11-18T02:07:40+08:00"
+      "last_seen_at": "2026-11-18T02:37:52+08:00"
     },
     "BV1nWJX6KEst": {
       "title": "【萤火虫的出嫁】全12集 超清中字（未删减版）周更",
@@ -3814,13 +3814,14 @@
       "aid": "117434992363974",
       "thread_key": "dark_machine",
       "pubdate": 1791916015,
-      "page_count": 5,
+      "page_count": 6,
       "seen_cids": [
         "42746577046",
         "43134813305",
         "43134815704",
         "43303373685",
-        "43498277314"
+        "43498277314",
+        "43693706403"
       ],
       "pages": [
         {
@@ -3862,9 +3863,17 @@
           "episode_no": 5,
           "episode_no_explicit": true,
           "duration": 1622
+        },
+        {
+          "cid": "43693706403",
+          "page": 6,
+          "part": "06",
+          "episode_no": 6,
+          "episode_no_explicit": true,
+          "duration": 1669
         }
       ],
-      "last_seen_at": "2026-11-18T02:07:52+08:00"
+      "last_seen_at": "2026-11-18T02:38:04+08:00"
     },
     "BV1KsHj62Esc": {
       "title": "【与暗黑召唤师秘密恋爱中】全8集 超清中字（更新中）",
@@ -3941,7 +3950,7 @@
           "duration": 1678
         }
       ],
-      "last_seen_at": "2026-11-18T02:07:55+08:00"
+      "last_seen_at": "2026-11-18T02:38:07+08:00"
     },
     "BV1gjp36rEUf": {
       "title": "『脑洞学生会！』第2话【中文字幕】",
@@ -3964,7 +3973,7 @@
           "duration": 1687
         }
       ],
-      "last_seen_at": "2026-11-18T02:08:45+08:00"
+      "last_seen_at": "2026-11-18T02:38:29+08:00"
     },
     "BV18pJB66EAA": {
       "title": "『脑洞学生会！』第3话【中文字幕】",
@@ -3987,7 +3996,7 @@
           "duration": 1773
         }
       ],
-      "last_seen_at": "2026-11-18T02:08:48+08:00"
+      "last_seen_at": "2026-11-18T02:38:32+08:00"
     },
     "BV1FpJ86BE9k": {
       "title": "【4K超清】某暗部的少女共栖 第2话",
@@ -4240,7 +4249,7 @@
           "duration": 1773
         }
       ],
-      "last_seen_at": "2026-11-18T02:08:51+08:00"
+      "last_seen_at": "2026-11-18T02:38:35+08:00"
     },
     "BV1m3nS66ETW": {
       "title": "〖战车椅子〗第4话",
@@ -4401,7 +4410,7 @@
           "duration": 1780
         }
       ],
-      "last_seen_at": "2026-11-18T02:08:54+08:00"
+      "last_seen_at": "2026-11-18T02:38:38+08:00"
     },
     "BV1APxb6WEtH": {
       "title": "〖战车椅子〗第5话",
@@ -4585,7 +4594,7 @@
           "duration": 1772
         }
       ],
-      "last_seen_at": "2026-11-18T02:08:57+08:00"
+      "last_seen_at": "2026-11-18T02:38:41+08:00"
     },
     "BV1yiWG6zEub": {
       "title": "〖黑暗机器 DARK MACHINE〗第5话",
@@ -4631,7 +4640,7 @@
           "duration": 1778
         }
       ],
-      "last_seen_at": "2026-11-18T01:38:07+08:00"
+      "last_seen_at": "2026-11-18T02:38:21+08:00"
     },
     "BV15PWB6tEA9": {
       "title": "【药屋少女的呢喃 第三季】第7集",
@@ -4677,7 +4686,7 @@
           "duration": 1848
         }
       ],
-      "last_seen_at": "2026-11-18T02:08:12+08:00"
+      "last_seen_at": "2026-11-18T02:38:51+08:00"
     },
     "BV1XNWB6dE6g": {
       "title": "凡人修仙传 第200集 慕兰之战24",
@@ -4723,11 +4732,34 @@
           "duration": 1773
         }
       ],
-      "last_seen_at": "2026-11-18T02:09:00+08:00"
+      "last_seen_at": "2026-11-18T02:38:44+08:00"
+    },
+    "BV1xosk6hEbZ": {
+      "title": "〖黑暗机器 DARK MACHINE〗第6话",
+      "owner": "晓月の诗",
+      "owner_mid": "3493112693394137",
+      "aid": "117633164774031",
+      "thread_key": "dark_machine",
+      "pubdate": 1794940039,
+      "page_count": 1,
+      "seen_cids": [
+        "43693704175"
+      ],
+      "pages": [
+        {
+          "cid": "43693704175",
+          "page": 1,
+          "part": "〖黑暗机器 DARK MACHINE〗第6话",
+          "episode_no": 6,
+          "episode_no_explicit": true,
+          "duration": 1669
+        }
+      ],
+      "last_seen_at": "2026-11-18T02:39:04+08:00"
     }
   },
   "last_checked_date": "2026-11-18",
-  "last_checked_at": "2026-11-18T02:09:07+08:00",
+  "last_checked_at": "2026-11-18T02:39:16+08:00",
   "threads": {
     "BV11kMh6WEe5": {
       "thread_id": "1524206562405777498",
@@ -4916,7 +4948,7 @@
   },
   "bangumi": {
     "a_record_of_a_mortal_journey": {
-      "last_checked_at": "2026-11-18T02:07:57+08:00",
+      "last_checked_at": "2026-11-18T02:38:09+08:00",
       "last_seen_pubdate": 1794625200
     }
   },
@@ -5138,12 +5170,13 @@
       "source_check_complete": false,
       "source_alerts": {
         "upload:224267770:fx_fighter_kurumi": {
-          "active": true,
+          "active": false,
           "alerted_at": "2026-11-18T02:09:07+08:00",
           "receipt": {
             "message_id": "1572312648899371082",
             "thread_id": "1561427411478905003"
-          }
+          },
+          "recovered_at": "2026-11-18T02:39:16+08:00"
         },
         "video:BV1akH96fEjw": {
           "active": true,
@@ -5277,7 +5310,7 @@
       "alerted_at": "2026-11-07T11:09:25+08:00"
     },
     "dark_machine": {
-      "last_episode_notification_at": "2026-11-11T02:37:52+08:00",
+      "last_episode_notification_at": "2026-11-18T02:38:04+08:00",
       "source_check_complete": true,
       "source_alerts": {
         "upload:3493112693394137:dark_machine": {
@@ -5652,6 +5685,10 @@
     "bilibili:BV1KsHj62Esc:7": {
       "message_id": "1571580044755730562",
       "thread_id": "1561427452084092941"
+    },
+    "bilibili:BV1uWpB6DEXJ:6": {
+      "message_id": "1572319932870566059",
+      "thread_id": "1561427446144696363"
     }
   },
   "repair_batches": {
@@ -5776,8 +5813,7 @@
     "video:BV1akH96fEjw": "Bilibili pagelist unavailable for BV1akH96fEjw: -404",
     "video:BV1nWJX6KEst": "Bilibili pagelist unavailable for BV1nWJX6KEst: -404",
     "video:BV1GTpn6BEsH": "Bilibili pagelist unavailable for BV1GTpn6BEsH: -404",
-    "video:BV1dNpe6jEj3": "Bilibili pagelist unavailable for BV1dNpe6jEj3: -404",
-    "upload:224267770:fx_fighter_kurumi": "412 Client Error: Precondition Failed for url: https://api.bilibili.com/x/series/recArchivesByKeywords?mid=224267770&keywords=FX%E6%88%98%E5%A3%AB%E4%B9%85%E7%95%99%E7%BE%8E&ps=30&pn=1"
+    "video:BV1dNpe6jEj3": "Bilibili pagelist unavailable for BV1dNpe6jEj3: -404"
   },
   "enrollment_batches": {
     "2026-10-19-autumn-nine": {
