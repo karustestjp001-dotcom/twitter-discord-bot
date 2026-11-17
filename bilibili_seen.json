@@ -185,7 +185,7 @@
           "duration": 1191
         }
       ],
-      "last_seen_at": "2026-11-18T05:15:35+08:00"
+      "last_seen_at": "2026-11-18T05:37:32+08:00"
     },
     "BV1jhM56oE3t": {
       "title": "『雷霆三人行』第1话",
@@ -3623,7 +3623,7 @@
           "duration": 1773
         }
       ],
-      "last_seen_at": "2026-11-18T05:15:44+08:00"
+      "last_seen_at": "2026-11-18T05:37:41+08:00"
     },
     "BV1Pkph6sEee": {
       "title": "【4K超清】魔禁外传 某暗部的少女共栖 01-05话",
@@ -3691,7 +3691,7 @@
           "duration": 1848
         }
       ],
-      "last_seen_at": "2026-11-18T05:15:47+08:00"
+      "last_seen_at": "2026-11-18T05:37:44+08:00"
     },
     "BV1nWJX6KEst": {
       "title": "【萤火虫的出嫁】全12集 超清中字（未删减版）周更",
@@ -3873,7 +3873,7 @@
           "duration": 1669
         }
       ],
-      "last_seen_at": "2026-11-18T05:15:59+08:00"
+      "last_seen_at": "2026-11-18T05:37:56+08:00"
     },
     "BV1KsHj62Esc": {
       "title": "【与暗黑召唤师秘密恋爱中】全8集 超清中字（更新中）",
@@ -3950,7 +3950,7 @@
           "duration": 1678
         }
       ],
-      "last_seen_at": "2026-11-18T05:16:02+08:00"
+      "last_seen_at": "2026-11-18T05:37:59+08:00"
     },
     "BV1gjp36rEUf": {
       "title": "『脑洞学生会！』第2话【中文字幕】",
@@ -4640,7 +4640,7 @@
           "duration": 1778
         }
       ],
-      "last_seen_at": "2026-11-18T05:16:13+08:00"
+      "last_seen_at": "2026-11-18T05:38:10+08:00"
     },
     "BV15PWB6tEA9": {
       "title": "【药屋少女的呢喃 第三季】第7集",
@@ -4686,7 +4686,7 @@
           "duration": 1848
         }
       ],
-      "last_seen_at": "2026-11-18T05:16:44+08:00"
+      "last_seen_at": "2026-11-18T05:38:23+08:00"
     },
     "BV1XNWB6dE6g": {
       "title": "凡人修仙传 第200集 慕兰之战24",
@@ -4755,11 +4755,11 @@
           "duration": 1669
         }
       ],
-      "last_seen_at": "2026-11-18T05:16:59+08:00"
+      "last_seen_at": "2026-11-18T05:38:35+08:00"
     }
   },
   "last_checked_date": "2026-11-18",
-  "last_checked_at": "2026-11-18T05:17:11+08:00",
+  "last_checked_at": "2026-11-18T05:38:59+08:00",
   "threads": {
     "BV11kMh6WEe5": {
       "thread_id": "1524206562405777498",
@@ -4948,7 +4948,7 @@
   },
   "bangumi": {
     "a_record_of_a_mortal_journey": {
-      "last_checked_at": "2026-11-18T05:16:04+08:00",
+      "last_checked_at": "2026-11-18T05:38:01+08:00",
       "last_seen_pubdate": 1794625200
     }
   },
@@ -5143,13 +5143,12 @@
       "source_check_complete": false,
       "source_alerts": {
         "upload:4262884:apothecary_diaries_s3": {
-          "active": false,
-          "alerted_at": "2026-11-18T05:09:03+08:00",
+          "active": true,
+          "alerted_at": "2026-11-18T05:38:59+08:00",
           "receipt": {
-            "message_id": "1572357929712091369",
+            "message_id": "1572365462489014344",
             "thread_id": "1561427405149831439"
-          },
-          "recovered_at": "2026-11-18T05:17:11+08:00"
+          }
         },
         "video:BV1CPJY67E2o": {
           "active": true,
@@ -5194,16 +5193,15 @@
     },
     "student_council_holes": {
       "last_episode_notification_at": "2026-11-15T00:39:09+08:00",
-      "source_check_complete": true,
+      "source_check_complete": false,
       "source_alerts": {
         "upload:224267770:student_council_holes": {
-          "active": false,
-          "alerted_at": "2026-11-17T01:09:15+08:00",
+          "active": true,
+          "alerted_at": "2026-11-18T05:38:59+08:00",
           "receipt": {
-            "message_id": "1571935196981231697",
+            "message_id": "1572365464468721795",
             "thread_id": "1561427418848297113"
-          },
-          "recovered_at": "2026-11-17T01:38:57+08:00"
+          }
         }
       }
     },
@@ -5326,16 +5324,15 @@
     },
     "dating_dark_summoner": {
       "last_episode_notification_at": "2026-11-16T01:38:01+08:00",
-      "source_check_complete": true,
+      "source_check_complete": false,
       "source_alerts": {
         "upload:3546768887253334:dating_dark_summoner": {
-          "active": false,
-          "alerted_at": "2026-11-17T23:39:06+08:00",
+          "active": true,
+          "alerted_at": "2026-11-18T05:38:59+08:00",
           "receipt": {
-            "message_id": "1572274900767612949",
+            "message_id": "1572365463487516813",
             "thread_id": "1561427452084092941"
-          },
-          "recovered_at": "2026-11-18T00:08:48+08:00"
+          }
         }
       },
       "alert_receipt": {
@@ -5813,7 +5810,10 @@
     "video:BV1akH96fEjw": "Bilibili pagelist unavailable for BV1akH96fEjw: -404",
     "video:BV1nWJX6KEst": "Bilibili pagelist unavailable for BV1nWJX6KEst: -404",
     "video:BV1GTpn6BEsH": "Bilibili pagelist unavailable for BV1GTpn6BEsH: -404",
-    "video:BV1dNpe6jEj3": "Bilibili pagelist unavailable for BV1dNpe6jEj3: -404"
+    "video:BV1dNpe6jEj3": "Bilibili pagelist unavailable for BV1dNpe6jEj3: -404",
+    "upload:4262884:apothecary_diaries_s3": "412 Client Error: Precondition Failed for url: https://api.bilibili.com/x/series/recArchivesByKeywords?mid=4262884&keywords=%E8%8D%AF%E5%B1%8B%E5%B0%91%E5%A5%B3%E7%9A%84%E5%91%A2%E5%96%83+%E7%AC%AC%E4%B8%89%E5%AD%A3&ps=30&pn=1",
+    "upload:224267770:student_council_holes": "412 Client Error: Precondition Failed for url: https://api.bilibili.com/x/series/recArchivesByKeywords?mid=224267770&keywords=%E5%AD%A6%E7%94%9F%E4%BC%9A&ps=30&pn=1",
+    "upload:3546768887253334:dating_dark_summoner": "412 Client Error: Precondition Failed for url: https://api.bilibili.com/x/series/recArchivesByKeywords?mid=3546768887253334&keywords=%E5%8F%AC%E5%94%A4%E5%B8%88&ps=30&pn=1"
   },
   "enrollment_batches": {
     "2026-10-19-autumn-nine": {
