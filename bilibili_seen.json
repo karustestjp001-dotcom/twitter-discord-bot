@@ -185,7 +185,7 @@
           "duration": 1191
         }
       ],
-      "last_seen_at": "2026-11-25T18:37:33+08:00"
+      "last_seen_at": "2026-11-25T19:07:37+08:00"
     },
     "BV1jhM56oE3t": {
       "title": "『雷霆三人行』第1话",
@@ -3632,7 +3632,7 @@
           "duration": 1773
         }
       ],
-      "last_seen_at": "2026-11-25T18:37:42+08:00"
+      "last_seen_at": "2026-11-25T19:07:46+08:00"
     },
     "BV1Pkph6sEee": {
       "title": "【4K超清】魔禁外传 某暗部的少女共栖 01-06话",
@@ -3709,7 +3709,7 @@
           "duration": 1848
         }
       ],
-      "last_seen_at": "2026-11-25T18:37:45+08:00"
+      "last_seen_at": "2026-11-25T19:07:49+08:00"
     },
     "BV1nWJX6KEst": {
       "title": "【萤火虫的出嫁】全12集 超清中字（未删减版）周更",
@@ -3891,7 +3891,7 @@
           "duration": 1669
         }
       ],
-      "last_seen_at": "2026-11-25T18:37:57+08:00"
+      "last_seen_at": "2026-11-25T19:08:01+08:00"
     },
     "BV1KsHj62Esc": {
       "title": "【与暗黑召唤师秘密恋爱中】全8集 超清中字（更新中）",
@@ -3968,7 +3968,7 @@
           "duration": 1678
         }
       ],
-      "last_seen_at": "2026-11-25T18:38:00+08:00"
+      "last_seen_at": "2026-11-25T19:08:04+08:00"
     },
     "BV1gjp36rEUf": {
       "title": "『脑洞学生会！』第2话【中文字幕】",
@@ -4842,7 +4842,7 @@
           "duration": 1848
         }
       ],
-      "last_seen_at": "2026-11-25T18:38:21+08:00"
+      "last_seen_at": "2026-11-25T19:08:57+08:00"
     },
     "BV19Ny4zfEtW": {
       "title": "凡人修仙传 第201集 慕兰之战25",
@@ -4911,11 +4911,11 @@
           "duration": 1798
         }
       ],
-      "last_seen_at": "2026-11-25T18:38:37+08:00"
+      "last_seen_at": "2026-11-25T19:09:05+08:00"
     }
   },
   "last_checked_date": "2026-11-25",
-  "last_checked_at": "2026-11-25T18:39:19+08:00",
+  "last_checked_at": "2026-11-25T19:09:05+08:00",
   "threads": {
     "BV11kMh6WEe5": {
       "thread_id": "1524206562405777498",
@@ -5104,7 +5104,7 @@
   },
   "bangumi": {
     "a_record_of_a_mortal_journey": {
-      "last_checked_at": "2026-11-25T18:38:03+08:00",
+      "last_checked_at": "2026-11-25T19:08:06+08:00",
       "last_seen_pubdate": 1795230000
     }
   },
@@ -5299,13 +5299,12 @@
       "source_check_complete": false,
       "source_alerts": {
         "upload:4262884:apothecary_diaries_s3": {
-          "active": false,
-          "alerted_at": "2026-11-25T04:39:16+08:00",
+          "active": true,
+          "alerted_at": "2026-11-25T19:09:05+08:00",
           "receipt": {
-            "message_id": "1574887149772341402",
+            "message_id": "1575106046324637767",
             "thread_id": "1561427405149831439"
-          },
-          "recovered_at": "2026-11-25T05:09:10+08:00"
+          }
         },
         "video:BV1CPJY67E2o": {
           "active": true,
@@ -5350,16 +5349,15 @@
     },
     "student_council_holes": {
       "last_episode_notification_at": "2026-11-22T00:38:31+08:00",
-      "source_check_complete": true,
+      "source_check_complete": false,
       "source_alerts": {
         "upload:224267770:student_council_holes": {
-          "active": false,
-          "alerted_at": "2026-11-25T12:38:36+08:00",
+          "active": true,
+          "alerted_at": "2026-11-25T19:09:05+08:00",
           "receipt": {
-            "message_id": "1575007777221382155",
+            "message_id": "1575106047490789458",
             "thread_id": "1561427418848297113"
-          },
-          "recovered_at": "2026-11-25T13:09:11+08:00"
+          }
         }
       }
     },
@@ -5995,7 +5993,9 @@
     "video:BV1akH96fEjw": "Bilibili pagelist unavailable for BV1akH96fEjw: -404",
     "video:BV1nWJX6KEst": "Bilibili pagelist unavailable for BV1nWJX6KEst: -404",
     "video:BV1GTpn6BEsH": "Bilibili pagelist unavailable for BV1GTpn6BEsH: -404",
-    "video:BV1dNpe6jEj3": "Bilibili pagelist unavailable for BV1dNpe6jEj3: -404"
+    "video:BV1dNpe6jEj3": "Bilibili pagelist unavailable for BV1dNpe6jEj3: -404",
+    "upload:4262884:apothecary_diaries_s3": "412 Client Error: Precondition Failed for url: https://api.bilibili.com/x/series/recArchivesByKeywords?mid=4262884&keywords=%E8%8D%AF%E5%B1%8B%E5%B0%91%E5%A5%B3%E7%9A%84%E5%91%A2%E5%96%83+%E7%AC%AC%E4%B8%89%E5%AD%A3&ps=30&pn=1",
+    "upload:224267770:student_council_holes": "412 Client Error: Precondition Failed for url: https://api.bilibili.com/x/series/recArchivesByKeywords?mid=224267770&keywords=%E5%AD%A6%E7%94%9F%E4%BC%9A&ps=30&pn=1"
   },
   "enrollment_batches": {
     "2026-10-19-autumn-nine": {
