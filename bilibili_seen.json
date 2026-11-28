@@ -185,7 +185,7 @@
           "duration": 1191
         }
       ],
-      "last_seen_at": "2026-11-29T02:07:33+08:00"
+      "last_seen_at": "2026-11-29T02:37:34+08:00"
     },
     "BV1jhM56oE3t": {
       "title": "『雷霆三人行』第1话",
@@ -3718,7 +3718,7 @@
           "duration": 1848
         }
       ],
-      "last_seen_at": "2026-11-29T02:07:45+08:00"
+      "last_seen_at": "2026-11-29T02:37:46+08:00"
     },
     "BV1nWJX6KEst": {
       "title": "【萤火虫的出嫁】全12集 超清中字（未删减版）周更",
@@ -3900,7 +3900,7 @@
           "duration": 1669
         }
       ],
-      "last_seen_at": "2026-11-29T02:07:57+08:00"
+      "last_seen_at": "2026-11-29T02:37:58+08:00"
     },
     "BV1KsHj62Esc": {
       "title": "【与暗黑召唤师秘密恋爱中】全8集 超清中字（更新中）",
@@ -3977,7 +3977,7 @@
           "duration": 1678
         }
       ],
-      "last_seen_at": "2026-11-29T02:08:00+08:00"
+      "last_seen_at": "2026-11-29T02:38:01+08:00"
     },
     "BV1gjp36rEUf": {
       "title": "『脑洞学生会！』第2话【中文字幕】",
@@ -4920,7 +4920,7 @@
           "duration": 1798
         }
       ],
-      "last_seen_at": "2026-11-29T01:38:30+08:00"
+      "last_seen_at": "2026-11-29T02:38:44+08:00"
     },
     "BV1HW17zSEDq": {
       "title": "『FX战士久留美』第9话【中文字幕】",
@@ -4966,7 +4966,7 @@
           "duration": 1778
         }
       ],
-      "last_seen_at": "2026-11-29T02:08:11+08:00"
+      "last_seen_at": "2026-11-29T02:38:59+08:00"
     },
     "BV1nw1tzyEpz": {
       "title": "【4K超清】某暗部的少女共栖 第8话",
@@ -4989,7 +4989,7 @@
           "duration": 1848
         }
       ],
-      "last_seen_at": "2026-11-29T02:08:49+08:00"
+      "last_seen_at": "2026-11-29T02:38:22+08:00"
     },
     "BV13n1tzaEfL": {
       "title": "凡人修仙传 第202集 慕兰之战26",
@@ -5016,7 +5016,7 @@
     }
   },
   "last_checked_date": "2026-11-29",
-  "last_checked_at": "2026-11-29T02:08:55+08:00",
+  "last_checked_at": "2026-11-29T02:39:04+08:00",
   "threads": {
     "BV11kMh6WEe5": {
       "thread_id": "1524206562405777498",
@@ -5205,7 +5205,7 @@
   },
   "bangumi": {
     "a_record_of_a_mortal_journey": {
-      "last_checked_at": "2026-11-29T02:08:02+08:00",
+      "last_checked_at": "2026-11-29T02:38:04+08:00",
       "last_seen_pubdate": 1795834800
     }
   },
@@ -5529,13 +5529,12 @@
       "source_check_complete": false,
       "source_alerts": {
         "upload:3493112693394137:tank_chair": {
-          "active": false,
-          "alerted_at": "2026-11-28T19:08:46+08:00",
+          "active": true,
+          "alerted_at": "2026-11-29T02:39:04+08:00",
           "receipt": {
-            "message_id": "1576193131345477828",
+            "message_id": "1576306453088833607",
             "thread_id": "1561427436477096008"
-          },
-          "recovered_at": "2026-11-28T19:38:34+08:00"
+          }
         },
         "video:BV1GTpn6BEsH": {
           "active": true,
@@ -5584,15 +5583,16 @@
     },
     "dark_machine": {
       "last_episode_notification_at": "2026-11-25T02:38:58+08:00",
-      "source_check_complete": false,
+      "source_check_complete": true,
       "source_alerts": {
         "upload:3493112693394137:dark_machine": {
-          "active": true,
+          "active": false,
           "alerted_at": "2026-11-29T02:08:54+08:00",
           "receipt": {
             "message_id": "1576298861876486257",
             "thread_id": "1561427446144696363"
-          }
+          },
+          "recovered_at": "2026-11-29T02:39:04+08:00"
         }
       }
     },
@@ -6125,7 +6125,7 @@
     "video:BV1nWJX6KEst": "Bilibili pagelist unavailable for BV1nWJX6KEst: -404",
     "video:BV1GTpn6BEsH": "Bilibili pagelist unavailable for BV1GTpn6BEsH: -404",
     "video:BV1dNpe6jEj3": "Bilibili pagelist unavailable for BV1dNpe6jEj3: -404",
-    "upload:3493112693394137:dark_machine": "412 Client Error: Precondition Failed for url: https://api.bilibili.com/x/series/recArchivesByKeywords?mid=3493112693394137&keywords=%E9%BB%91%E6%9A%97%E6%9C%BA%E5%99%A8&ps=30&pn=1"
+    "upload:3493112693394137:tank_chair": "412 Client Error: Precondition Failed for url: https://api.bilibili.com/x/series/recArchivesByKeywords?mid=3493112693394137&keywords=%E6%88%98%E8%BD%A6%E6%A4%85%E5%AD%90&ps=30&pn=1"
   },
   "enrollment_batches": {
     "2026-10-19-autumn-nine": {
